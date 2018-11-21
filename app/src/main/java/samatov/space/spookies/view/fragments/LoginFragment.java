@@ -12,19 +12,30 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ConsoleMessage;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.io.Console;
+import java.util.logging.ConsoleHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import samatov.space.spookies.AuthActivity;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.utils.InputValidator;
+import samatov.space.spookies.model.utils.api.beans.Auth;
 
 public class LoginFragment extends Fragment {
 
@@ -74,7 +85,32 @@ public class LoginFragment extends Fragment {
     @OnClick(R.id.loginButton)
     public void onLoginButtonClicked() {
         if (InputValidator.inputNotEmpty(mUsernameEditText) && InputValidator.inputNotEmpty(mPasswordEditText)) {
-            //TODO: login
+            String username = mUsernameEditText.getText() + "";
+            String password = mPasswordEditText.getText() + "";
+            Auth.login(username, password)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<Auth>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(Auth auth) {
+                            Log.d("TEST", auth.getToken());
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
         } else {
             mUsernameEditText.requestFocus();
             displayErrorMessage("Username and password must be at least 3 characters");
