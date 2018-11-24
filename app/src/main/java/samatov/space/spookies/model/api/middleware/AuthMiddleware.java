@@ -1,11 +1,11 @@
-package samatov.space.spookies.model.utils.api.middleware;
+package samatov.space.spookies.model.api.middleware;
 
 import java.util.HashMap;
 
 import io.reactivex.Observable;
-import samatov.space.spookies.model.utils.api.ApiManager;
-import samatov.space.spookies.model.utils.api.beans.Auth;
-import samatov.space.spookies.model.utils.api.calls.AuthApi;
+import samatov.space.spookies.model.api.ApiManager;
+import samatov.space.spookies.model.api.beans.Auth;
+import samatov.space.spookies.model.api.calls.AuthApi;
 
 public class AuthMiddleware {
 

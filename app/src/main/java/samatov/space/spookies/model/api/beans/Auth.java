@@ -1,6 +1,6 @@
-package samatov.space.spookies.model.utils.api.beans;
+package samatov.space.spookies.model.api.beans;
 
-import samatov.space.spookies.model.utils.api.middleware.AuthMiddleware;
+import samatov.space.spookies.model.api.middleware.AuthMiddleware;
 
 public class Auth extends AuthMiddleware {
     private User user;

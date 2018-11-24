@@ -1,4 +1,4 @@
-package samatov.space.spookies.model.utils.api.beans;
+package samatov.space.spookies.model.api.beans;
 
 import java.util.Map;
 

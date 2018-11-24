@@ -1,4 +1,4 @@
-package samatov.space.spookies.model.utils.api;
+package samatov.space.spookies.model.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
