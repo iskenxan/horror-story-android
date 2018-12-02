@@ -1,4 +1,4 @@
-package samatov.space.spookies.view.fragments;
+package samatov.space.spookies.view_model.fragments;
 
 
 import android.graphics.Typeface;
@@ -15,15 +15,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
-import samatov.space.spookies.AuthActivity;
+import retrofit2.HttpException;
 import samatov.space.spookies.R;
+import samatov.space.spookies.model.api.beans.ApiError;
+import samatov.space.spookies.model.utils.Formatter;
 import samatov.space.spookies.model.utils.InputValidator;
+import samatov.space.spookies.view_model.activities.AuthActivity;
 
 public class SignupFragment extends Fragment {
 
@@ -47,6 +51,7 @@ public class SignupFragment extends Fragment {
     @BindView(R.id.signupUsernameInputLayout) TextInputLayout mUsernameInputLayout;
     @BindView(R.id.signupPassInputLayout) TextInputLayout mPassInputLayout;
     @BindView(R.id.signupPassRepeatInputLayout) TextInputLayout mPassRepeatInputLayout;
+    @BindView(R.id.signupScrollView) ScrollView mScrollView;
 
 
 
@@ -55,7 +60,6 @@ public class SignupFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_signup, container, false);
         ButterKnife.bind(this, view);
         styleLoginLink();
-
         mActivity = (AuthActivity) getActivity();
 
         return view;
@@ -75,9 +79,37 @@ public class SignupFragment extends Fragment {
 
     @OnClick(R.id.signupButton)
     public void onSignup() {
-        if (!inputsEmpty() && passwordsMatch()) {
-            //TODO: Signup
+        if (inputsEmpty() || !passwordsMatch())
+            return;
+        requestSignup();
+    }
+
+
+    private void requestSignup() {
+        String username = mUsernameEditText.getText() + "";
+        String password = mPassEditText.getText() + "";
+        String repeatPassword = mPassRepeatEditText.getText() + "";
+
+        mActivity.startSignup(username, password, repeatPassword, e -> handleAuthError(e));
+    }
+
+
+    private void handleAuthError(Throwable e) {
+        String message = "There was a connection problem. Please check your connection and try again.";
+        if (e instanceof HttpException) {
+            try {
+                message = getApiError((HttpException)e);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
+        displayErrorMessage(message);
+    }
+
+
+    private String getApiError(HttpException e) throws Exception {
+        ApiError error = Formatter.extractErrorData(e);
+        return error.getMessage();
     }
 
 
@@ -87,12 +119,18 @@ public class SignupFragment extends Fragment {
                 && InputValidator.inputNotEmpty(mPassRepeatEditText))
             return false;
         else {
-            mUsernameEditText.requestFocus();
-            mUsernameInputLayout.setError("Username and password must be at least 3 characters");
-            mPassInputLayout.setError(" ");
-            mPassRepeatInputLayout.setError(" ");
+            displayErrorMessage("Username and password must be at least 3 characters");
             return true;
         }
+    }
+
+
+    private void displayErrorMessage(String text) {
+        mScrollView.scrollTo(0,0);
+        mUsernameEditText.requestFocus();
+        mUsernameInputLayout.setError(text);
+        mPassInputLayout.setError(" ");
+        mPassRepeatInputLayout.setError(" ");
     }
 
 

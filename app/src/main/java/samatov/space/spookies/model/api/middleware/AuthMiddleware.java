@@ -18,4 +18,16 @@ public class AuthMiddleware {
 
         return twitterApi.login(params);
     }
+
+
+    public static Observable<Auth> signup(String username, String password, String repeatPassword) {
+        AuthApi twitterApi = ApiManager.getRetrofit().create(AuthApi.class);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("username", username);
+        params.put("password", password);
+        params.put("repeatPassword", repeatPassword);
+
+        return twitterApi.signup(params);
+    }
+
 }

@@ -1,4 +1,4 @@
-package samatov.space.spookies.view.fragments;
+package samatov.space.spookies.view_model.fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -22,17 +22,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
-import samatov.space.spookies.AuthActivity;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.api.beans.ApiError;
-import samatov.space.spookies.model.api.beans.Auth;
 import samatov.space.spookies.model.utils.Formatter;
 import samatov.space.spookies.model.utils.InputValidator;
+import samatov.space.spookies.view_model.activities.AuthActivity;
 
 public class LoginFragment extends Fragment {
 
@@ -48,6 +43,7 @@ public class LoginFragment extends Fragment {
 
     AuthActivity mActivity;
 
+
     @BindView(R.id.loginSignupLinkTextView) TextView mSignupTextView;
     @BindView(R.id.loginUsernameInput) EditText mUsernameEditText;
     @BindView(R.id.loginPassInput) EditText mPasswordEditText;
@@ -62,6 +58,7 @@ public class LoginFragment extends Fragment {
         ButterKnife.bind(this, view);
         this.mActivity = (AuthActivity) getActivity();
         styleSignupLink();
+
         mUsernameEditText.requestFocus();
 
        return view;
@@ -81,42 +78,19 @@ public class LoginFragment extends Fragment {
 
     @OnClick(R.id.loginButton)
     public void onLoginButtonClicked() {
-        if (InputValidator.inputNotEmpty(mUsernameEditText) && InputValidator.inputNotEmpty(mPasswordEditText)) {
-            String username = mUsernameEditText.getText() + "";
-            String password = mPasswordEditText.getText() + "";
-            Auth.login(username, password)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(loginObserver());
-        } else {
+        if (InputValidator.inputNotEmpty(mUsernameEditText) && InputValidator.inputNotEmpty(mPasswordEditText))
+            requestLogin();
+        else {
             mUsernameEditText.requestFocus();
             displayErrorMessage("Username and password must be at least 3 characters");
         }
     }
 
 
-    private Observer<Auth> loginObserver() {
-        return new Observer<Auth>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(Auth auth) {
-                mActivity.onAuthSuccess(auth);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                handleLoginError(e);
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
+    private void requestLogin() {
+        String username = mUsernameEditText.getText() + "";
+        String password = mPasswordEditText.getText() + "";
+        mActivity.startLogin(username, password, e -> handleLoginError(e));
     }
 
 

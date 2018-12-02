@@ -7,13 +7,21 @@ import com.google.gson.Gson;
 
 public class MyPreferenceManager {
 
+
+    public static void deleteString(Context context, String key) {
+        SharedPreferences preferences = getPreference(context);
+        preferences.edit().remove(key).commit();
+    }
+
+
     public static void saveString(Context context, String key, String value) {
-        SharedPreferences preferences = context.getSharedPreferences("GLOBAL_PREF", Context.MODE_PRIVATE);
+        SharedPreferences preferences = getPreference(context);
         preferences.edit().putString(key, value).commit();
     }
 
+
     public static void saveObjectAsJson(Context context, String key, Object value) {
-        SharedPreferences preferences = context.getSharedPreferences("GLOBAL_PREF", Context.MODE_PRIVATE);
+        SharedPreferences preferences = getPreference(context);
         Gson gson = new Gson();
         String jsonStr = gson.toJson(value);
         preferences.edit().putString(key, jsonStr).commit();
@@ -21,7 +29,7 @@ public class MyPreferenceManager {
 
 
     public static String getString (Context context, String key) {
-        SharedPreferences preferences = context.getSharedPreferences("GLOBAL_PREF", Context.MODE_PRIVATE);
+        SharedPreferences preferences = getPreference(context);
 
         return preferences.getString(key, null);
     }
@@ -34,5 +42,10 @@ public class MyPreferenceManager {
         Gson gson = new Gson();
 
         return gson.fromJson(jsonStr, cls);
+    }
+
+
+    private static SharedPreferences getPreference(Context context) {
+        return context.getSharedPreferences("GLOBAL_PREF", Context.MODE_PRIVATE);
     }
 }

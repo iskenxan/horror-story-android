@@ -2,8 +2,11 @@ package samatov.space.spookies.model.api.beans;
 
 import java.util.Map;
 
-public class User {
+import samatov.space.spookies.model.api.middleware.ProfileMiddleware;
+
+public class User extends ProfileMiddleware {
     private String username;
+    private String profileUrl;
     private Map<String, String> followers; //username, picture_url
     private Map<String, String> following; //username, picture_url
     private Map<String, String> draftRefs; //draftId, title
@@ -47,5 +50,13 @@ public class User {
 
     public void setPublishedRefs(Map<String, String> publishedRefs) {
         this.publishedRefs = publishedRefs;
+    }
+
+    public String getProfileUrl() {
+        return profileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
     }
 }
