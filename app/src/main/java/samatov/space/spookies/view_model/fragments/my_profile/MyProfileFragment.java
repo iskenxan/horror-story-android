@@ -55,7 +55,7 @@ public class MyProfileFragment extends Fragment implements GalleryImagePickerLis
 
 
     private void setupViews() {
-        User user = (User) MyPreferenceManager.getObject(getActivity(), "user", User.class);
+        User user  = (User) MyPreferenceManager.getObject(getActivity(), "user", User.class);
         if (!Formatter.isNullOrEmpty(user.getProfileUrl()))
             Picasso.get()
                     .load(user.getProfileUrl())
@@ -79,8 +79,7 @@ public class MyProfileFragment extends Fragment implements GalleryImagePickerLis
     public void onImagePicked(File file) {
         Picasso.get().load(file)
                 .resize(90, 90)
-                .centerCrop().placeholder(R.drawable.ic_profile_placeholder)
+                .centerCrop()
                 .into(mProfileImageView);
-        //TODO: finish saving file and updating imageView
     }
 }

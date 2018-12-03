@@ -60,12 +60,14 @@ public class AuthActivity extends BaseActivity {
 
 
     private void onFetchUserError() {
-        String errorMessage = "There was an error retrieving your data. Please try logging in again.";
-        mDialog = DialogFactory.getErrorDialog(this, errorMessage, dialog -> {
+        String errorMessage = "Error retrieving your data. Please try logging in again.";
+        SweetAlertDialog errorDialog = DialogFactory.getErrorDialog(this, errorMessage, dialog -> {
             dialog.dismiss();
-            MyPreferenceManager.deleteString(this, "token");
+            MyPreferenceManager.delete(this, "token");
+            MyPreferenceManager.delete(this, "user");
             startFragment(LoginFragment.newInstance(this));
         });
+        errorDialog.show();
     }
 
 

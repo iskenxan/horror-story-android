@@ -11,7 +11,7 @@ import samatov.space.spookies.model.api.beans.User;
 
 public class ApiManager {
 
-    private static String BASE_URL = "https://48f8164c.ngrok.io/";
+    private static String BASE_URL = "https://b5cf9b4a.ngrok.io/";
 
 
     public static Retrofit getRetrofit() {
@@ -27,6 +27,7 @@ public class ApiManager {
         return new GsonBuilder()
                         .registerTypeAdapter(Auth.class, new MyDeserializer<Auth>())
                         .registerTypeAdapter(User.class, new MyDeserializer<User>())
+                        .registerTypeAdapter(String.class, new MyDeserializer<String>())
                         .create();
     }
 }

@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 public class MyPreferenceManager {
 
 
-    public static void deleteString(Context context, String key) {
+    public static void delete(Context context, String key) {
         SharedPreferences preferences = getPreference(context);
         preferences.edit().remove(key).commit();
     }
