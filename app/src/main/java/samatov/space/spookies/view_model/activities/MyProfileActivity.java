@@ -3,6 +3,7 @@ package samatov.space.spookies.view_model.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -42,6 +43,11 @@ public class MyProfileActivity extends BaseActivity {
         startFragment(myProfileFragment, R.id.myProfilePlaceholder);
 
         mActivity = this;
+    }
+
+
+    public void startFragment(Fragment fragment) {
+        startFragment(fragment, R.id.myProfilePlaceholder);
     }
 
 
