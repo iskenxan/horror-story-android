@@ -19,10 +19,17 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:screenOrientation="portrait" android:name=".view_model.activities.MyProfileActivity"></activity>
+        <activity
+            android:name=".view_model.activities.MyProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view_model.activities.EditPostActivity"
+            android:screenOrientation="portrait"
+            ></activity>
     </application>
 
 </manifest>

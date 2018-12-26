@@ -39,7 +39,7 @@ public class BmbMenuFactory {
                 .normalImageRes(R.drawable.menu_profile_icon)
                 .highlightedImageRes(R.drawable.menu_profile_icon_white)
                 .listener(index -> {
-                    ActivityFactory.startActivity(activity, MyProfileActivity.class, true);
+                    ActivityFactory.startActivity(activity, MyProfileActivity.class, true, false);
                 });
         bmb.addBuilder(builder);
     }
@@ -61,7 +61,7 @@ public class BmbMenuFactory {
                 .highlightedImageRes(R.drawable.menu_logout_icon_white)
                 .listener(index -> {
                     MyPreferenceManager.delete(activity, "token");
-                    ActivityFactory.startActivity(activity, AuthActivity.class, true);
+                    ActivityFactory.startActivity(activity, AuthActivity.class, true, true);
                 });
         bmb.addBuilder(builder);
     }

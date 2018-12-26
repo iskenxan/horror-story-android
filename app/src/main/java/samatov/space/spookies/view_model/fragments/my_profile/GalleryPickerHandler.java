@@ -72,7 +72,7 @@ public class GalleryPickerHandler {
 
     private void displayPermissionAlertDialog(PermissionToken token) {
         DialogFactory.getAlertDialog(mActivity, "Access required", "We need access to your files to pick profile image",
-                dialog -> {
+                false, dialog -> {
                     dialog.dismiss();
                     token.continuePermissionRequest();
                 }).show();

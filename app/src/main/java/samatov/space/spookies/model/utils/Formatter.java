@@ -1,9 +1,12 @@
 package samatov.space.spookies.model.utils;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONObject;
 
 import retrofit2.HttpException;
 import samatov.space.spookies.model.api.beans.ApiError;
+import samatov.space.spookies.model.api.beans.Post;
 
 public class Formatter {
 
@@ -29,7 +32,12 @@ public class Formatter {
     }
 
 
-    public static boolean isNullOrEmpty(String str) {
-        return str == null || str.equals("") || str.equals("null");
+    public static JsonObject constructRefFromPost(Post post) {
+        JsonObject draftRef = new JsonObject();
+        draftRef.addProperty("created", post.getCreated());
+        draftRef.addProperty("lastUpdated", post.getLastUpdated());
+        draftRef.addProperty("title", post.getTitle());
+
+        return draftRef;
     }
 }

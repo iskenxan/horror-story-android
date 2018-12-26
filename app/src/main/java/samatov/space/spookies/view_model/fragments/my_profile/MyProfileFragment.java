@@ -21,9 +21,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.User;
-import samatov.space.spookies.model.utils.Formatter;
+import samatov.space.spookies.model.utils.Validator;
+import samatov.space.spookies.view_model.activities.EditPostActivity;
 import samatov.space.spookies.view_model.activities.MyProfileActivity;
-import samatov.space.spookies.view_model.fragments.EditPostFragment;
+import samatov.space.spookies.view_model.fragments.edit_post.EditPostFragment;
 import samatov.space.spookies.view_model.fragments.posts_viewpager.PostsViewPagerAdapter;
 
 
@@ -37,7 +38,7 @@ public class MyProfileFragment extends Fragment implements GalleryImagePickerLis
     @BindView(R.id.myProfileViewPager) ViewPager mPostsViewPager;
     @BindView(R.id.myProfileViewPagerTabs) SmartTabLayout mViewPagerTabs;
     @BindView(R.id.myProfileFab) FloatingActionButton mFab;
-
+    User mUser;
 
 
     MyProfileActivity mActivity;
@@ -66,19 +67,24 @@ public class MyProfileFragment extends Fragment implements GalleryImagePickerLis
 
 
     private void setupViews() {
-        User user  = (User) MyPreferenceManager.getObject(getActivity(), "user", User.class);
-        setProfileImage(user.getProfileUrl());
-        mUsernameTextView.setText(user.getUsername());
-        mFollowersTextView.setText(user.getFollowers().size() + "\nfollowers");
-        mFollowingTextView.setText(user.getFollowing().size() + "\nfollowing");
-        mPostsTextView.setText(user.getPublishedRefs().size() + "\nposts");
+        mUser = (User) MyPreferenceManager.getObject(getActivity(), "user", User.class);
+        setProfileImage(mUser.getProfileUrl());
+        mUsernameTextView.setText(mUser.getUsername());
+        setupFollowersViews();
         setupFab();
         setupViewPager();
     }
 
 
+    private void setupFollowersViews() {
+        mFollowersTextView.setText(mUser.getFollowers().size() + "\nfollowers");
+        mFollowingTextView.setText(mUser.getFollowing().size() + "\nfollowing");
+        mPostsTextView.setText(mUser.getPublishedRefs().size() + "\nposts");
+    }
+
+
     private void setProfileImage(String profileUrl) {
-        if (!Formatter.isNullOrEmpty(profileUrl))
+        if (!Validator.isNullOrEmpty(profileUrl))
             Picasso.get()
                     .load(profileUrl)
                     .resize(90,90)
@@ -88,12 +94,20 @@ public class MyProfileFragment extends Fragment implements GalleryImagePickerLis
 
 
     private void setupFab() {
-        mFab.setOnClickListener(event -> mActivity.startFragment(EditPostFragment.newInstance()));
+        mFab.setOnClickListener(event -> {
+            MyPreferenceManager.delete(getContext(), EditPostActivity.CURRENT_POST_ID);
+            MyPreferenceManager.delete(getContext(), EditPostFragment.CURRENT_POST);
+            startEditPostActivity();
+        });
     }
 
 
+    public void startEditPostActivity() {
+        mActivity.startEditPostActivity();
+    }
+
     private void setupViewPager() {
-        mViewPagerAdapter = new PostsViewPagerAdapter(getChildFragmentManager());
+        mViewPagerAdapter = new PostsViewPagerAdapter(getChildFragmentManager(), mUser);
         mPostsViewPager.setAdapter(mViewPagerAdapter);
         mViewPagerTabs.setViewPager(mPostsViewPager);
     }
@@ -111,5 +125,14 @@ public class MyProfileFragment extends Fragment implements GalleryImagePickerLis
                 .resize(90, 90)
                 .centerCrop()
                 .into(mProfileImageView);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mUser = (User) MyPreferenceManager.getObject(getActivity(), "user", User.class);
+        setupFollowersViews();
+        mViewPagerAdapter.setUser(mUser);
+        mViewPagerAdapter.notifyDataSetChanged();
     }
 }

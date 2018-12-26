@@ -5,7 +5,33 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyPreferenceManager {
+
+    private static List<SharedPreferences.OnSharedPreferenceChangeListener> mListeners = new ArrayList<>();
+
+
+    public static String getToken(Context context) {
+      return getString(context, "token");
+    }
+
+
+    public static void addSharedPreferenceListener(Context context, SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        SharedPreferences preferences = getPreference(context);
+        preferences.registerOnSharedPreferenceChangeListener(listener);
+        mListeners.add(listener);
+    }
+
+
+    public static void cleanAllListeners(Context context) {
+        for (SharedPreferences.OnSharedPreferenceChangeListener listener : mListeners) {
+            SharedPreferences preferences = getPreference(context);
+            preferences.unregisterOnSharedPreferenceChangeListener(listener);
+        }
+        mListeners = new ArrayList<>();
+    }
 
 
     public static void delete(Context context, String key) {

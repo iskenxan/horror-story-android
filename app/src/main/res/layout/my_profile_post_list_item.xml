@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:layout_marginTop="20dp"
+    android:background="@drawable/my_profile_posts_list_item_bg">
+    <TextView
+        android:id="@+id/myProfilePostsListItemTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:text="Once upon a time"
+        android:textSize="15sp"
+        android:gravity="left"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/myProfilePostsListItemViewButton"
+        />
+    <Button
+        android:id="@+id/myProfilePostsListItemViewButton"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:background="@drawable/primary_btn_bg"
+        android:textColor="@android:color/white"
+        android:text="View"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myProfilePostsListItemTextView"
+        />
+    <TextView
+        android:id="@+id/myProfilePostsListTimeTextView"
+        android:layout_width="wrap_content"
+        android:text="Edited: a moment ago"
+        android:gravity="center"
+        android:textSize="10sp"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/myProfilePostsListItemViewButton"
+        android:layout_height="wrap_content" />
+
+</android.support.constraint.ConstraintLayout>

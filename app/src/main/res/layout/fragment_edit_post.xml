@@ -1,14 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view_model.fragments.EditPostFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view_model.fragments.edit_post.EditPostFragment"
+    android:background="@color/colorBg">
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_height="160dp"
+        android:background="@android:color/white"
+        android:id="@+id/editPostTopContainer">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:id="@+id/editPostTopButtonsContainer">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unpublish"
+                android:visibility="gone"
+                android:textColor="@color/colorSecondary"
+                android:id="@+id/editPostUnpublishTextView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:textColor="@color/colorSecondary"
+                android:id="@+id/editPostDeletePostTextView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/editPostSaveDraftButton"
+                />
+            <Button
+                android:id="@+id/editPostSaveDraftButton"
+                android:layout_width="78dp"
+                android:layout_height="25dp"
+                android:background="@drawable/neutral_btn_bg"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/editPostDeletePostTextView"
+                app:layout_constraintEnd_toStartOf="@id/editPostPublishButton"
+                android:text="Save draft"
+                android:textSize="10sp"
+                android:textColor="@color/colorPrimary"
+                />
+            <Button
+                android:id="@+id/editPostPublishButton"
+                android:layout_width="78dp"
+                android:layout_height="25dp"
+                android:background="@drawable/primary_btn_bg"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/editPostSaveDraftButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Publish"
+                android:textSize="10sp"
+                android:textColor="@android:color/white"
+                />
+            <ImageView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:id="@+id/editPostDeleteMessagesImageView"
+                android:src="@drawable/delete_icon"/>
+        </android.support.constraint.ConstraintLayout>
+        <View
+            android:id="@+id/editPostTopSeparator"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/colorBg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editPostTopButtonsContainer"/>
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/editPostSettingsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintTop_toBottomOf="@id/editPostTopSeparator">
+            <TextView
+                android:id="@+id/editPostFragmentTitleLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Title:"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintVertical_chainStyle="spread_inside"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/editPostChattingWithLabel"
+                />
+            <TextView
+                android:id="@+id/editPostFragmentTitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit in settings"
+                android:layout_marginLeft="7dp"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/colorPrimaryDark"
+                app:layout_constraintStart_toEndOf="@id/editPostFragmentTitleLabel"
+                app:layout_constraintBottom_toBottomOf="@id/editPostFragmentTitleLabel"/>
+            <TextView
+                android:id="@+id/editPostChattingWithLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chatting with:"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintTop_toBottomOf="@id/editPostFragmentTitleLabel"
+                app:layout_constraintBottom_toTopOf="@id/editPostColorLabel"/>
+            <TextView
+                android:id="@+id/editPostChattingWithTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit in settings"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/colorPrimaryDark"
+                app:layout_constraintStart_toEndOf="@id/editPostChattingWithLabel"
+                app:layout_constraintBottom_toBottomOf="@id/editPostChattingWithLabel"
+                android:layout_marginLeft="7dp"/>
+            <TextView
+                android:id="@+id/editPostColorLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chat color:"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/editPostChattingWithLabel"/>
+            <ImageView
+                android:id="@+id/editPostColorPlaceholder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/circle_color_palette"
+                android:layout_marginLeft="7dp"
+                app:layout_constraintStart_toEndOf="@id/editPostColorLabel"
+                app:layout_constraintBottom_toBottomOf="@id/editPostColorLabel"/>
+            <ImageView
+                android:id="@+id/editPostSettingsImageView"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_edit_post_settings"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+    <com.stfalcon.chatkit.messages.MessagesList
+        android:id="@+id/editPostMessageList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:dateHeaderTextColor="@android:color/transparent"
+        app:dateHeaderPadding="0dp"
+        app:outcomingTimeTextSize="0sp"
+        app:incomingTimeTextSize="0sp"
+        app:incomingTimeTextColor="@android:color/transparent"
+        app:outcomingTimeTextColor="@android:color/transparent"
+        app:outcomingDefaultBubbleSelectedColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/editPostTopContainer"
+        app:layout_constraintBottom_toTopOf="@+id/editPostInputContainer"/>
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/editPostInputContainer"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#fff"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <Spinner
+            android:id="@+id/editPostUserSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <com.stfalcon.chatkit.messages.MessageInput
+            android:id="@+id/editPostMessageInput"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:inputMaxLines="3"
+            app:inputTextSize="14sp"
+            android:layout_alignParentBottom="true"
+            app:inputHint="Enter your message..."
+            app:layout_constraintStart_toEndOf="@id/editPostUserSpinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+    </android.support.constraint.ConstraintLayout>
 
-</FrameLayout>
+
+</android.support.constraint.ConstraintLayout>

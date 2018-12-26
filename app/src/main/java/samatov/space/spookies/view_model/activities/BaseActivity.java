@@ -10,15 +10,29 @@ import android.view.View;
 
 import com.nightonke.boommenu.BoomMenuButton;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.utils.BmbMenuFactory;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected void startFragment(Fragment fragment, int placeholder) {
+
+    protected void stackFragment(Fragment fragment, int placeholder, String tag) {
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(placeholder, fragment, tag)
+                .addToBackStack(tag).commit();
+    }
+
+
+    protected void replaceFragment(Fragment fragment, int placeholder) {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(placeholder, fragment).commit();
     }
@@ -36,6 +50,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         ((Toolbar) actionBar.getParent()).setContentInsetsAbsolute(0,0);
         BoomMenuButton bmb = actionBar.findViewById(R.id.toolbarBmb);
         BmbMenuFactory.setupBmb(this, bmb);
+    }
+
+
+    protected void listenToObservable(Observable observable, ApiRequestListener listener) {
+        observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(10, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .subscribe(requestObserver(listener));
     }
 
 
@@ -61,5 +84,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             }
         };
+    }
+
+
+    protected void handleBackPressed() {
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

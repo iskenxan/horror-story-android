@@ -3,7 +3,6 @@ package samatov.space.spookies.view_model.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -24,6 +23,7 @@ import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.view_model.fragments.my_profile.MyProfileFragment;
+import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class MyProfileActivity extends BaseActivity {
@@ -40,14 +40,14 @@ public class MyProfileActivity extends BaseActivity {
         ButterKnife.bind(this);
         setupActionBar(mToolbar);
         myProfileFragment = MyProfileFragment.newInstance();
-        startFragment(myProfileFragment, R.id.myProfilePlaceholder);
+        replaceFragment(myProfileFragment, R.id.myProfilePlaceholder);
 
         mActivity = this;
     }
 
 
-    public void startFragment(Fragment fragment) {
-        startFragment(fragment, R.id.myProfilePlaceholder);
+    public void startEditPostActivity() {
+        ActivityFactory.startActivity(this, EditPostActivity.class, true, false);
     }
 
 
@@ -120,5 +120,12 @@ public class MyProfileActivity extends BaseActivity {
             }
         };
     }
+
+
+    @Override
+    public void onBackPressed() {
+        handleBackPressed();
+    }
+
 
 }
