@@ -3,6 +3,7 @@ package samatov.space.spookies.model.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -15,7 +16,7 @@ import samatov.space.spookies.model.api.beans.User;
 
 public class ApiManager {
 
-    private static String BASE_URL = "https://487be31f.ngrok.io";
+    private static String BASE_URL = "https://175cbcc7.ngrok.io";
 
 
     public static Retrofit getRetrofit() {
@@ -39,6 +40,7 @@ public class ApiManager {
                         .registerTypeAdapter(User.class, new MyDeserializer<User>())
                         .registerTypeAdapter(String.class, new MyDeserializer<String>())
                         .registerTypeAdapter(Post.class, new MyDeserializer<Post>())
+                        .registerTypeAdapter(List.class, new MyDeserializer<List>())
                         .create();
     }
 }
