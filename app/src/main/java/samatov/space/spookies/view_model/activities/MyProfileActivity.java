@@ -58,6 +58,13 @@ public class MyProfileActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        setupSearchAction(menu);
+
+        return true;
+    }
+
+
+    private void setupSearchAction(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -66,8 +73,6 @@ public class MyProfileActivity extends BaseActivity {
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class)));
         searchView.setQueryHint("Search for users...");
-
-        return true;
     }
 
 

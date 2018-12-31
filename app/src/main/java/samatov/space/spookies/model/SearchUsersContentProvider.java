@@ -9,12 +9,13 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import samatov.space.spookies.R;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.middleware.SearchMiddleware;
+import samatov.space.spookies.model.utils.Formatter;
 import samatov.space.spookies.model.utils.Validator;
 
 public class SearchUsersContentProvider extends ContentProvider {
@@ -48,27 +49,30 @@ public class SearchUsersContentProvider extends ContentProvider {
             return null;
 
         String query = uri.getLastPathSegment();
-        if (Validator.isNullOrEmpty(query) || query.equals("search_suggest_query"))
+        if (Validator.isNullOrEmpty(query))
             return null;
-
         try {
-            //TODO: save the result in my preferences to get item in case the user clicks on the suggestion
             mUsers = SearchMiddleware.searchForUsersSync(query, getContext());
+            MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_USER_QUERY_RESULTS, mUsers);
             return createCursorFromResult();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
 
-    private Cursor createCursorFromResult() {
-        String[] menuCols = new String[] { "_id", "suggest_text_1", "suggest_intent_data"};
+    private Cursor createCursorFromResult() throws Exception {
+        String[] menuCols = new String[] { "_id", "suggest_text_1", "suggest_icon_1", "suggest_intent_data" };
         MatrixCursor cursor = new MatrixCursor(menuCols);
         int counter = 0;
 
         for (User user : mUsers) {
-            cursor.addRow(new Object[]{ counter, user.getUsername(), user.getUsername() });
+            Object profileUri =  R.drawable.ic_profile_placeholder;
+            if (!Validator.isNullOrEmpty(user.getProfileUrl()))
+                profileUri = Formatter.uriFromUrl(user.getProfileUrl(), getContext());
+
+            cursor.addRow(new Object[]{ counter, user.getUsername(), profileUri, user.getUsername() });
             counter++;
         }
 

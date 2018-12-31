@@ -10,6 +10,9 @@ import java.util.List;
 
 public class MyPreferenceManager {
 
+    public static String CURRENT_USER_QUERY_RESULTS = "current_user_query_result";
+
+
     private static List<SharedPreferences.OnSharedPreferenceChangeListener> mListeners = new ArrayList<>();
 
 
