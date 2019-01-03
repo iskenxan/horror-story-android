@@ -15,6 +15,7 @@ import samatov.space.spookies.model.api.beans.Auth;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.model.api.interfaces.AuthListener;
+import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
 import samatov.space.spookies.view_model.fragments.LoginFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;

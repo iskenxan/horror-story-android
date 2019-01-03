@@ -9,7 +9,7 @@ import com.nightonke.boommenu.BoomMenuButton;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.view_model.activities.AuthActivity;
-import samatov.space.spookies.view_model.activities.MyProfileActivity;
+import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
 
 public class BmbMenuFactory {
 

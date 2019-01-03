@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view_model.activities.MyProfileActivity">
+    tools:context=".view_model.activities.my_profile.MyProfileActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/myProfileToolbar"
         android:layout_width="match_parent"

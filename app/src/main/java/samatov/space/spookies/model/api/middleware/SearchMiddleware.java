@@ -20,6 +20,7 @@ public class SearchMiddleware {
         SearchApi searchApi = ApiManager.getRetrofit().create(SearchApi.class);
         HashMap<String, Object> params = new HashMap<>();
         params.put("token", MyPreferenceManager.getToken(context));
+        params.put("query", query);
 
         return searchApi.searchForUsers(params);
     }

@@ -23,7 +23,7 @@ import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.utils.Validator;
 import samatov.space.spookies.view_model.activities.EditPostActivity;
-import samatov.space.spookies.view_model.activities.MyProfileActivity;
+import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
 import samatov.space.spookies.view_model.fragments.edit_post.EditPostFragment;
 import samatov.space.spookies.view_model.fragments.posts_viewpager.PostsViewPagerAdapter;
 

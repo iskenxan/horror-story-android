@@ -23,7 +23,7 @@ import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.view_model.activities.EditPostActivity;
-import samatov.space.spookies.view_model.activities.MyProfileActivity;
+import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
 
 
 public class PostsListFragment extends Fragment {
