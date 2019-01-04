@@ -16,11 +16,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListItemViewhold
 
     List<JsonObject> mPosts;
     PostListItemClicked mListener;
+    boolean mDisplayTimestamp;
 
 
-    public PostsListAdapter(List<JsonObject> posts, PostListItemClicked listener) {
+    public PostsListAdapter(List<JsonObject> posts, PostListItemClicked listener, boolean displayTimestamp) {
         this.mPosts = posts;
-        mListener = listener;
+        this.mListener = listener;
+        this.mDisplayTimestamp = displayTimestamp;
     }
 
 
@@ -39,7 +41,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListItemViewhold
         JsonObject post = mPosts.get(position);
         String title = post.getAsJsonPrimitive("title").getAsString();
         String id = post.getAsJsonPrimitive("id").getAsString();
-        long lastUpdated = post.getAsJsonPrimitive("lastUpdated").getAsLong();
+
+        long lastUpdated = mDisplayTimestamp ?
+                post.getAsJsonPrimitive("lastUpdated").getAsLong() : -1;
 
         postsListItemViewholder.bind(title, mListener, id, lastUpdated);
     }

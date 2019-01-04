@@ -60,7 +60,7 @@ public class BmbMenuFactory {
                 .normalImageRes(R.drawable.menu_logout_icon)
                 .highlightedImageRes(R.drawable.menu_logout_icon_white)
                 .listener(index -> {
-                    MyPreferenceManager.delete(activity, "token");
+                    MyPreferenceManager.cleanPreferencesOnLogout(activity);
                     ActivityFactory.startActivity(activity, AuthActivity.class, true, true);
                 });
         bmb.addBuilder(builder);

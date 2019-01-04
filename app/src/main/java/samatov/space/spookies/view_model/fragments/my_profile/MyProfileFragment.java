@@ -2,7 +2,6 @@ package samatov.space.spookies.view_model.fragments.my_profile;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +20,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.User;
-import samatov.space.spookies.model.utils.Validator;
-import samatov.space.spookies.view_model.activities.EditPostActivity;
+import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
-import samatov.space.spookies.view_model.fragments.edit_post.EditPostFragment;
+import samatov.space.spookies.view_model.fragments.BaseFragment;
 import samatov.space.spookies.view_model.fragments.posts_viewpager.PostsViewPagerAdapter;
 
 
-public class MyProfileFragment extends Fragment implements GalleryImagePickerListener {
+public class MyProfileFragment extends BaseFragment implements GalleryImagePickerListener {
 
     @BindView(R.id.myProfileImageView) CircleImageView mProfileImageView;
     @BindView(R.id.myProfileUsernameTextView) TextView mUsernameTextView;
@@ -60,6 +58,7 @@ public class MyProfileFragment extends Fragment implements GalleryImagePickerLis
         mContentView = inflater.inflate(R.layout.fragment_my_profile, container, false);
         ButterKnife.bind(this, mContentView);
         mActivity = (MyProfileActivity) getActivity();
+        mUser = MyPreferenceManager.getObject(getActivity(), MyPreferenceManager.CURRENT_USER, User.class);
         setupViews();
 
         return mContentView;
@@ -67,36 +66,19 @@ public class MyProfileFragment extends Fragment implements GalleryImagePickerLis
 
 
     private void setupViews() {
-        mUser = (User) MyPreferenceManager.getObject(getActivity(), "user", User.class);
-        setProfileImage(mUser.getProfileUrl());
+        setProfileImage(mUser, mProfileImageView);
         mUsernameTextView.setText(mUser.getUsername());
-        setupFollowersViews();
+        setupFollowersViews(mUser, mFollowersTextView, mFollowingTextView, mPostsTextView);
         setupFab();
         setupViewPager();
     }
 
 
-    private void setupFollowersViews() {
-        mFollowersTextView.setText(mUser.getFollowers().size() + "\nfollowers");
-        mFollowingTextView.setText(mUser.getFollowing().size() + "\nfollowing");
-        mPostsTextView.setText(mUser.getPublishedRefs().size() + "\nposts");
-    }
-
-
-    private void setProfileImage(String profileUrl) {
-        if (!Validator.isNullOrEmpty(profileUrl))
-            Picasso.get()
-                    .load(profileUrl)
-                    .resize(90,90)
-                    .centerCrop().placeholder(R.drawable.ic_profile_placeholder)
-                    .into(mProfileImageView);
-    }
-
-
     private void setupFab() {
         mFab.setOnClickListener(event -> {
-            MyPreferenceManager.delete(getContext(), EditPostActivity.CURRENT_POST_ID);
-            MyPreferenceManager.delete(getContext(), EditPostFragment.CURRENT_POST);
+            MyPreferenceManager.delete(getContext(), MyPreferenceManager.CURRENT_POST_ID);
+            MyPreferenceManager.delete(getContext(), MyPreferenceManager.CURRENT_POST);
+            MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST_TYPE, POST_TYPE.DRAFT);
             startEditPostActivity();
         });
     }
@@ -130,8 +112,8 @@ public class MyProfileFragment extends Fragment implements GalleryImagePickerLis
     @Override
     public void onResume() {
         super.onResume();
-        mUser = (User) MyPreferenceManager.getObject(getActivity(), "user", User.class);
-        setupFollowersViews();
+        mUser = MyPreferenceManager.getObject(getActivity(), MyPreferenceManager.CURRENT_USER, User.class);
+        setupFollowersViews(mUser, mFollowersTextView, mFollowingTextView, mPostsTextView);
         mViewPagerAdapter.setUser(mUser);
         mViewPagerAdapter.notifyDataSetChanged();
     }

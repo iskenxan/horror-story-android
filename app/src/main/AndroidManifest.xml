@@ -23,15 +23,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".view_model.activities.my_profile.MyProfileActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".view_model.activities.EditPostActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".view_model.activities.ViewProfileActivity"></activity>
     </application>
 
 </manifest>

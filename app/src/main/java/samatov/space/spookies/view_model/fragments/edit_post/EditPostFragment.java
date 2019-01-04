@@ -40,9 +40,6 @@ import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class EditPostFragment extends Fragment implements ChatSettingsListener, MessageInput.InputListener {
 
-    public static String CURRENT_POST = "current_edit_post";
-
-
 
     public EditPostFragment() {
         // Required empty public constructor
@@ -103,9 +100,9 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
 
     private void setupForCurrentPost() {
-        mPost = (Post) MyPreferenceManager.getObject(getContext(), CURRENT_POST, Post.class);
-        mPostType = (POST_TYPE) MyPreferenceManager.getObject(getContext(),
-                EditPostActivity.CURRENT_POST_TYPE, POST_TYPE.class);
+        mPost = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_POST, Post.class);
+        mPostType = MyPreferenceManager.getObject(getContext(),
+                MyPreferenceManager.CURRENT_POST_TYPE, POST_TYPE.class);
 
         if (mPost == null) {
             mPost = new Post();

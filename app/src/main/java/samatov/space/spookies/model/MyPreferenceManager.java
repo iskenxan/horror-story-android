@@ -8,9 +8,18 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import samatov.space.spookies.model.utils.ListOfJson;
+
 public class MyPreferenceManager {
 
-    public static String CURRENT_USER_QUERY_RESULTS = "current_user_query_result";
+
+    public static String CURRENT_USER = "current_user";
+    public static String SECURITY_TOKEN = "token";
+    public static String USER_SEARCH_RESULT = "current_user_query_result";
+    public static String USER_SEARCH_CLICKED_ITEM = "user_searched_clicked_item";
+    public static String CURRENT_POST_ID = "current_post_id";
+    public static String CURRENT_POST_TYPE = "current_post_type";
+    public static String CURRENT_POST = "current_edit_post";
 
 
     private static List<SharedPreferences.OnSharedPreferenceChangeListener> mListeners = new ArrayList<>();
@@ -18,6 +27,15 @@ public class MyPreferenceManager {
 
     public static String getToken(Context context) {
       return getString(context, "token");
+    }
+
+
+    public static void cleanPreferencesOnLogout(Context context) {
+        delete(context, SECURITY_TOKEN);
+        delete(context, CURRENT_USER);
+        delete(context, USER_SEARCH_CLICKED_ITEM);
+        delete(context, CURRENT_POST_TYPE);
+        delete(context, CURRENT_POST_ID);
     }
 
 
@@ -64,13 +82,21 @@ public class MyPreferenceManager {
     }
 
 
-    public static Object getObject(Context context, String key, Class cls) {
+    public static <T> T getObject(Context context, String key, Class<T> cls) {
         String jsonStr = getString(context, key);
         if (jsonStr == null)
             return null;
         Gson gson = new Gson();
 
         return gson.fromJson(jsonStr, cls);
+    }
+
+
+    public static <T> List<T> getListOfObjects(Context context, String key, Class<T> cls) {
+        String jsonArray = getString(context, key);
+        List<T> yourClassList = new Gson().fromJson(jsonArray, new ListOfJson<>(cls));
+
+        return yourClassList;
     }
 
 

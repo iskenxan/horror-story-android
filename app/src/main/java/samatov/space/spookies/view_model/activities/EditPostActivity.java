@@ -19,10 +19,6 @@ import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class EditPostActivity extends BaseActivity {
 
-    public static String CURRENT_POST_ID = "current_post_id";
-    public static String CURRENT_POST_TYPE = "current_post_type";
-
-
     SweetAlertDialog mDialog;
     AppCompatActivity mActivity;
 
@@ -30,35 +26,37 @@ public class EditPostActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_post);
-        checkCurrentPostAndStartFragment();
 
         mActivity = this;
+        checkCurrentPostAndStartFragment();
     }
 
 
     private void checkCurrentPostAndStartFragment() {
-        String currentPostId = MyPreferenceManager.getString(this, CURRENT_POST_ID);
-        if (!Validator.isNullOrEmpty(currentPostId)) {
-            mDialog = DialogFactory.getLoadingDialog(this, "Loading...");
-            mDialog.show();
-            Observable observable = getPostRequestObservable(currentPostId);
-            listenToObservable(observable, (result, exception) -> {
-                mDialog.dismiss();
-                if (exception == null) {
-                    MyPreferenceManager.saveObjectAsJson(this, EditPostFragment.CURRENT_POST, result);
-                    replaceFragment(EditPostFragment.newInstance(), R.id.editPostActivityPlaceHolder);
-                }
-                else
-                    showGetPostErrorDialog();
-            });
-        } else
+        String currentPostId = MyPreferenceManager.getString(this, MyPreferenceManager.CURRENT_POST_ID);
+        if (Validator.isNullOrEmpty(currentPostId)) {
             replaceFragment(EditPostFragment.newInstance(), R.id.editPostActivityPlaceHolder);
+            return;
+        }
+
+        mDialog = DialogFactory.getLoadingDialog(this, "Loading...");
+        mDialog.show();
+        Observable observable = getPostRequestObservable(currentPostId);
+        listenToObservable(observable, (result, exception) -> {
+            mDialog.dismiss();
+            if (exception == null) {
+                MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, result);
+                replaceFragment(EditPostFragment.newInstance(), R.id.editPostActivityPlaceHolder);
+            }
+            else
+                showGetPostErrorDialog();
+        });
     }
 
 
     private Observable getPostRequestObservable(String currentPostId) {
-        POST_TYPE type = (POST_TYPE) MyPreferenceManager
-                .getObject(this, CURRENT_POST_TYPE, POST_TYPE.class);
+        POST_TYPE type = MyPreferenceManager
+                .getObject(this, MyPreferenceManager.CURRENT_POST_TYPE, POST_TYPE.class);
         Observable observable = Post.getDraft(currentPostId, this);
         if (type == POST_TYPE.PUBLISHED)
             observable = Post.getPublished(currentPostId, this);
@@ -79,8 +77,8 @@ public class EditPostActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        POST_TYPE type = (POST_TYPE) MyPreferenceManager
-                .getObject(this, CURRENT_POST_TYPE, POST_TYPE.class);
+        POST_TYPE type = MyPreferenceManager
+                .getObject(this, MyPreferenceManager.CURRENT_POST_TYPE, POST_TYPE.class);
         if (type == POST_TYPE.DRAFT)
             showExitConfirmDialog();
         else
@@ -124,11 +122,11 @@ public class EditPostActivity extends BaseActivity {
 
     private void movePostToDrafts(Object result) {
         Post draft = (Post) result;
-        User user = (User) MyPreferenceManager.getObject(mActivity, "user", User.class);
+        User user = MyPreferenceManager.getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
         JsonObject postRef = Formatter.constructRefFromPost(draft);
         user.getDraftRefs().put(draft.getId(), postRef);
         user.getPublishedRefs().remove(draft.getId());
-        MyPreferenceManager.saveObjectAsJson(mActivity, "user", user);
+        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_USER, user);
     }
 
 
@@ -163,9 +161,9 @@ public class EditPostActivity extends BaseActivity {
 
     private void deleteDraftFromMyPref(Object result) {
         String draftId = (String) result;
-        User user = (User) MyPreferenceManager.getObject(mActivity, "user", User.class);
+        User user = MyPreferenceManager.getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
         user.getDraftRefs().remove(draftId);
-        MyPreferenceManager.saveObjectAsJson(mActivity, "user", user);
+        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_USER, user);
     }
 
 
@@ -189,10 +187,10 @@ public class EditPostActivity extends BaseActivity {
 
     private void addDraftToMyPref(Object result) {
         Post savedDraft = (Post) result;
-        User user = (User) MyPreferenceManager.getObject(mActivity, "user", User.class);
+        User user = MyPreferenceManager.getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
         JsonObject draftRef = Formatter.constructRefFromPost(savedDraft);
         user.getDraftRefs().put(savedDraft.getId(), draftRef);
-        MyPreferenceManager.saveObjectAsJson(mActivity, "user", user);
+        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_USER, user);
     }
 
 
@@ -212,11 +210,11 @@ public class EditPostActivity extends BaseActivity {
 
     private void moveDraftToPublished(Object result, String oldDraftId) {
         Post publishedPost = (Post) result;
-        User user = (User) MyPreferenceManager.getObject(mActivity, "user", User.class);
+        User user = MyPreferenceManager.getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
         JsonObject postRef = Formatter.constructRefFromPost(publishedPost);
         user.getPublishedRefs().put(publishedPost.getId(), postRef);
         user.getDraftRefs().remove(oldDraftId);
-        MyPreferenceManager.saveObjectAsJson(mActivity, "user", user);
+        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_USER, user);
     }
 
 

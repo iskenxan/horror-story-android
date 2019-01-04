@@ -1,7 +1,6 @@
 package samatov.space.spookies.view_model.fragments.posts_viewpager;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,8 +11,6 @@ import android.widget.LinearLayout;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -22,11 +19,11 @@ import butterknife.ButterKnife;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.enums.POST_TYPE;
-import samatov.space.spookies.view_model.activities.EditPostActivity;
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
+import samatov.space.spookies.view_model.fragments.BaseFragment;
 
 
-public class PostsListFragment extends Fragment {
+public class PostsListFragment extends BaseFragment {
 
 
     public PostsListFragment() { }
@@ -79,7 +76,7 @@ public class PostsListFragment extends Fragment {
 
 
     private void setupViews() {
-        List<JsonObject> list = getFormattedPostList();
+        List<JsonObject> list = getFormattedPostList(mPosts);
         if (list.size() <= 0) {
             mRecyclerView.setVisibility(View.GONE);
             mEmptyListView.setVisibility(View.VISIBLE);
@@ -92,40 +89,11 @@ public class PostsListFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new PostsListAdapter(list, postId -> {
-            MyPreferenceManager.saveObjectAsJson(getContext(), EditPostActivity.CURRENT_POST_TYPE, mPostsType);
-            MyPreferenceManager.saveString(getContext(), EditPostActivity.CURRENT_POST_ID, postId);
+            MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST_TYPE, mPostsType);
+            MyPreferenceManager.saveString(getContext(), MyPreferenceManager.CURRENT_POST_ID, postId);
             mActivity.startEditPostActivity();
-        });
+        }, true);
         mRecyclerView.setAdapter(mAdapter);
-    }
-
-
-    private List<JsonObject> getFormattedPostList() {
-        List<JsonObject> list = new ArrayList<>();
-
-        for (String key: mPosts.keySet()) {
-            JsonObject item = getFormattedListItem(key);
-            list.add(item);
-        }
-        sortPostsByTimestamp(list);
-
-        return list;
-    }
-
-
-    private JsonObject getFormattedListItem(String key) {
-        JsonObject value;
-        value = mPosts.get(key).getAsJsonObject();
-        value.addProperty("id", key);
-
-        return value;
-    }
-
-
-    private void sortPostsByTimestamp(List<JsonObject> list) {
-        Collections.sort(list, (a, b) ->
-                (int) (b.getAsJsonPrimitive("created").getAsLong()
-                - (a.getAsJsonPrimitive("created").getAsLong())));
     }
 
 

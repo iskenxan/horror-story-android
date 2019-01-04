@@ -23,9 +23,14 @@ public class PostsListItemViewholder extends RecyclerView.ViewHolder {
         TextView textView = mContainerView.findViewById(R.id.myProfilePostsListItemTextView);
         textView.setText(title);
 
-        String timeSince = "Edited: " + TimeSince.getTimeAgo(lastUpdated);
         TextView timeTextView = mContainerView.findViewById(R.id.myProfilePostsListTimeTextView);
-        timeTextView.setText(timeSince);
+        if (lastUpdated != -1) {
+            String timeSince = "Edited: " + TimeSince.getTimeAgo(lastUpdated);
+
+            timeTextView.setText(timeSince);
+        } else
+            timeTextView.setVisibility(View.GONE);
+
 
         Button button = mContainerView.findViewById(R.id.myProfilePostsListItemViewButton);
         button.setOnClickListener(view -> itemClicked.onItemClicked(postId));

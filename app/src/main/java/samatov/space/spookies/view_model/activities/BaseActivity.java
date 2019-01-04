@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.nightonke.boommenu.BoomMenuButton;
 
@@ -38,9 +39,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void setupActionBar(Toolbar toolbar) {
+    protected void setupActionBar(Toolbar toolbar, String title) {
         LayoutInflater mInflater = LayoutInflater.from(this);
         View actionBar = mInflater.inflate(R.layout.custom_action_bar, null);
+
+        TextView titleTextView = actionBar.findViewById(R.id.toolbarTitleTextView);
+        titleTextView.setText(title);
+
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();
         bar.setDisplayShowHomeEnabled(false);
@@ -53,7 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void listenToObservable(Observable observable, ApiRequestListener listener) {
+    public void listenToObservable(Observable observable, ApiRequestListener listener) {
         observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -91,8 +96,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
-        } else {
-            super.onBackPressed();
         }
     }
 }

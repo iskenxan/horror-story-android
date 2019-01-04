@@ -35,7 +35,8 @@ public class AuthActivity extends BaseActivity {
 
 
     private void checkIfLoggedInAndRedirect() {
-        String token = MyPreferenceManager.getString(getApplicationContext(), "token");
+        String token = MyPreferenceManager
+                .getString(getApplicationContext(), MyPreferenceManager.SECURITY_TOKEN);
         if (token == null)
             startFragment(LoginFragment.newInstance(this));
         else
@@ -68,8 +69,8 @@ public class AuthActivity extends BaseActivity {
         String errorMessage = "Error retrieving your data. Please try logging in again.";
         SweetAlertDialog errorDialog = DialogFactory.getErrorDialog(this, errorMessage, dialog -> {
             dialog.dismiss();
-            MyPreferenceManager.delete(this, "token");
-            MyPreferenceManager.delete(this, "user");
+            MyPreferenceManager.delete(this, MyPreferenceManager.SECURITY_TOKEN);
+            MyPreferenceManager.delete(this, MyPreferenceManager.CURRENT_USER);
             startFragment(LoginFragment.newInstance(this));
         });
         errorDialog.show();
@@ -78,7 +79,7 @@ public class AuthActivity extends BaseActivity {
 
     private void onFetchUserSuccess(Object result) {
         User user = (User) result;
-        MyPreferenceManager.saveObjectAsJson(this, "user", user);
+        MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_USER, user);
         ActivityFactory.startActivity(this, MyProfileActivity.class, true, true);
     }
 
@@ -109,9 +110,8 @@ public class AuthActivity extends BaseActivity {
 
 
     private void onAuthSuccess(Auth auth) {
-        MyPreferenceManager.saveString(getApplicationContext(), "token", auth.getToken());
-        MyPreferenceManager.saveObjectAsJson(getApplicationContext(), "user", auth.getUser());
+        MyPreferenceManager.saveString(getApplicationContext(), MyPreferenceManager.SECURITY_TOKEN, auth.getToken());
+        MyPreferenceManager.saveObjectAsJson(getApplicationContext(), MyPreferenceManager.CURRENT_USER, auth.getUser());
         ActivityFactory.startActivity(this, MyProfileActivity.class, true, true);
     }
-
 }
