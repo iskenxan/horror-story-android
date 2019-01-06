@@ -114,4 +114,9 @@ public class AuthActivity extends BaseActivity {
         MyPreferenceManager.saveObjectAsJson(getApplicationContext(), MyPreferenceManager.CURRENT_USER, auth.getUser());
         ActivityFactory.startActivity(this, MyProfileActivity.class, true, true);
     }
+
+    @Override
+    public void onBackPressed() {
+        // do nothing
+    }
 }

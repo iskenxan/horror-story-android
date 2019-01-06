@@ -9,8 +9,8 @@ import samatov.space.spookies.model.api.middleware.ProfileMiddleware;
 public class User extends ProfileMiddleware {
     private String username;
     private String profileUrl;
-    private Map<String, String> followers; //username, picture_url
-    private Map<String, String> following; //username, picture_url
+    private Map<String, JsonObject> followers; //username, picture_url
+    private Map<String, JsonObject> following; //username, picture_url
     private Map<String, JsonObject> draftRefs; //draftId, draft data
     private Map<String, JsonObject> publishedRefs; //postId, draft data
 
@@ -22,21 +22,6 @@ public class User extends ProfileMiddleware {
         this.username = username;
     }
 
-    public Map<String, String> getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(Map<String, String> followers) {
-        this.followers = followers;
-    }
-
-    public Map<String, String> getFollowing() {
-        return following;
-    }
-
-    public void setFollowing(Map<String, String> following) {
-        this.following = following;
-    }
 
     public Map<String, JsonObject> getDraftRefs() {
         return draftRefs;
@@ -60,5 +45,22 @@ public class User extends ProfileMiddleware {
 
     public void setProfileUrl(String profileUrl) {
         this.profileUrl = profileUrl;
+    }
+
+
+    public Map<String, JsonObject> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Map<String, JsonObject> followers) {
+        this.followers = followers;
+    }
+
+    public Map<String, JsonObject> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Map<String, JsonObject> following) {
+        this.following = following;
     }
 }

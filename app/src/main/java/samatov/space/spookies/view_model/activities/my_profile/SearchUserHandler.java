@@ -26,6 +26,7 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
     private BaseActivity mActivity;
     OnSearchSuggestionClick mSuggestionClickListener;
     SearchView mSearchView;
+    SearchUsersCursorAdapter mAdapter;
 
 
     public SearchUserHandler(SearchView searchView, SearchManager searchManager,
@@ -37,9 +38,9 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
         searchView.setQueryHint("Search for users...");
-        SearchUsersCursorAdapter cursorAdapter = new SearchUsersCursorAdapter(activity, null, 0);
-        searchView.setSuggestionsAdapter(cursorAdapter);
-        setupQueryListenerForSearchView(searchView, cursorAdapter, apiRequestListener);
+        mAdapter = new SearchUsersCursorAdapter(activity, null, 0);
+        searchView.setSuggestionsAdapter(mAdapter);
+        setupQueryListenerForSearchView(searchView, apiRequestListener);
         searchView.setOnSuggestionListener(this);
     }
 
@@ -61,34 +62,40 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
     }
 
 
-    private void setupQueryListenerForSearchView(SearchView searchView,
-                                         SearchUsersCursorAdapter adapter, ApiRequestListener listener) {
+    private void setupQueryListenerForSearchView(SearchView searchView, ApiRequestListener listener) {
         RxSearchView.queryTextChanges(searchView)
                 .debounce(300, TimeUnit.MILLISECONDS)
                 .subscribe(charSequence -> {
                     String query = charSequence + "";
-                    requestSearch(query, adapter, listener);
+                    requestSearch(query, listener);
                 });
     }
 
 
-    private void requestSearch(String query, SearchUsersCursorAdapter adapter, ApiRequestListener listener) {
+    private void requestSearch(String query, ApiRequestListener listener) {
         try {
             if (Validator.isNullOrEmpty(query))
                 return;
 
             Observable<List<User>> observable = SearchMiddleware.searchForUsers(query, mActivity);
-            mActivity.listenToObservable(observable, (result, exception) -> {
-                listener.onRequestComplete(result, exception);
-                mUsers = (List<User>) result;
-                MyPreferenceManager.saveObjectAsJson(mActivity,
-                        MyPreferenceManager.USER_SEARCH_RESULT, mUsers);
-                Cursor cursor = createCursorFromResult();
-                adapter.swapCursor(cursor);
-            });
+            mActivity.listenToObservable(observable, (result, exception) ->
+                    onSearchComplete(listener, result, exception));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+
+    private void onSearchComplete(ApiRequestListener listener, Object result, Throwable exception) {
+        listener.onRequestComplete(result, exception);
+        if (exception != null)
+            return;
+        mUsers = (List<User>) result;
+        MyPreferenceManager.saveObjectAsJson(mActivity,
+                MyPreferenceManager.USER_SEARCH_RESULT, mUsers);
+        Cursor cursor = createCursorFromResult();
+        mAdapter.swapCursor(cursor);
     }
 
 

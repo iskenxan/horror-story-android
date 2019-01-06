@@ -26,7 +26,7 @@ public class MyPreferenceManager {
 
 
     public static String getToken(Context context) {
-      return getString(context, "token");
+      return getString(context, SECURITY_TOKEN);
     }
 
 

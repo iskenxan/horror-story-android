@@ -45,14 +45,13 @@
                 android:id="@+id/editPostSaveDraftButton"
                 android:layout_width="78dp"
                 android:layout_height="25dp"
-                android:background="@drawable/neutral_btn_bg"
+                style="@style/secondaryButton"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/editPostDeletePostTextView"
                 app:layout_constraintEnd_toStartOf="@id/editPostPublishButton"
                 android:text="Save draft"
                 android:textSize="10sp"
-                android:textColor="@color/colorPrimary"
                 />
             <Button
                 android:id="@+id/editPostPublishButton"

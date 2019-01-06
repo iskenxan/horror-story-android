@@ -17,6 +17,14 @@ public interface ProfileApi {
     Observable<User> getUserInfo(@Body HashMap<String, Object> params);
 
 
+    @POST("user/profile/follow")
+    Observable<User> follow(@Body HashMap<String, Object> params);
+
+
+    @POST("user/profile/unfollow")
+    Observable<User> unfollow(@Body HashMap<String, Object> params);
+
+
     @Multipart
     @POST("user/profile/profile-image/save")
     Observable<String> saveProfileImage(@Part MultipartBody.Part file, @Part("token")RequestBody token);
