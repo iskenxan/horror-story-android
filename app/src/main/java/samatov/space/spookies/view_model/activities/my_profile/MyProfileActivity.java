@@ -13,6 +13,7 @@ import android.view.Menu;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,13 +94,10 @@ public class MyProfileActivity extends BaseActivity {
 
     private OnSearchSuggestionClick onSearchItemClickListener() {
         return (username) -> {
-            List<User> users = MyPreferenceManager.getListOfObjects(mActivity,
+            Map<String, User> users = MyPreferenceManager.getMapOfObjects(mActivity,
                     MyPreferenceManager.USER_SEARCH_RESULT, User.class);
-
-            for (User user : users) {
-                if (user.getUsername().equals(username))
-                    startViewUserProfileActivity(user);
-            }
+            User user = users.get(username);
+            startViewUserProfileActivity(user);
         };
     }
 

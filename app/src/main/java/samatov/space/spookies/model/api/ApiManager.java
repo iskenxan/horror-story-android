@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -16,7 +17,7 @@ import samatov.space.spookies.model.api.beans.User;
 
 public class ApiManager {
 
-    private static String BASE_URL = "https://34408a73.ngrok.io";
+    private static String BASE_URL = "https://d1d792d9.ngrok.io";
 
 
     public static Retrofit getRetrofit() {
@@ -41,6 +42,7 @@ public class ApiManager {
                         .registerTypeAdapter(String.class, new MyDeserializer<String>())
                         .registerTypeAdapter(Post.class, new MyDeserializer<Post>())
                         .registerTypeAdapter(List.class, new MyDeserializer<List>())
+                        .registerTypeAdapter(Map.class, new MyDeserializer<Map>())
                         .create();
     }
 }

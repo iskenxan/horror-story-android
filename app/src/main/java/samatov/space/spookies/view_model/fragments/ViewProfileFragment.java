@@ -33,13 +33,8 @@ public class ViewProfileFragment extends BaseFragment {
 
     public ViewProfileFragment() {}
 
-    public static ViewProfileFragment newInstance(User user) {
+    public static ViewProfileFragment newInstance() {
         ViewProfileFragment fragment = new ViewProfileFragment();
-        Bundle args = new Bundle();
-        String userJson = new Gson().toJson(user, User.class);
-        args.putString("user", userJson);
-
-        fragment.setArguments(args);
 
         return fragment;
     }
@@ -55,17 +50,15 @@ public class ViewProfileFragment extends BaseFragment {
     @BindView(R.id.viewProfileFollowButton) Button mFollowButton;
 
 
-    User mUser;
     PostsListAdapter mAdapter;
     ViewProfileActivity mActivity;
-
+    User mUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_profile, container, false);
         ButterKnife.bind(this, view);
         getUser();
-        setupViews();
         mActivity = (ViewProfileActivity) getActivity();
 
 
@@ -74,8 +67,15 @@ public class ViewProfileFragment extends BaseFragment {
 
 
     private void getUser() {
-        String userJson = getArguments().getString("user");
-        mUser = new Gson().fromJson(userJson, User.class);
+        mUser = MyPreferenceManager.getObject(getContext(),
+                MyPreferenceManager.USER_SEARCH_CLICKED_ITEM, User.class);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupViews();
     }
 
 
@@ -159,7 +159,7 @@ public class ViewProfileFragment extends BaseFragment {
     private boolean followingSelectedUser() {
         User currentUser = MyPreferenceManager
                 .getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
-       return currentUser.getFollowing().containsKey(mUser.getUsername());
+       return mUser.getFollowers().containsKey(currentUser.getUsername());
     }
 
 
@@ -167,6 +167,7 @@ public class ViewProfileFragment extends BaseFragment {
         User currentUser = MyPreferenceManager
                 .getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
         mUser.getFollowers().remove(currentUser.getUsername());
+        updateSearchResultItem(); // we're updating the search result list because the searchView caches the most current results for a quick load
     }
 
 
@@ -176,6 +177,14 @@ public class ViewProfileFragment extends BaseFragment {
         JsonObject currentsUserFollower = new JsonObject();
         currentsUserFollower.addProperty("profile_url", currentUser.getProfileUrl());
         mUser.getFollowers().put(currentUser.getUsername(), currentsUserFollower);
+        updateSearchResultItem();
     }
 
+
+    private void updateSearchResultItem() {
+        String resultKey = MyPreferenceManager.USER_SEARCH_RESULT;
+        Map<String, User> users = MyPreferenceManager.getMapOfObjects(getContext(), resultKey, User.class);
+        users.put(mUser.getUsername(), mUser);
+        MyPreferenceManager.saveObjectAsJson(getContext(), resultKey, users);
+    }
 }

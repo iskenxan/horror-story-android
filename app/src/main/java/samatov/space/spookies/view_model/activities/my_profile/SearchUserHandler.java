@@ -9,7 +9,7 @@ import android.support.v7.widget.SearchView;
 
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -22,7 +22,7 @@ import samatov.space.spookies.view_model.activities.BaseActivity;
 
 public class SearchUserHandler implements SearchView.OnSuggestionListener {
 
-    private List<User> mUsers;
+    private Map<String, User> mUsers;
     private BaseActivity mActivity;
     OnSearchSuggestionClick mSuggestionClickListener;
     SearchView mSearchView;
@@ -77,7 +77,7 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
             if (Validator.isNullOrEmpty(query))
                 return;
 
-            Observable<List<User>> observable = SearchMiddleware.searchForUsers(query, mActivity);
+            Observable<Map<String, User>> observable = SearchMiddleware.searchForUsers(query, mActivity);
             mActivity.listenToObservable(observable, (result, exception) ->
                     onSearchComplete(listener, result, exception));
         } catch (Exception e) {
@@ -91,7 +91,7 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
         listener.onRequestComplete(result, exception);
         if (exception != null)
             return;
-        mUsers = (List<User>) result;
+        mUsers = (Map<String, User>) result;
         MyPreferenceManager.saveObjectAsJson(mActivity,
                 MyPreferenceManager.USER_SEARCH_RESULT, mUsers);
         Cursor cursor = createCursorFromResult();
@@ -100,14 +100,15 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
 
 
     private Cursor createCursorFromResult()  {
-        String[] menuCols = new String[] {BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1,
+        String[] menuCols = new String[] { BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1,
                 SearchManager.SUGGEST_COLUMN_ICON_1, SearchManager.SUGGEST_COLUMN_INTENT_DATA };
 
         MatrixCursor cursor = new MatrixCursor(menuCols);
         int counter = 0;
 
-        for (User user : mUsers) {
-            cursor.addRow(new Object[]{ counter, user.getUsername(), user.getProfileUrl(), user.getUsername() });
+        for (String username : mUsers.keySet()) {
+            User user = mUsers.get(username);
+            cursor.addRow(new Object[] { counter, user.getUsername(), user.getProfileUrl(), user.getUsername() });
             counter++;
         }
 

@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import samatov.space.spookies.model.utils.ListOfJson;
+import java.util.Map;
 
 public class MyPreferenceManager {
 
@@ -92,9 +93,9 @@ public class MyPreferenceManager {
     }
 
 
-    public static <T> List<T> getListOfObjects(Context context, String key, Class<T> cls) {
+    public static <T> Map<String, T> getMapOfObjects(Context context, String key, Class<T> cls) {
         String jsonArray = getString(context, key);
-        List<T> yourClassList = new Gson().fromJson(jsonArray, new ListOfJson<>(cls));
+        Map<String, T> yourClassList = new Gson().fromJson(jsonArray, TypeToken.getParameterized(HashMap.class, String.class, cls).getType());
 
         return yourClassList;
     }

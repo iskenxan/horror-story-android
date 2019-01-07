@@ -33,7 +33,7 @@ public class ViewProfileActivity extends BaseActivity {
 
         setupActionBar(mToolbar, "View profile");
         getCurrentUser();
-        replaceFragment(ViewProfileFragment.newInstance(mUser), R.id.viewProfileMainPlaceholder);
+        replaceFragment(ViewProfileFragment.newInstance(), R.id.viewProfileMainPlaceholder);
     }
 
 
@@ -46,18 +46,16 @@ public class ViewProfileActivity extends BaseActivity {
     public void followSelectedUser(ApiRequestListener listener) {
         displayLoadingDialog();
         Observable<User> observable = User.follow(this, mUser.getUsername(), mUser.getProfileUrl());
-        listenToObservable(observable, (result, exception) -> {
-            onRequestComplete(result, exception, listener);
-        });
+        listenToObservable(observable, (result, exception) ->
+                onRequestComplete(result, exception, listener));
     }
 
 
     public void unfollowSelectedUser(ApiRequestListener listener) {
         displayLoadingDialog();
         Observable<User> observable = User.unfollow(this, mUser.getUsername());
-        listenToObservable(observable, (result, exception) -> {
-            onRequestComplete(result, exception, listener);
-        });
+        listenToObservable(observable, (result, exception) ->
+                onRequestComplete(result, exception, listener));
     }
 
 
@@ -83,5 +81,12 @@ public class ViewProfileActivity extends BaseActivity {
         String errorText = "Couldn't complete your request. Please try again later.";
         mDialog = DialogFactory.getErrorDialog(this, errorText, null);
         mDialog.show();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        MyPreferenceManager.delete(this, MyPreferenceManager.USER_SEARCH_CLICKED_ITEM);
+        finishAfterTransition();
     }
 }

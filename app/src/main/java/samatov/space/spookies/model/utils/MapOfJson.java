@@ -2,13 +2,13 @@ package samatov.space.spookies.model.utils;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
+import java.util.Map;
 
-public class ListOfJson<T> implements ParameterizedType
+public class MapOfJson<String, T> implements ParameterizedType
 {
     private Class<?> wrapped;
 
-    public ListOfJson(Class<T> wrapper)
+    public MapOfJson(Class<T> wrapper)
     {
         this.wrapped = wrapper;
     }
@@ -22,7 +22,7 @@ public class ListOfJson<T> implements ParameterizedType
     @Override
     public Type getRawType()
     {
-        return List.class;
+        return Map.class;
     }
 
     @Override
