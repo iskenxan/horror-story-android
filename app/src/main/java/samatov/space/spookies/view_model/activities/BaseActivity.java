@@ -39,9 +39,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void setupActionBar(Toolbar toolbar, String title) {
+    protected void setupMainActionbar(Toolbar toolbar, String title) {
         LayoutInflater mInflater = LayoutInflater.from(this);
-        View actionBar = mInflater.inflate(R.layout.custom_action_bar, null);
+        View actionBar = mInflater.inflate(R.layout.main_action_bar, null);
 
         TextView titleTextView = actionBar.findViewById(R.id.toolbarTitleTextView);
         titleTextView.setText(title);

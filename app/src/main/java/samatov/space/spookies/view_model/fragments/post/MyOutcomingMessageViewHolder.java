@@ -1,4 +1,4 @@
-package samatov.space.spookies.view_model.fragments.edit_post;
+package samatov.space.spookies.view_model.fragments.post;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -7,13 +7,12 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
-import samatov.space.spookies.model.edit_post.Message;
+import samatov.space.spookies.model.post.Message;
 
 public class MyOutcomingMessageViewHolder extends MessagesListAdapter.OutcomingMessageViewHolder<Message> implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -62,13 +61,5 @@ public class MyOutcomingMessageViewHolder extends MessagesListAdapter.OutcomingM
         GradientDrawable gradientBg = (GradientDrawable) bg;
         gradientBg.setColor(color);
         ViewCompat.setBackground(bubbleView, gradientBg);
-    }
-
-
-    private void setTextColor(int color) {
-        TextView textView = mView.findViewById(com.stfalcon.chatkit.R.id.messageText);
-        if (textView != null) {
-            textView.setBackgroundColor(color);
-        }
     }
 }

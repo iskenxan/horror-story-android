@@ -14,7 +14,7 @@ import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.model.utils.Formatter;
 import samatov.space.spookies.model.utils.Validator;
-import samatov.space.spookies.view_model.fragments.edit_post.EditPostFragment;
+import samatov.space.spookies.view_model.fragments.post.edit_post.EditPostFragment;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class EditPostActivity extends BaseActivity {

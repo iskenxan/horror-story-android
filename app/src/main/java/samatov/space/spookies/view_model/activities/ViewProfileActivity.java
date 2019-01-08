@@ -12,6 +12,7 @@ import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.fragments.ViewProfileFragment;
+import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class ViewProfileActivity extends BaseActivity {
@@ -31,7 +32,7 @@ public class ViewProfileActivity extends BaseActivity {
         ButterKnife.bind(this);
         mActivity = this;
 
-        setupActionBar(mToolbar, "View profile");
+        setupMainActionbar(mToolbar, "View profile");
         getCurrentUser();
         replaceFragment(ViewProfileFragment.newInstance(), R.id.viewProfileMainPlaceholder);
     }
@@ -40,6 +41,13 @@ public class ViewProfileActivity extends BaseActivity {
     private void getCurrentUser() {
         mUser = MyPreferenceManager
                 .getObject(this, MyPreferenceManager.USER_SEARCH_CLICKED_ITEM, User.class);
+    }
+
+
+    public void startReadPostActivity(String postId) {
+        MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, mUser.getUsername());
+        MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_ID, postId);
+        ActivityFactory.startActivity(this, ReadPostActivity.class, true, false);
     }
 
 

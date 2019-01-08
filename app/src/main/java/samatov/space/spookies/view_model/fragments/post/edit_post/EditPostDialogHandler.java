@@ -1,4 +1,4 @@
-package samatov.space.spookies.view_model.fragments.edit_post;
+package samatov.space.spookies.view_model.fragments.post.edit_post;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -16,7 +16,7 @@ import com.orhanobut.dialogplus.ViewHolder;
 import com.thebluealliance.spectrum.SpectrumDialog;
 
 import samatov.space.spookies.R;
-import samatov.space.spookies.model.edit_post.ChatSettingsListener;
+import samatov.space.spookies.model.post.ChatSettingsListener;
 
 public class EditPostDialogHandler {
 

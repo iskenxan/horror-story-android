@@ -48,7 +48,7 @@ public class MyProfileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
         ButterKnife.bind(this);
-        setupActionBar(mToolbar, "My profile");
+        setupMainActionbar(mToolbar, "My profile");
         myProfileFragment = MyProfileFragment.newInstance();
         replaceFragment(myProfileFragment, R.id.myProfilePlaceholder);
 
@@ -70,7 +70,7 @@ public class MyProfileActivity extends BaseActivity {
 
 
     private void setupSearchAction(Menu menu) {
-        getMenuInflater().inflate(R.menu.action_bar, menu);
+        getMenuInflater().inflate(R.menu.search_action_bar_menu, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat

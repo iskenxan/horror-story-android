@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view_model.fragments.post.read_post.ReadPostFragment"
+    android:background="@color/colorBg"
+    android:id="@+id/readPostRootContainer">
+    <LinearLayout
+        android:id="@+id/readPostTipContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryLight"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="Click anywhere to proceed with the story"/>
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:alpha="0.5"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/click_icon"/>
+    </LinearLayout>
+    <com.stfalcon.chatkit.messages.MessagesList
+        android:id="@+id/readPostMessageList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dateHeaderTextColor="@android:color/transparent"
+        app:dateHeaderPadding="0dp"
+        app:outcomingTimeTextSize="0sp"
+        app:incomingTimeTextSize="0sp"
+        android:visibility="gone"
+        app:incomingTimeTextColor="@android:color/transparent"
+        app:outcomingTimeTextColor="@android:color/transparent" />
+
+</android.support.constraint.ConstraintLayout>

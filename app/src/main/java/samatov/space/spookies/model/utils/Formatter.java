@@ -1,16 +1,10 @@
 package samatov.space.spookies.model.utils;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.FutureTarget;
 import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
-
-import java.io.File;
 
 import retrofit2.HttpException;
 import samatov.space.spookies.model.api.beans.ApiError;
@@ -55,18 +49,5 @@ public class Formatter {
                 new java.net.URL(url).getContent()), "");
 
         return dr;
-    }
-
-
-    public static Uri uriFromUrl(String url, Context context) throws Exception {
-        FutureTarget<File> futureTarget  = Glide
-                .with(context.getApplicationContext())
-                .load(url)
-                .downloadOnly(30, 30);
-
-        File cacheFile = futureTarget.get();
-        Uri uri = Uri.fromFile(cacheFile);
-
-        return uri;
     }
 }

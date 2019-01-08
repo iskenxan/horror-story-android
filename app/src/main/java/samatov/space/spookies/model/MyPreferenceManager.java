@@ -21,6 +21,7 @@ public class MyPreferenceManager {
     public static String CURRENT_POST_ID = "current_post_id";
     public static String CURRENT_POST_TYPE = "current_post_type";
     public static String CURRENT_POST = "current_edit_post";
+    public static String CURRENT_POST_AUTHOR = "current_post_author";
 
 
     private static List<SharedPreferences.OnSharedPreferenceChangeListener> mListeners = new ArrayList<>();

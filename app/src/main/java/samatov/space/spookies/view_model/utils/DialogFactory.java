@@ -1,11 +1,24 @@
 package samatov.space.spookies.view_model.utils;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
+
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.ViewHolder;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import samatov.space.spookies.R;
 
 public class DialogFactory {
+
+
+    public static DialogPlus getDialogPlus(Context context, boolean expanded, int view, int gravity) {
+        return DialogPlus.newDialog(context)
+                .setContentHolder(new ViewHolder(view))
+                .setExpanded(expanded)
+                .setGravity(gravity)
+                .create();
+    }
 
 
     public static SweetAlertDialog getSuccessDialog(AppCompatActivity activity, String text,

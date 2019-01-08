@@ -1,4 +1,4 @@
-package samatov.space.spookies.model.edit_post;
+package samatov.space.spookies.model.post;
 
 import com.stfalcon.chatkit.commons.models.IMessage;
 

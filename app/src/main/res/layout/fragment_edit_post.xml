@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view_model.fragments.edit_post.EditPostFragment"
+    tools:context=".view_model.fragments.post.edit_post.EditPostFragment"
     android:background="@color/colorBg">
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

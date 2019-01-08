@@ -13,6 +13,18 @@ import samatov.space.spookies.model.api.calls.PostsApi;
 public class PostsMiddleware {
 
 
+    public static Observable<Post> getOtherUserPost(String postId, String authorUsername, Context context) {
+        PostsApi postsApi = ApiManager.getRetrofit().create(PostsApi.class);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", postId);
+        params.put("token", MyPreferenceManager.getToken(context));
+        params.put("authorUsername", authorUsername);
+
+        return postsApi.getOtherUserPost(params);
+    }
+
+
     public static Observable<Post> getPublished(String postId, Context context) {
         PostsApi postsApi = ApiManager.getRetrofit().create(PostsApi.class);
 

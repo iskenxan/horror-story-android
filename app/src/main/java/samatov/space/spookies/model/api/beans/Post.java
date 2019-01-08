@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import samatov.space.spookies.model.api.middleware.PostsMiddleware;
-import samatov.space.spookies.model.edit_post.Author;
-import samatov.space.spookies.model.edit_post.Message;
+import samatov.space.spookies.model.post.Author;
+import samatov.space.spookies.model.post.Message;
 
 public class Post extends PostsMiddleware {
 

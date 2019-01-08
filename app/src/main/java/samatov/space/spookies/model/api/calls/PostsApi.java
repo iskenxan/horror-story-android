@@ -29,4 +29,7 @@ public interface PostsApi {
 
     @POST("user/posts/published/get")
     Observable<Post> getPublished(@Body HashMap<String, Object> params);
+
+    @POST("posts/get")
+    Observable<Post> getOtherUserPost(@Body HashMap<String, Object> params);
 }

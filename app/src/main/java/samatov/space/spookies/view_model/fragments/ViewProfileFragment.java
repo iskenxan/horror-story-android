@@ -103,10 +103,8 @@ public class ViewProfileFragment extends BaseFragment {
         List<JsonObject> formattedPostsList = getFormattedPostList(postsJson);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new PostsListAdapter(formattedPostsList, postId -> {
-            //TODO: create a new activity for viewing other peoples posts and start it here
-            MyPreferenceManager.saveString(getContext(), MyPreferenceManager.CURRENT_POST_ID, postId);
-        }, false);
+        mAdapter = new PostsListAdapter(formattedPostsList, postId ->
+                mActivity.startReadPostActivity(postId), false);
         mRecyclerView.setAdapter(mAdapter);
     }
 

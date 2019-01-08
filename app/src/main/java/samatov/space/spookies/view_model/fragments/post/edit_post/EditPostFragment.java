@@ -1,4 +1,4 @@
-package samatov.space.spookies.view_model.fragments.edit_post;
+package samatov.space.spookies.view_model.fragments.post.edit_post;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -30,12 +30,13 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Post;
-import samatov.space.spookies.model.edit_post.Author;
-import samatov.space.spookies.model.edit_post.ChatSettingsListener;
-import samatov.space.spookies.model.edit_post.Message;
+import samatov.space.spookies.model.post.Author;
+import samatov.space.spookies.model.post.ChatSettingsListener;
+import samatov.space.spookies.model.post.Message;
 import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.model.utils.Validator;
 import samatov.space.spookies.view_model.activities.EditPostActivity;
+import samatov.space.spookies.view_model.fragments.post.MyOutcomingMessageViewHolder;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class EditPostFragment extends Fragment implements ChatSettingsListener, MessageInput.InputListener {
