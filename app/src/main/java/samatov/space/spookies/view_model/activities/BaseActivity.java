@@ -13,6 +13,8 @@ import com.nightonke.boommenu.BoomMenuButton;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -67,6 +69,32 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
+    public void listenToCompletable(Completable completable, ApiRequestListener listener) {
+        completable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .timeout(10, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        listener.onRequestComplete(null, null);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        listener.onRequestComplete(null, e);
+                    }
+                });
+    }
+
+
+
+
     protected Observer<Object> requestObserver(ApiRequestListener listener) {
         return new Observer<Object>() {
             @Override
@@ -76,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             @Override
             public void onNext(Object auth) {
-               listener.onRequestComplete(auth, null);
+                listener.onRequestComplete(auth, null);
             }
 
             @Override

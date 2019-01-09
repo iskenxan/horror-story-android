@@ -30,7 +30,13 @@
             android:name=".view_model.activities.EditPostActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".view_model.activities.ViewProfileActivity" />
-        <activity android:name=".view_model.activities.ReadPostActivity"></activity>
+        <activity android:name=".view_model.activities.ReadPostActivity" />
+        <activity android:name=".view_model.activities.DemoActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

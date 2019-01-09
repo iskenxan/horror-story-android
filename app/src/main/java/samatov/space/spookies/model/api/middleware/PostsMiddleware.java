@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.HashMap;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.ApiManager;
@@ -11,6 +12,31 @@ import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.calls.PostsApi;
 
 public class PostsMiddleware {
+
+
+    public static Completable addToFavorite(String authorUsername, String postId, String title, Context context) {
+        PostsApi postsApi = ApiManager.getRetrofit().create(PostsApi.class);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", postId);
+        params.put("token", MyPreferenceManager.getToken(context));
+        params.put("authorUsername", authorUsername);
+        params.put("postTitle", title);
+
+        return postsApi.addToFavorite(params);
+    }
+
+
+    public static Completable removeFromFavorite(String authorUsername, String postId, Context context) {
+        PostsApi postsApi = ApiManager.getRetrofit().create(PostsApi.class);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", postId);
+        params.put("token", MyPreferenceManager.getToken(context));
+        params.put("authorUsername", authorUsername);
+
+        return postsApi.removeFromFavorite(params);
+    }
 
 
     public static Observable<Post> getOtherUserPost(String postId, String authorUsername, Context context) {

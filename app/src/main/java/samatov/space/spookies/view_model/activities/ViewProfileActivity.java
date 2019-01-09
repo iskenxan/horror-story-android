@@ -40,7 +40,7 @@ public class ViewProfileActivity extends BaseActivity {
 
     private void getCurrentUser() {
         mUser = MyPreferenceManager
-                .getObject(this, MyPreferenceManager.USER_SEARCH_CLICKED_ITEM, User.class);
+                .getObject(this, MyPreferenceManager.CURRENTLY_VIEWING_USER, User.class);
     }
 
 
@@ -94,7 +94,7 @@ public class ViewProfileActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        MyPreferenceManager.delete(this, MyPreferenceManager.USER_SEARCH_CLICKED_ITEM);
+        MyPreferenceManager.delete(this, MyPreferenceManager.CURRENTLY_VIEWING_USER);
         finishAfterTransition();
     }
 }

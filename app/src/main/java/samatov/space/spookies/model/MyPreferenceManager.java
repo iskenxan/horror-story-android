@@ -17,11 +17,12 @@ public class MyPreferenceManager {
     public static String CURRENT_USER = "current_user";
     public static String SECURITY_TOKEN = "token";
     public static String USER_SEARCH_RESULT = "current_user_query_result";
-    public static String USER_SEARCH_CLICKED_ITEM = "user_searched_clicked_item";
+    public static String CURRENTLY_VIEWING_USER = "user_searched_clicked_item";
     public static String CURRENT_POST_ID = "current_post_id";
     public static String CURRENT_POST_TYPE = "current_post_type";
     public static String CURRENT_POST = "current_edit_post";
     public static String CURRENT_POST_AUTHOR = "current_post_author";
+    public static String CURRENT_CHAT_BUBBLE_COLOR = "current_bubble_color";
 
 
     private static List<SharedPreferences.OnSharedPreferenceChangeListener> mListeners = new ArrayList<>();
@@ -35,7 +36,7 @@ public class MyPreferenceManager {
     public static void cleanPreferencesOnLogout(Context context) {
         delete(context, SECURITY_TOKEN);
         delete(context, CURRENT_USER);
-        delete(context, USER_SEARCH_CLICKED_ITEM);
+        delete(context, CURRENTLY_VIEWING_USER);
         delete(context, CURRENT_POST_TYPE);
         delete(context, CURRENT_POST_ID);
     }

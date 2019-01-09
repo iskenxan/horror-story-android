@@ -295,7 +295,7 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
         if (!Validator.isNullOrEmpty(color)) {
             mPost.changeCharacterSettings("User", "color", color);
             updateColorImageView();
-            MyPreferenceManager.saveString(getContext(), "current_bubble_color", color);
+            MyPreferenceManager.saveString(getContext(), MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR , color);
         }
 
         if (!Validator.isNullOrEmpty(name)) {

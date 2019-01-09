@@ -21,7 +21,7 @@ public class MyOutcomingMessageViewHolder extends MessagesListAdapter.OutcomingM
     public MyOutcomingMessageViewHolder(View itemView) {
         super(itemView);
         mView = itemView;
-        String color = MyPreferenceManager.getString(mView.getContext(), "current_bubble_color");
+        String color = MyPreferenceManager.getString(mView.getContext(), MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR);
         setBubbleColor(Color.parseColor(color));
         setupSharedPreferenceListener();
     }
@@ -34,10 +34,10 @@ public class MyOutcomingMessageViewHolder extends MessagesListAdapter.OutcomingM
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (!key.equals("current_bubble_color"))
+        if (!key.equals(MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR))
             return;
 
-        String color = MyPreferenceManager.getString(mView.getContext(), "current_bubble_color");
+        String color = MyPreferenceManager.getString(mView.getContext(), MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR);
         setBubbleColor(Color.parseColor(color));
     }
 
@@ -46,7 +46,7 @@ public class MyOutcomingMessageViewHolder extends MessagesListAdapter.OutcomingM
     public void onBind(Message message) {
         super.onBind(message);
         if (!isSelected()) {
-            String color = MyPreferenceManager.getString(mView.getContext(), "current_bubble_color");
+            String color = MyPreferenceManager.getString(mView.getContext(), MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR);
             setBubbleColor(Color.parseColor(color));
         } else {
             int color = R.color.colorSecondary;

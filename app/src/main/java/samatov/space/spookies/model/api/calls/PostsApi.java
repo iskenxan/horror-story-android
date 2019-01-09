@@ -2,6 +2,7 @@ package samatov.space.spookies.model.api.calls;
 
 import java.util.HashMap;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -32,4 +33,10 @@ public interface PostsApi {
 
     @POST("posts/get")
     Observable<Post> getOtherUserPost(@Body HashMap<String, Object> params);
+
+    @POST("posts/add-favorite")
+    Completable addToFavorite(@Body HashMap<String, Object> params);
+
+    @POST("posts/remove-favorite")
+    Completable removeFromFavorite(@Body HashMap<String, Object> params);
 }

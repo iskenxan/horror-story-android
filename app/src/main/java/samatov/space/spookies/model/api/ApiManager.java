@@ -17,7 +17,7 @@ import samatov.space.spookies.model.api.beans.User;
 
 public class ApiManager {
 
-    private static String BASE_URL = "https://4ecd0086.ngrok.io";
+    private static String BASE_URL = "https://ee43f332.ngrok.io";
 
 
     public static Retrofit getRetrofit() {

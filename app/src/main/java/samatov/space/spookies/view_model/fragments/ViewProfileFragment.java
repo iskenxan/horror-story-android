@@ -68,7 +68,7 @@ public class ViewProfileFragment extends BaseFragment {
 
     private void getUser() {
         mUser = MyPreferenceManager.getObject(getContext(),
-                MyPreferenceManager.USER_SEARCH_CLICKED_ITEM, User.class);
+                MyPreferenceManager.CURRENTLY_VIEWING_USER, User.class);
     }
 
 

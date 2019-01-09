@@ -20,9 +20,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.reactivex.Completable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.post.Message;
 import samatov.space.spookies.view_model.activities.ReadPostActivity;
 import samatov.space.spookies.view_model.fragments.post.MyOutcomingMessageViewHolder;
@@ -72,13 +75,12 @@ public class ReadPostFragment extends Fragment {
 
 
     private void setupMessageList() throws Exception {
+        MyPreferenceManager.saveString(getContext(), MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR, mPost.getChatBubbleColor());
         MessagesListAdapter.HoldersConfig holdersConfig = new MessagesListAdapter.HoldersConfig();
         holdersConfig.setOutcoming(MyOutcomingMessageViewHolder.class, com.stfalcon.chatkit.R.layout.item_outcoming_text_message);
         mMessageListAdapter = new MessagesListAdapter<>("0", holdersConfig, null);
         mMessageList.setAdapter(mMessageListAdapter);
-        mMessageListAdapter.setOnMessageViewClickListener((a, b) -> {
-            checkAndAddNextMessage();
-        });
+        mMessageListAdapter.setOnMessageViewClickListener((a, b) -> checkAndAddNextMessage());
         mMessages = mPost.getSortedDialog();
     }
 
@@ -108,15 +110,89 @@ public class ReadPostFragment extends Fragment {
 
     private void setupDialogViewListeners(View view) {
         TextView backTextView = view.findViewById(R.id.readPostDialogBackTextView);
-        backTextView.setOnClickListener((v) -> {
+        backTextView.setOnClickListener(getOnBackClickedListener());
+        ShineButton favoriteButton = view.findViewById(R.id.readPostDialogFavoriteButton);
+        favoriteButton.init(mActivity);
+        if (inFavorites())
+            favoriteButton.setChecked(true);
+        favoriteButton.setOnClickListener(getOnFavoriteClickedListener());
+        ImageView commentImageView = view.findViewById(R.id.readPostDialogCommendImageView);
+    }
+
+
+    private View.OnClickListener getOnBackClickedListener() {
+        return (view) -> {
             MyPreferenceManager.delete(mActivity, MyPreferenceManager.CURRENT_POST);
             MyPreferenceManager.delete(mActivity, MyPreferenceManager.CURRENT_POST_ID);
             MyPreferenceManager.delete(mActivity, MyPreferenceManager.CURRENT_POST_AUTHOR);
             mActivity.finishAfterTransition();
-        });
-        ShineButton favoriteButton = view.findViewById(R.id.readPostDialogFavoriteButton);
-        favoriteButton.init(mActivity);
-        ImageView commentImageView = view.findViewById(R.id.readPostDialogCommendImageView);
+        };
+    }
+
+
+    private View.OnClickListener getOnFavoriteClickedListener() {
+        return (view) -> {
+            ShineButton favoriteButton = (ShineButton) view;
+            favoriteButton.setEnabled(false);
+            Completable completable = getCorrectFavoriteObservable();
+            mActivity.listenToCompletable(completable, (result, exception) -> {
+                onRequestResult(favoriteButton, exception);
+            });
+        };
+    }
+
+
+    private Completable getCorrectFavoriteObservable() {
+        User viewingUser = MyPreferenceManager
+                .getObject(getContext(), MyPreferenceManager.CURRENTLY_VIEWING_USER, User.class);
+        String viewingUsername = viewingUser.getUsername();
+        Completable observable =
+                Post.addToFavorite(viewingUsername, mPost.getId(),mPost.getTitle(), getContext());
+        if (inFavorites())
+            observable = Post.removeFromFavorite(viewingUsername, mPost.getId(), getContext());
+
+        return observable;
+    }
+
+
+    private void onRequestResult(ShineButton favoriteButton, Throwable exception) {
+        favoriteButton.setEnabled(true);
+        if (exception != null) {
+            favoriteButton.setChecked(!favoriteButton.isChecked());
+            onRequestError();
+            return;
+        }
+        if(!inFavorites())
+            addToFavorites();
+        else
+            removeFromFavorites();
+    }
+
+
+    private void onRequestError() {
+        String errorText = "Error processing your request. Please try again later";
+        SweetAlertDialog dialog = DialogFactory.getErrorDialog(mActivity, errorText, null);
+        dialog.show();
+    }
+
+
+    private boolean inFavorites() {
+        User user = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
+        return mPost.getFavorite().contains(user.getUsername());
+    }
+
+
+    private void addToFavorites() {
+        User user = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
+        mPost.getFavorite().add(user.getUsername());
+        MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST, mPost);
+    }
+
+
+    private void removeFromFavorites() {
+        User user = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
+        mPost.getFavorite().remove(user.getUsername());
+        MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST, mPost);
     }
 
 }

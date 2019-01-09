@@ -103,7 +103,7 @@ public class MyProfileActivity extends BaseActivity {
 
 
     private void startViewUserProfileActivity(User user) {
-        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.USER_SEARCH_CLICKED_ITEM, user);
+        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENTLY_VIEWING_USER, user);
         ActivityFactory.startActivity(mActivity,
                 ViewProfileActivity.class, true, false);
     }
