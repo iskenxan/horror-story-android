@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".view_model.fragments.post.comment.CommentFragment">
+    <TextView
+        android:id="@+id/commentFragmentCommentCountTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:text="5 comments"
+        android:textColor="@color/colorPrimaryLight"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/commentFragmentTopSeparator"
+        />
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/commentFragmentTopSeparator"
+        android:background="@color/colorBg"
+        app:layout_constraintTop_toBottomOf="@id/commentFragmentCommentCountTextView"/>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:id="@+id/commentFragmentRecyclerView"
+        app:layout_constraintTop_toBottomOf="@id/commentFragmentTopSeparator"
+        app:layout_constraintBottom_toTopOf="@id/commentFragmentMessageInput"/>
+    <com.stfalcon.chatkit.messages.MessageInput
+        android:id="@+id/commentFragmentMessageInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:inputMaxLines="3"
+        app:inputTextSize="14sp"
+        android:layout_alignParentBottom="true"
+        app:inputHint="Type your comment..."
+        app:layout_constraintTop_toBottomOf="@id/commentFragmentRecyclerView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+</android.support.constraint.ConstraintLayout>

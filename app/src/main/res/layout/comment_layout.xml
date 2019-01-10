@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_profile_placeholder"
+        android:id="@+id/commentItemImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="iskenxan"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:id="@+id/commentItemUsernameTextView"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintStart_toEndOf="@id/commentItemImageView"
+        app:layout_constraintTop_toTopOf="@id/commentItemImageView"
+        />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/commentItemTextTextView"
+        android:layout_marginTop="6dp"
+        android:textSize="12sp"
+        android:textColor="@color/colorPrimary"
+        android:text="Cool story! Keep it comming"
+        app:layout_constraintTop_toBottomOf="@id/commentItemUsernameTextView"
+        app:layout_constraintStart_toStartOf="@id/commentItemUsernameTextView"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/commentItemTimestampTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="58 minutes ago"
+        android:textColor="@color/colorSecondary"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@id/commentItemUsernameTextView"/>
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/colorBg"
+        app:layout_constraintStart_toStartOf="@id/commentItemUsernameTextView"
+        app:layout_constraintTop_toBottomOf="@id/commentItemTextTextView"/>
+</android.support.constraint.ConstraintLayout>

@@ -48,6 +48,7 @@ public class ReadPostFragment extends Fragment {
     @BindView(R.id.readPostMessageList) MessagesList mMessageList;
 
     ReadPostActivity mActivity;
+    DialogPlus mBottomDialog;
     Post mPost;
     MessagesListAdapter<Message> mMessageListAdapter;
     List<Message> mMessages;
@@ -99,11 +100,11 @@ public class ReadPostFragment extends Fragment {
           mMessageListAdapter.addToStart(mMessages.get(mMessageCounter), true);
           mMessageCounter ++;
       } else {
-          DialogPlus bottomDialog = DialogFactory.getDialogPlus
+          mBottomDialog = DialogFactory.getDialogPlus
                   (getContext(), false, R.layout.read_post_dialog, Gravity.BOTTOM);
-          View view = bottomDialog.getHolderView();
+          View view = mBottomDialog.getHolderView();
           setupDialogViewListeners(view);
-          bottomDialog.show();
+          mBottomDialog.show();
       }
     }
 
@@ -111,12 +112,15 @@ public class ReadPostFragment extends Fragment {
     private void setupDialogViewListeners(View view) {
         TextView backTextView = view.findViewById(R.id.readPostDialogBackTextView);
         backTextView.setOnClickListener(getOnBackClickedListener());
+
         ShineButton favoriteButton = view.findViewById(R.id.readPostDialogFavoriteButton);
         favoriteButton.init(mActivity);
         if (inFavorites())
             favoriteButton.setChecked(true);
         favoriteButton.setOnClickListener(getOnFavoriteClickedListener());
+
         ImageView commentImageView = view.findViewById(R.id.readPostDialogCommendImageView);
+        commentImageView.setOnClickListener(getOnCommentClickedListener());
     }
 
 
@@ -130,14 +134,21 @@ public class ReadPostFragment extends Fragment {
     }
 
 
+    private View.OnClickListener getOnCommentClickedListener() {
+        return (view) -> {
+            mBottomDialog.dismiss();
+            mActivity.startCommentFragment();
+        };
+    }
+
+
     private View.OnClickListener getOnFavoriteClickedListener() {
         return (view) -> {
             ShineButton favoriteButton = (ShineButton) view;
             favoriteButton.setEnabled(false);
             Completable completable = getCorrectFavoriteObservable();
-            mActivity.listenToCompletable(completable, (result, exception) -> {
-                onRequestResult(favoriteButton, exception);
-            });
+            mActivity.listenToCompletable(completable, (result, exception) ->
+                    onRequestResult(favoriteButton, exception));
         };
     }
 

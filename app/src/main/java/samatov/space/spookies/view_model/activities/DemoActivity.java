@@ -76,32 +76,36 @@ public class DemoActivity extends AppCompatActivity {
                 Observable<Map<String, User>> observable = SearchMiddleware.searchForUsers(s, activity);
                 observable.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Map<String, User>>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onNext(Map<String, User> users) {
-                                Cursor cursor = createCursorFromResult(users);
-                                adapter.swapCursor(cursor);
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-                        });
+                        .subscribe(getRequestObserver(adapter));
                 return true;
             }
         };
     }
 
+
+    private Observer getRequestObserver(CursorAdapter adapter) {
+       return new Observer<Map<String, User>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Map<String, User> users) {
+                Cursor cursor = createCursorFromResult(users);
+                adapter.swapCursor(cursor);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+    }
 
 
     private SearchView.OnSuggestionListener getOnSuggestionClickListener() {

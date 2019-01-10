@@ -12,6 +12,7 @@ import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.fragments.post.read_post.ReadPostFragment;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
@@ -70,12 +71,23 @@ public class ReadPostActivity extends BaseActivity {
 
 
     private void setupToolbar() {
-        TextView titleTextView = mToolbar.findViewById(R.id.readPostToolbarTitleTextView);
-        titleTextView.setText(mPost.getOtherCharacterName());
-
+        setToolbarTitle(mPost.getOtherCharacterName());
         setSupportActionBar(mToolbar);
         ActionBar bar = getSupportActionBar();
         bar.setDisplayShowHomeEnabled(false);
         bar.setDisplayShowTitleEnabled(false);
+    }
+
+
+    public void startCommentFragment() {
+        setToolbarTitle("Comments");
+        CommentFragment fragment = CommentFragment.newInstance(this);
+        stackFragment(fragment, R.id.readPostMainPlaceholder, "comment_fragment");
+    }
+
+
+    private void setToolbarTitle(String title) {
+        TextView titleTextView = mToolbar.findViewById(R.id.readPostToolbarTitleTextView);
+        titleTextView.setText(title);
     }
 }

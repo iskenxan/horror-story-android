@@ -20,8 +20,10 @@ public class Post extends PostsMiddleware {
     private JsonObject dialog = new JsonObject();
     private JsonObject characters = new JsonObject();
     private List<String> favorite = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
     private long created;
     private long lastUpdated;
+
 
     public Post() {
         characters.add("User", new JsonObject());
@@ -215,5 +217,13 @@ public class Post extends PostsMiddleware {
 
     public void setFavorite(List<String> favorite) {
         this.favorite = favorite;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }
