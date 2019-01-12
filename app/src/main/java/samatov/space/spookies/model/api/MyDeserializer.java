@@ -19,8 +19,8 @@ class MyDeserializer<T> implements JsonDeserializer<T>
 
         // Deserialize it. You use a new instance of Gson to avoid infinite recursion
         // to this deserializer
-        T user =  new Gson().fromJson(content, type);
+        T result =  new Gson().fromJson(content, type);
 
-        return user;
+        return result;
     }
 }

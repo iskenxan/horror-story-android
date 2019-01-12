@@ -18,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
+import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
 import samatov.space.spookies.view_model.fragments.BaseFragment;
@@ -88,12 +89,40 @@ public class PostsListFragment extends BaseFragment {
     private void setupRecyclerView(List<JsonObject> list) {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new PostsListAdapter(list, postId -> {
-            MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST_TYPE, mPostsType);
-            MyPreferenceManager.saveString(getContext(), MyPreferenceManager.CURRENT_POST_ID, postId);
-            mActivity.startEditPostActivity();
-        }, true);
+        mAdapter = new PostsListAdapter(list, getItemClickedListener(), true);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+
+    private PostListItemClicked getItemClickedListener() {
+        return (postId, clickedType) -> {
+            if (clickedType == ClickItemType.READ_POST)
+                onReadPostClicked(postId);
+            else if (clickedType == ClickItemType.FAVORITE)
+                onViewLikesClicked(postId);
+            else if (clickedType == ClickItemType.COMMENT)
+                onViewCommentsClicked(postId);
+        };
+    }
+
+
+    private void onReadPostClicked(String postId) {
+        MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST_TYPE, mPostsType);
+        MyPreferenceManager.saveString(getContext(), MyPreferenceManager.CURRENT_POST_ID, postId);
+        mActivity.startEditPostActivity();
+    }
+
+
+    private void onViewLikesClicked(String postId) {
+        //TODO: implement method
+    }
+
+
+    private void onViewCommentsClicked(String postId) {
+       JsonObject postObj = mPosts.getAsJsonObject(postId);
+       Post post = new Gson().fromJson(postObj, Post.class);
+       post.setId(postId);
+       mActivity.startViewCommentFragment(post);
     }
 
 

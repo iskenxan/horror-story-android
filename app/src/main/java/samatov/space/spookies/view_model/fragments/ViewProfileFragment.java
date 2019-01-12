@@ -24,8 +24,11 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
+import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.view_model.activities.ViewProfileActivity;
+import samatov.space.spookies.view_model.fragments.posts_viewpager.ClickItemType;
+import samatov.space.spookies.view_model.fragments.posts_viewpager.PostListItemClicked;
 import samatov.space.spookies.view_model.fragments.posts_viewpager.PostsListAdapter;
 
 
@@ -75,6 +78,7 @@ public class ViewProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        mActivity.showToolbar();
         setupViews();
     }
 
@@ -103,9 +107,24 @@ public class ViewProfileFragment extends BaseFragment {
         List<JsonObject> formattedPostsList = getFormattedPostList(postsJson);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new PostsListAdapter(formattedPostsList, postId ->
-                mActivity.startReadPostActivity(postId), false);
+        mAdapter = new PostsListAdapter(formattedPostsList, getOnItemClicked(), false);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+
+    private PostListItemClicked getOnItemClicked() {
+        return (postId, clickType) -> {
+            if (clickType == ClickItemType.READ_POST)
+                mActivity.startReadPostActivity(postId);
+            else if (clickType == ClickItemType.COMMENT) {
+                JsonObject postObj = mUser.getPublishedRefs().get(postId);
+                Post post = new Gson().fromJson(postObj, Post.class);
+                post.setId(postId);
+                mActivity.startReadCommentFragment(post, mUser.getUsername());
+            } else if (clickType == ClickItemType.FAVORITE) {
+                // TODO: implement
+            }
+        };
     }
 
 
@@ -185,4 +204,7 @@ public class ViewProfileFragment extends BaseFragment {
         users.put(mUser.getUsername(), mUser);
         MyPreferenceManager.saveObjectAsJson(getContext(), resultKey, users);
     }
+
+
+
 }

@@ -2,45 +2,84 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="20dp"
-    android:background="@drawable/my_profile_posts_list_item_bg">
-    <TextView
-        android:id="@+id/myProfilePostsListItemTextView"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/myProfilePostListItemTopContainer"
+        android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:text="Once upon a time"
-        android:textSize="15sp"
-        android:gravity="left"
-        app:layout_constraintVertical_chainStyle="spread_inside"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/myProfilePostsListItemViewButton"
-        />
-    <Button
-        android:id="@+id/myProfilePostsListItemViewButton"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:background="@drawable/primary_btn_bg"
-        android:textColor="@android:color/white"
-        android:text="View"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/myProfilePostsListItemTextView"
-        />
+        android:layout_height="90dp"
+        android:background="@drawable/my_profile_posts_list_item_bg"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/myProfilePostsListItemTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:text="Once upon a time"
+            android:textSize="15sp"
+            android:gravity="left"
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/myProfilePostsListItemViewButton"
+            />
+        <Button
+            android:id="@+id/myProfilePostsListItemViewButton"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@drawable/primary_btn_bg"
+            android:textColor="@android:color/white"
+            android:text="View"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/myProfilePostsListItemTextView"
+            />
+        <TextView
+            android:id="@+id/myProfilePostsListTimeTextView"
+            android:layout_width="wrap_content"
+            android:text="Edited: a moment ago"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/myProfilePostsListItemViewButton"
+            android:layout_height="wrap_content" />
+    </android.support.constraint.ConstraintLayout>
     <TextView
-        android:id="@+id/myProfilePostsListTimeTextView"
         android:layout_width="wrap_content"
-        android:text="Edited: a moment ago"
-        android:gravity="center"
-        android:textSize="10sp"
-        android:textColor="@color/colorPrimary"
+        android:layout_height="wrap_content"
+        android:id="@+id/MyProfileListItemLikesTextView"
+        app:layout_constraintTop_toBottomOf="@id/myProfilePostListItemTopContainer"
+        app:layout_constraintEnd_toStartOf="@id/MyProfileListItemLikesImageView"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:text="2"/>
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:padding="2dp"
+        android:src="@drawable/favorite_icon_grey"
+        android:id="@+id/MyProfileListItemLikesImageView"
+        app:layout_constraintBottom_toBottomOf="@id/MyProfileListItemLikesTextView"
+        android:layout_marginRight="25dp"
+        app:layout_constraintEnd_toStartOf="@id/MyProfileListItemCommentImageView"/>
+    <ImageView
+        android:id="@+id/MyProfileListItemCommentImageView"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:padding="2dp"
+        android:src="@drawable/comment_icon_grey"
+        android:layout_marginLeft="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/MyProfileListItemLikesImageView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/myProfilePostsListItemViewButton"
-        android:layout_height="wrap_content" />
-
+        android:layout_marginRight="10dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorBg"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/MyProfileListItemLikesTextView"/>
 </android.support.constraint.ConstraintLayout>

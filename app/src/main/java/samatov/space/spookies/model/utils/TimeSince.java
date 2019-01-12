@@ -18,7 +18,7 @@ public class TimeSince {
 
         long now = new Date().getTime();
         if (time > now || time <= 0) {
-            return null;
+            return "just now";
         }
 
         // TODO: localize

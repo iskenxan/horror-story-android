@@ -8,10 +8,24 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.ApiManager;
+import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.calls.PostsApi;
 
 public class PostsMiddleware {
+
+
+    public static Observable<Comment> addComment(String authorUsername, String postId, Comment comment, Context context) {
+        PostsApi postsApi = ApiManager.getRetrofit().create(PostsApi.class);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", postId);
+        params.put("token", MyPreferenceManager.getToken(context));
+        params.put("authorUsername", authorUsername);
+        params.put("comment", comment);
+
+        return postsApi.addComment(params);
+    }
 
 
     public static Completable addToFavorite(String authorUsername, String postId, String title, Context context) {

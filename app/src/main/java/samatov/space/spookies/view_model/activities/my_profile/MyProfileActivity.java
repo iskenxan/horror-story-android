@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.View;
 
 import java.io.File;
 import java.util.List;
@@ -26,12 +27,14 @@ import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
+import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.activities.BaseActivity;
 import samatov.space.spookies.view_model.activities.EditPostActivity;
 import samatov.space.spookies.view_model.activities.ViewProfileActivity;
 import samatov.space.spookies.view_model.fragments.my_profile.MyProfileFragment;
+import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
@@ -58,6 +61,22 @@ public class MyProfileActivity extends BaseActivity {
 
     public void startEditPostActivity() {
         ActivityFactory.startActivity(this, EditPostActivity.class, true, false);
+    }
+
+
+    public void showToolbar() {
+        mToolbar.setVisibility(View.VISIBLE);
+    }
+
+
+    public void startViewCommentFragment(Post post) {
+        mToolbar.setVisibility(View.GONE);
+        User currentUser = MyPreferenceManager
+                .getObject(this, MyPreferenceManager.CURRENT_USER, User.class);
+        MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, post);
+        MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, currentUser.getUsername());
+        CommentFragment fragment = CommentFragment.newInstance(this, true);
+        stackFragment(fragment, R.id.myProfilePlaceholder, "comment_fragment");
     }
 
 

@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.List;
 
 import samatov.space.spookies.R;
+import samatov.space.spookies.model.api.beans.Post;
 
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListItemViewholder> {
 
@@ -38,14 +40,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListItemViewhold
 
     @Override
     public void onBindViewHolder(@NonNull PostsListItemViewholder postsListItemViewholder, int position) {
-        JsonObject post = mPosts.get(position);
-        String title = post.getAsJsonPrimitive("title").getAsString();
-        String id = post.getAsJsonPrimitive("id").getAsString();
+        JsonObject postJson = mPosts.get(position);
+//        String title = post.getAsJsonPrimitive("title").getAsString();
+//        String id = post.getAsJsonPrimitive("id").getAsString();
+//
+//        long lastUpdated = mDisplayTimestamp ?
+//                post.getAsJsonPrimitive("lastUpdated").getAsLong() : -1;
 
-        long lastUpdated = mDisplayTimestamp ?
-                post.getAsJsonPrimitive("lastUpdated").getAsLong() : -1;
+        Post post = new Gson().fromJson(postJson, Post.class);
 
-        postsListItemViewholder.bind(title, mListener, id, lastUpdated);
+
+        postsListItemViewholder.bind(post, mListener, mDisplayTimestamp);
     }
 
 

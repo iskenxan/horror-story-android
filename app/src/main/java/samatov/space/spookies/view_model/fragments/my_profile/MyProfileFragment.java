@@ -88,6 +88,7 @@ public class MyProfileFragment extends BaseFragment implements GalleryImagePicke
         mActivity.startEditPostActivity();
     }
 
+
     private void setupViewPager() {
         mViewPagerAdapter = new PostsViewPagerAdapter(getChildFragmentManager(), mUser);
         mPostsViewPager.setAdapter(mViewPagerAdapter);
@@ -109,9 +110,11 @@ public class MyProfileFragment extends BaseFragment implements GalleryImagePicke
                 .into(mProfileImageView);
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
+        mActivity.showToolbar();
         mUser = MyPreferenceManager.getObject(getActivity(), MyPreferenceManager.CURRENT_USER, User.class);
         setupFollowersViews(mUser, mFollowersTextView, mFollowingTextView, mPostsTextView);
         mViewPagerAdapter.setUser(mUser);

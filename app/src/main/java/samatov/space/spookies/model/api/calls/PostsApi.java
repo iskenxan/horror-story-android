@@ -6,6 +6,7 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
 
 public interface PostsApi {
@@ -39,4 +40,7 @@ public interface PostsApi {
 
     @POST("posts/remove-favorite")
     Completable removeFromFavorite(@Body HashMap<String, Object> params);
+
+    @POST("posts/add-comment")
+    Observable<Comment> addComment(@Body HashMap<String, Object> params);
 }

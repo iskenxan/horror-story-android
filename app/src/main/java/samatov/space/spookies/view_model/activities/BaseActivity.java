@@ -13,6 +13,7 @@ import com.nightonke.boommenu.BoomMenuButton;
 
 import java.util.concurrent.TimeUnit;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
@@ -21,10 +22,42 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import samatov.space.spookies.R;
+import samatov.space.spookies.model.MyPreferenceManager;
+import samatov.space.spookies.model.api.beans.Comment;
+import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.utils.BmbMenuFactory;
+import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+
+    public void addComment(String authorUsername, String postId, Comment comment, ApiRequestListener listener) {
+        SweetAlertDialog loadingDialog =
+                DialogFactory.getLoadingDialog(this, "Posting your comment...");
+        loadingDialog.show();
+        Observable<Comment> observable = Post.addComment(authorUsername, postId, comment, this);
+        listenToObservable(observable, (result, exception) -> {
+            loadingDialog.dismiss();
+            onAddCommentResult(result, exception);
+            listener.onRequestComplete(result, exception);
+        });
+    }
+
+
+    private void onAddCommentResult(Object result, Throwable exception) {
+        if (exception != null) {
+            SweetAlertDialog dialog = DialogFactory.getErrorDialog(this,
+                    "Error completing your request. Please try again later", null);
+            dialog.show();
+        } else {
+            Post currentPost = MyPreferenceManager.getObject(this,
+                    MyPreferenceManager.CURRENT_POST, Post.class);
+            currentPost.getComments().add((Comment) result);
+            MyPreferenceManager
+                    .saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, currentPost);
+        }
+    }
 
 
     protected void stackFragment(Fragment fragment, int placeholder, String tag) {
@@ -120,10 +153,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void handleBackPressed() {
+    protected boolean handleBackPressed() {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
+            return true;
         }
+        return false;
     }
 }

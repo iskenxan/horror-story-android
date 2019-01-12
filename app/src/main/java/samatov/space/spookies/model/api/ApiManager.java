@@ -12,12 +12,13 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import samatov.space.spookies.model.api.beans.Auth;
+import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
 
 public class ApiManager {
 
-    private static String BASE_URL = "https://3ddea295.ngrok.io";
+    private static String BASE_URL = "https://29336232.ngrok.io";
 
 
     public static Retrofit getRetrofit() {
@@ -43,6 +44,7 @@ public class ApiManager {
                         .registerTypeAdapter(Post.class, new MyDeserializer<Post>())
                         .registerTypeAdapter(List.class, new MyDeserializer<List>())
                         .registerTypeAdapter(Map.class, new MyDeserializer<Map>())
+                        .registerTypeAdapter(Comment.class, new MyDeserializer<Comment>())
                         .create();
     }
 }

@@ -3,6 +3,7 @@ package samatov.space.spookies.view_model.activities;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -79,9 +80,14 @@ public class ReadPostActivity extends BaseActivity {
     }
 
 
+    public void showToolbar() {
+        mToolbar.setVisibility(View.VISIBLE);
+    }
+
+
     public void startCommentFragment() {
-        setToolbarTitle("Comments");
-        CommentFragment fragment = CommentFragment.newInstance(this);
+        mToolbar.setVisibility(View.GONE);
+        CommentFragment fragment = CommentFragment.newInstance(this, false);
         stackFragment(fragment, R.id.readPostMainPlaceholder, "comment_fragment");
     }
 
