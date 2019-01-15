@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
 import samatov.space.spookies.view_model.fragments.BaseFragment;
+import samatov.space.spookies.view_model.dialogs.favorite.FavoriteDialogHandler;
 
 
 public class PostsListFragment extends BaseFragment {
@@ -33,7 +35,7 @@ public class PostsListFragment extends BaseFragment {
     public static PostsListFragment newInstance(Map<String, JsonObject> posts, POST_TYPE type) {
         PostsListFragment fragment = new PostsListFragment();
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonStr = gson.toJson(posts);
         Bundle bundle = new Bundle();
         bundle.putString("posts", jsonStr);
@@ -70,7 +72,7 @@ public class PostsListFragment extends BaseFragment {
         String postsStr = getArguments().getString("posts");
         String postType = getArguments().getString("post_type");
         if (postsStr != null)
-            mPosts = new Gson().fromJson(postsStr, JsonObject.class);
+            mPosts = new GsonBuilder().serializeNulls().create().fromJson(postsStr, JsonObject.class);
         if (postType != null)
             mPostsType = POST_TYPE.valueOf(postType);
     }
@@ -89,7 +91,7 @@ public class PostsListFragment extends BaseFragment {
     private void setupRecyclerView(List<JsonObject> list) {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new PostsListAdapter(list, getItemClickedListener(), true);
+        mAdapter = new PostsListAdapter(list, getItemClickedListener(), true, mPostsType);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -114,15 +116,24 @@ public class PostsListFragment extends BaseFragment {
 
 
     private void onViewLikesClicked(String postId) {
-        //TODO: implement method
+        Post post = getPost(postId);
+        FavoriteDialogHandler dialogHandler = new FavoriteDialogHandler(mActivity, post.getFavorite());
+        dialogHandler.showDialog();
     }
 
 
     private void onViewCommentsClicked(String postId) {
-       JsonObject postObj = mPosts.getAsJsonObject(postId);
-       Post post = new Gson().fromJson(postObj, Post.class);
-       post.setId(postId);
+       Post post = getPost(postId);
        mActivity.startViewCommentFragment(post);
+    }
+
+
+    private Post getPost(String postId) {
+        JsonObject postObj = mPosts.getAsJsonObject(postId);
+        Post post = new GsonBuilder().serializeNulls().create().fromJson(postObj, Post.class);
+        post.setId(postId);
+
+        return post;
     }
 
 

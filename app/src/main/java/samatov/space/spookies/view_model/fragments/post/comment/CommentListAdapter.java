@@ -15,10 +15,12 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListItemView
 
     List<Comment> mComments;
 
-    public CommentListAdapter(List<Comment> comments) {
-        mComments = comments;
-    }
+    CommentClickedListener mListener;
 
+    public CommentListAdapter(List<Comment> comments, CommentClickedListener listener) {
+        mComments = comments;
+        mListener = listener;
+    }
 
 
     @NonNull
@@ -34,7 +36,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListItemView
     @Override
     public void onBindViewHolder(@NonNull CommentListItemViewholder commentListItemViewholder, int position) {
         Comment comment = mComments.get(position);
-        commentListItemViewholder.bind(comment);
+        commentListItemViewholder.bind(comment, mListener);
     }
 
 

@@ -21,7 +21,6 @@ public class TimeSince {
             return "just now";
         }
 
-        // TODO: localize
         final long diff = now - time;
         if (diff < MINUTE_MILLIS) {
             return "just now";

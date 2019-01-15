@@ -1,7 +1,6 @@
 package samatov.space.spookies.view_model.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -17,7 +16,7 @@ import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.fragments.post.read_post.ReadPostFragment;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
-public class ReadPostActivity extends BaseActivity {
+public class ReadPostActivity extends BaseToolbarActivity {
 
     Post mPost;
     SweetAlertDialog mDialog;
@@ -30,6 +29,7 @@ public class ReadPostActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_post);
         ButterKnife.bind(this);
+        super.mToolbar = mToolbar;
         mActivity = this;
         getPost();
     }
@@ -65,23 +65,10 @@ public class ReadPostActivity extends BaseActivity {
 
 
     private void onPostLoadSuccess() {
+        setToolbarTitle(mPost.getOtherCharacterName());
         setupToolbar();
         MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, mPost);
         replaceFragment(ReadPostFragment.newInstance(), R.id.readPostMainPlaceholder);
-    }
-
-
-    private void setupToolbar() {
-        setToolbarTitle(mPost.getOtherCharacterName());
-        setSupportActionBar(mToolbar);
-        ActionBar bar = getSupportActionBar();
-        bar.setDisplayShowHomeEnabled(false);
-        bar.setDisplayShowTitleEnabled(false);
-    }
-
-
-    public void showToolbar() {
-        mToolbar.setVisibility(View.VISIBLE);
     }
 
 

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.sackcentury.shinebuttonlib.ShineButton;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -155,12 +156,12 @@ public class ReadPostFragment extends Fragment {
 
     private Completable getCorrectFavoriteObservable() {
         User viewingUser = MyPreferenceManager
-                .getObject(getContext(), MyPreferenceManager.CURRENTLY_VIEWING_USER, User.class);
-        String viewingUsername = viewingUser.getUsername();
+                .getObject(getContext(), MyPreferenceManager.VIEWED_USER, User.class);
+        String authorUsername = viewingUser.getUsername();
         Completable observable =
-                Post.addToFavorite(viewingUsername, mPost.getId(),mPost.getTitle(), getContext());
+                Post.addToFavorite(authorUsername, mPost.getId(), mPost.getTitle(), getContext());
         if (inFavorites())
-            observable = Post.removeFromFavorite(viewingUsername, mPost.getId(), getContext());
+            observable = Post.removeFromFavorite(authorUsername, mPost.getId(), getContext());
 
         return observable;
     }
@@ -189,21 +190,39 @@ public class ReadPostFragment extends Fragment {
 
     private boolean inFavorites() {
         User user = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
-        return mPost.getFavorite().contains(user.getUsername());
+        return mPost.getFavorite().has(user.getUsername());
     }
 
 
     private void addToFavorites() {
-        User user = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
-        mPost.getFavorite().add(user.getUsername());
+        User currentUser = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
+        User viewedUser = MyPreferenceManager
+                .getObject(getContext(), MyPreferenceManager.VIEWED_USER, User.class);
+
+        JsonObject favoriteItem = new JsonObject();
+        favoriteItem.addProperty("profileImgUrl", currentUser.getProfileUrl());
+        mPost.getFavorite().add(currentUser.getUsername(), favoriteItem);
+
+        JsonObject postRef = viewedUser.getPublishedRefs().get(mPost.getId());
+        if (postRef.has("favorite")) {
+            postRef.getAsJsonObject("favorite").add(currentUser.getUsername(), favoriteItem);
+        }
+
         MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST, mPost);
+        MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.VIEWED_USER, viewedUser);
     }
 
 
     private void removeFromFavorites() {
-        User user = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
-        mPost.getFavorite().remove(user.getUsername());
+        User currentUser = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
+        User viewedUser = MyPreferenceManager
+                .getObject(getContext(), MyPreferenceManager.VIEWED_USER, User.class);
+
+        mPost.getFavorite().remove(currentUser.getUsername());
+        viewedUser.getPublishedRefs().get(mPost.getId()).getAsJsonObject("favorite").remove(currentUser.getUsername());
+
         MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST, mPost);
+        MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.VIEWED_USER, viewedUser);
     }
 
 }

@@ -67,4 +67,6 @@ dependencies {
     implementation 'com.orhanobut:dialogplus:1.11@aar'
 
     implementation 'com.sackcentury:shinebutton:0.2.0'
+
+    implementation 'com.github.javiersantos:BottomDialogs:1.2.1'
 }

@@ -17,6 +17,10 @@ public interface ProfileApi {
     Observable<User> getUserInfo(@Body HashMap<String, Object> params);
 
 
+    @POST("user/profile/other")
+    Observable<User> getOtherUserInfo(@Body HashMap<String, Object> params);
+
+
     @POST("user/profile/follow")
     Observable<User> follow(@Body HashMap<String, Object> params);
 

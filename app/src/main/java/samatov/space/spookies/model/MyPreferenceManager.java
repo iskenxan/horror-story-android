@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class MyPreferenceManager {
     public static String CURRENT_USER = "current_user";
     public static String SECURITY_TOKEN = "token";
     public static String USER_SEARCH_RESULT = "current_user_query_result";
-    public static String CURRENTLY_VIEWING_USER = "user_searched_clicked_item";
+    public static String VIEWED_USER = "user_searched_clicked_item";
     public static String CURRENT_POST_ID = "current_post_id";
     public static String CURRENT_POST_TYPE = "current_post_type";
     public static String CURRENT_POST = "current_edit_post";
@@ -36,7 +37,7 @@ public class MyPreferenceManager {
     public static void cleanPreferencesOnLogout(Context context) {
         delete(context, SECURITY_TOKEN);
         delete(context, CURRENT_USER);
-        delete(context, CURRENTLY_VIEWING_USER);
+        delete(context, VIEWED_USER);
         delete(context, CURRENT_POST_TYPE);
         delete(context, CURRENT_POST_ID);
     }
@@ -72,7 +73,7 @@ public class MyPreferenceManager {
 
     public static void saveObjectAsJson(Context context, String key, Object value) {
         SharedPreferences preferences = getPreference(context);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonStr = gson.toJson(value);
         preferences.edit().putString(key, jsonStr).commit();
     }

@@ -13,12 +13,12 @@ import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
-import samatov.space.spookies.view_model.fragments.ViewProfileFragment;
+import samatov.space.spookies.view_model.fragments.view_profile.ViewProfileFragment;
 import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
-public class ViewProfileActivity extends BaseActivity {
+public class ViewProfileActivity extends BaseToolbarActivity {
 
 
     @BindView(R.id.viewProfileToolbar) Toolbar mToolbar;
@@ -35,6 +35,8 @@ public class ViewProfileActivity extends BaseActivity {
         ButterKnife.bind(this);
         mActivity = this;
 
+        super.mToolbar = this.mToolbar;
+
         setupMainActionbar(mToolbar, "View profile");
         getCurrentUser();
         replaceFragment(ViewProfileFragment.newInstance(), R.id.viewProfileMainPlaceholder);
@@ -43,7 +45,7 @@ public class ViewProfileActivity extends BaseActivity {
 
     private void getCurrentUser() {
         mUser = MyPreferenceManager
-                .getObject(this, MyPreferenceManager.CURRENTLY_VIEWING_USER, User.class);
+                .getObject(this, MyPreferenceManager.VIEWED_USER, User.class);
     }
 
 
@@ -51,11 +53,6 @@ public class ViewProfileActivity extends BaseActivity {
         MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, mUser.getUsername());
         MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_ID, postId);
         ActivityFactory.startActivity(this, ReadPostActivity.class, true, false);
-    }
-
-
-    public void showToolbar() {
-        mToolbar.setVisibility(View.VISIBLE);
     }
 
 
@@ -111,7 +108,7 @@ public class ViewProfileActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (!handleBackPressed()) {
-            MyPreferenceManager.delete(this, MyPreferenceManager.CURRENTLY_VIEWING_USER);
+            MyPreferenceManager.delete(this, MyPreferenceManager.VIEWED_USER);
             finishAfterTransition();
         }
     }

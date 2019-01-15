@@ -25,11 +25,36 @@ import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
+import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.BmbMenuFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+
+    public void getUserAndStartViewProfileActivity(String username, boolean finishCurrent) {
+        BaseActivity activity = this;
+        SweetAlertDialog loadingDialog =
+                DialogFactory.getLoadingDialog(this, "Loading...");
+        loadingDialog.show();
+        Observable<User> observable = User.getOtherUserInfo(username, this);
+        listenToObservable(observable, (result, exception) -> {
+            loadingDialog.dismiss();
+            if (exception != null) {
+                SweetAlertDialog dialog = DialogFactory.getErrorDialog(this,
+                        "Error completing your request. Please try again later", null);
+                dialog.show();
+                return;
+            }
+
+            User viewedUser = (User) result;
+            MyPreferenceManager.saveObjectAsJson(activity, MyPreferenceManager.VIEWED_USER, viewedUser);
+            ActivityFactory
+                    .startActivity(activity, ViewProfileActivity.class, true, finishCurrent);
+        });
+    }
 
 
     public void addComment(String authorUsername, String postId, Comment comment, ApiRequestListener listener) {
@@ -124,8 +149,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
 
 
     protected Observer<Object> requestObserver(ApiRequestListener listener) {

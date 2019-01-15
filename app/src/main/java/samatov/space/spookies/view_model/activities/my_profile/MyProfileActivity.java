@@ -30,7 +30,7 @@ import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
-import samatov.space.spookies.view_model.activities.BaseActivity;
+import samatov.space.spookies.view_model.activities.BaseToolbarActivity;
 import samatov.space.spookies.view_model.activities.EditPostActivity;
 import samatov.space.spookies.view_model.activities.ViewProfileActivity;
 import samatov.space.spookies.view_model.fragments.my_profile.MyProfileFragment;
@@ -38,7 +38,7 @@ import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
-public class MyProfileActivity extends BaseActivity {
+public class MyProfileActivity extends BaseToolbarActivity {
 
     @BindView(R.id.myProfileToolbar) Toolbar mToolbar;
     AppCompatActivity mActivity;
@@ -51,21 +51,16 @@ public class MyProfileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
         ButterKnife.bind(this);
+        mActivity = this;
+        super.mToolbar = this.mToolbar;
         setupMainActionbar(mToolbar, "My profile");
         myProfileFragment = MyProfileFragment.newInstance();
         replaceFragment(myProfileFragment, R.id.myProfilePlaceholder);
-
-        mActivity = this;
     }
 
 
     public void startEditPostActivity() {
         ActivityFactory.startActivity(this, EditPostActivity.class, true, false);
-    }
-
-
-    public void showToolbar() {
-        mToolbar.setVisibility(View.VISIBLE);
     }
 
 
@@ -122,7 +117,7 @@ public class MyProfileActivity extends BaseActivity {
 
 
     private void startViewUserProfileActivity(User user) {
-        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENTLY_VIEWING_USER, user);
+        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.VIEWED_USER, user);
         ActivityFactory.startActivity(mActivity,
                 ViewProfileActivity.class, true, false);
     }
@@ -196,6 +191,4 @@ public class MyProfileActivity extends BaseActivity {
     public void onBackPressed() {
         handleBackPressed();
     }
-
-
 }

@@ -19,7 +19,7 @@ public class Post extends PostsMiddleware {
     private int dialogCount = 0;
     private JsonObject dialog = new JsonObject();
     private JsonObject characters = new JsonObject();
-    private List<String> favorite = new ArrayList<>();
+    private JsonObject favorite = new JsonObject();
     private List<Comment> comments = new ArrayList<>();
     private long created;
     private long lastUpdated;
@@ -211,11 +211,11 @@ public class Post extends PostsMiddleware {
         this.lastUpdated = lastUpdated;
     }
 
-    public List<String> getFavorite() {
+    public JsonObject getFavorite() {
         return favorite;
     }
 
-    public void setFavorite(List<String> favorite) {
+    public void setFavorite(JsonObject favorite) {
         this.favorite = favorite;
     }
 

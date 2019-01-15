@@ -1,4 +1,4 @@
-package samatov.space.spookies.view_model.fragments;
+package samatov.space.spookies.view_model.fragments.view_profile;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -26,7 +27,11 @@ import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
+import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.view_model.activities.ViewProfileActivity;
+import samatov.space.spookies.view_model.dialogs.user_list.UserListDialogHandler;
+import samatov.space.spookies.view_model.fragments.BaseFragment;
+import samatov.space.spookies.view_model.dialogs.favorite.FavoriteDialogHandler;
 import samatov.space.spookies.view_model.fragments.posts_viewpager.ClickItemType;
 import samatov.space.spookies.view_model.fragments.posts_viewpager.PostListItemClicked;
 import samatov.space.spookies.view_model.fragments.posts_viewpager.PostsListAdapter;
@@ -60,8 +65,7 @@ public class ViewProfileFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_profile, container, false);
-        ButterKnife.bind(this, view);
-        getUser();
+        ButterKnife.bind(this, view);;
         mActivity = (ViewProfileActivity) getActivity();
 
 
@@ -69,17 +73,20 @@ public class ViewProfileFragment extends BaseFragment {
     }
 
 
-    private void getUser() {
-        mUser = MyPreferenceManager.getObject(getContext(),
-                MyPreferenceManager.CURRENTLY_VIEWING_USER, User.class);
-    }
-
-
     @Override
     public void onResume() {
         super.onResume();
+        getUser();
         mActivity.showToolbar();
         setupViews();
+    }
+
+
+    private void getUser() {
+        User user = MyPreferenceManager.getObject(getContext(),
+                MyPreferenceManager.VIEWED_USER, User.class);
+        if (user != null)
+            mUser = user;
     }
 
 
@@ -100,31 +107,47 @@ public class ViewProfileFragment extends BaseFragment {
             return;
         }
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String postsStr = gson.toJson(posts);
 
         JsonObject postsJson = gson.fromJson(postsStr, JsonObject.class);
         List<JsonObject> formattedPostsList = getFormattedPostList(postsJson);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new PostsListAdapter(formattedPostsList, getOnItemClicked(), false);
+        mAdapter = new PostsListAdapter(formattedPostsList, getOnItemClicked(),
+                false, POST_TYPE.PUBLISHED);
         mRecyclerView.setAdapter(mAdapter);
     }
 
 
     private PostListItemClicked getOnItemClicked() {
         return (postId, clickType) -> {
+            JsonObject postObj = mUser.getPublishedRefs().get(postId);
+            Post post = new Gson().fromJson(postObj, Post.class);
+            post.setId(postId);
             if (clickType == ClickItemType.READ_POST)
                 mActivity.startReadPostActivity(postId);
             else if (clickType == ClickItemType.COMMENT) {
-                JsonObject postObj = mUser.getPublishedRefs().get(postId);
-                Post post = new Gson().fromJson(postObj, Post.class);
-                post.setId(postId);
                 mActivity.startReadCommentFragment(post, mUser.getUsername());
             } else if (clickType == ClickItemType.FAVORITE) {
-                // TODO: implement
+                FavoriteDialogHandler handler = new FavoriteDialogHandler(mActivity, post.getFavorite());
+                handler.showDialog();
             }
         };
+    }
+
+
+    @OnClick(R.id.viewProfileFollowersTextView)
+    public void onFollowersTextViewClicked() {
+        UserListDialogHandler handler = new UserListDialogHandler(mActivity, mUser.getFollowers(), "Followers");
+        handler.showDialog();
+    }
+
+
+    @OnClick(R.id.viewProfileFollowingTextView)
+    public void onFollowingTextViewClicked() {
+        UserListDialogHandler handler = new UserListDialogHandler(mActivity, mUser.getFollowing(), "Following");
+        handler.showDialog();
     }
 
 
@@ -204,7 +227,4 @@ public class ViewProfileFragment extends BaseFragment {
         users.put(mUser.getUsername(), mUser);
         MyPreferenceManager.saveObjectAsJson(getContext(), resultKey, users);
     }
-
-
-
 }

@@ -22,9 +22,7 @@ import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
-import samatov.space.spookies.view_model.activities.BaseActivity;
-import samatov.space.spookies.view_model.activities.ReadPostActivity;
-import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
+import samatov.space.spookies.view_model.activities.BaseToolbarActivity;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 
@@ -55,7 +53,7 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
     @BindView(R.id.commentFragmentRecyclerView)RecyclerView mRecyclerView;
 
     Post mPost;
-    BaseActivity mActivity;
+    BaseToolbarActivity mActivity;
     CommentListAdapter mAdapter;
     SweetAlertDialog mDialog;
 
@@ -64,7 +62,7 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comment, container, false);
         ButterKnife.bind(this, view);
-        mActivity = (BaseActivity) getActivity();
+        mActivity = (BaseToolbarActivity) getActivity();
         getPost();
 
         return view;
@@ -87,7 +85,8 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
     private void fetchPost() {
         mDialog = DialogFactory.getLoadingDialog(mActivity, "Loading comments...");
         mDialog.show();
-        String postAuthor = MyPreferenceManager.getString(getContext(), MyPreferenceManager.CURRENT_POST_AUTHOR);
+        String postAuthor =
+                MyPreferenceManager.getString(getContext(), MyPreferenceManager.CURRENT_POST_AUTHOR);
         Observable<Post> observable = Post.getOtherUserPost(mPost.getId(), postAuthor, getContext());
         mActivity.listenToObservable(observable, (result, exception) -> {
             mDialog.dismiss();
@@ -121,8 +120,13 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
     private void setupRecyclerView() {
         RecyclerView.LayoutManager layoutManager  = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new CommentListAdapter(mPost.getComments());
+        mAdapter = new CommentListAdapter(mPost.getComments(), getCommentClickedListener());
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+
+    private CommentClickedListener getCommentClickedListener() {
+        return (username) -> mActivity.getUserAndStartViewProfileActivity(username, true);
     }
 
 
@@ -158,12 +162,6 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mActivity instanceof ReadPostActivity) {
-            ReadPostActivity activity = (ReadPostActivity) mActivity;
-            activity.showToolbar();
-        } else if (mActivity instanceof MyProfileActivity) {
-            MyProfileActivity activity = (MyProfileActivity) mActivity;
-            activity.showToolbar();
-        }
+        mActivity.showToolbar();
     }
 }

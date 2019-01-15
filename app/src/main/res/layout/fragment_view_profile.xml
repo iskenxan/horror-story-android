@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view_model.fragments.ViewProfileFragment"
+    tools:context=".view_model.fragments.view_profile.ViewProfileFragment"
     android:background="@color/colorBg"
     android:paddingTop="30dp"
     android:paddingBottom="30dp"

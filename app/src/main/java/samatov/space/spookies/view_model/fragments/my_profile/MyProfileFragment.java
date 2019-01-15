@@ -22,6 +22,7 @@ import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
+import samatov.space.spookies.view_model.dialogs.user_list.UserListDialogHandler;
 import samatov.space.spookies.view_model.fragments.BaseFragment;
 import samatov.space.spookies.view_model.fragments.posts_viewpager.PostsViewPagerAdapter;
 
@@ -78,7 +79,8 @@ public class MyProfileFragment extends BaseFragment implements GalleryImagePicke
         mFab.setOnClickListener(event -> {
             MyPreferenceManager.delete(getContext(), MyPreferenceManager.CURRENT_POST_ID);
             MyPreferenceManager.delete(getContext(), MyPreferenceManager.CURRENT_POST);
-            MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST_TYPE, POST_TYPE.DRAFT);
+            MyPreferenceManager.saveObjectAsJson(getContext(),
+                    MyPreferenceManager.CURRENT_POST_TYPE, POST_TYPE.DRAFT);
             startEditPostActivity();
         });
     }
@@ -93,6 +95,22 @@ public class MyProfileFragment extends BaseFragment implements GalleryImagePicke
         mViewPagerAdapter = new PostsViewPagerAdapter(getChildFragmentManager(), mUser);
         mPostsViewPager.setAdapter(mViewPagerAdapter);
         mViewPagerTabs.setViewPager(mPostsViewPager);
+    }
+
+
+    @OnClick(R.id.myProfileFollowersTextView)
+    public void onFollowersTextViewClicked() {
+        UserListDialogHandler handler =
+                new UserListDialogHandler(mActivity, mUser.getFollowers(), "Your followers");
+        handler.showDialog();
+    }
+
+
+    @OnClick(R.id.myProfileFollowingTextView)
+    public void onFollowingTextViewClicked() {
+        UserListDialogHandler handler =
+                new UserListDialogHandler(mActivity, mUser.getFollowing(), "Following");
+        handler.showDialog();
     }
 
 

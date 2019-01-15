@@ -48,38 +48,44 @@
             app:layout_constraintBottom_toBottomOf="@id/myProfilePostsListItemViewButton"
             android:layout_height="wrap_content" />
     </android.support.constraint.ConstraintLayout>
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/MyProfileListItemLikesTextView"
-        app:layout_constraintTop_toBottomOf="@id/myProfilePostListItemTopContainer"
-        app:layout_constraintEnd_toStartOf="@id/MyProfileListItemLikesImageView"
-        android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
-        android:text="2"/>
-    <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:padding="2dp"
-        android:src="@drawable/favorite_icon_grey"
-        android:id="@+id/MyProfileListItemLikesImageView"
-        app:layout_constraintBottom_toBottomOf="@id/MyProfileListItemLikesTextView"
-        android:layout_marginRight="25dp"
-        app:layout_constraintEnd_toStartOf="@id/MyProfileListItemCommentImageView"/>
-    <ImageView
-        android:id="@+id/MyProfileListItemCommentImageView"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:padding="2dp"
-        android:src="@drawable/comment_icon_grey"
-        android:layout_marginLeft="5dp"
-        app:layout_constraintBottom_toBottomOf="@id/MyProfileListItemLikesImageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginRight="10dp"/>
+        android:id="@+id/myProfileListItemBottomContainer"
+        app:layout_constraintTop_toBottomOf="@id/myProfilePostListItemTopContainer">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/MyProfileListItemLikesTextView"
+            app:layout_constraintEnd_toStartOf="@id/MyProfileListItemLikesImageView"
+            android:layout_marginRight="5dp"
+            android:visibility="gone"
+            android:text="2"/>
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:padding="2dp"
+            android:src="@drawable/favorite_icon_grey"
+            android:id="@+id/MyProfileListItemLikesImageView"
+            app:layout_constraintBottom_toBottomOf="@id/MyProfileListItemLikesTextView"
+            android:layout_marginRight="25dp"
+            app:layout_constraintEnd_toStartOf="@id/MyProfileListItemCommentImageView"/>
+        <ImageView
+            android:id="@+id/MyProfileListItemCommentImageView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:padding="2dp"
+            android:src="@drawable/comment_icon_grey"
+            android:layout_marginLeft="5dp"
+            app:layout_constraintBottom_toBottomOf="@id/MyProfileListItemLikesImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="10dp"/>
+    </android.support.constraint.ConstraintLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorBg"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/MyProfileListItemLikesTextView"/>
+        app:layout_constraintTop_toBottomOf="@id/myProfileListItemBottomContainer"/>
 </android.support.constraint.ConstraintLayout>

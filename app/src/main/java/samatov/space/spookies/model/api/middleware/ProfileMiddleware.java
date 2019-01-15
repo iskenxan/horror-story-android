@@ -17,6 +17,17 @@ import samatov.space.spookies.model.api.calls.ProfileApi;
 public class ProfileMiddleware {
 
 
+    public static Observable<User> getOtherUserInfo(String username, Context context) {
+        ProfileApi profileApi = ApiManager.getRetrofit().create(ProfileApi.class);
+        String token = MyPreferenceManager.getToken(context);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", token);
+        params.put("username", username);
+
+        return profileApi.getOtherUserInfo(params);
+    }
+
+
     public static Observable<User> getUserInfo(String token) {
         ProfileApi profileApi = ApiManager.getRetrofit().create(ProfileApi.class);
         HashMap<String, Object> params = new HashMap<>();

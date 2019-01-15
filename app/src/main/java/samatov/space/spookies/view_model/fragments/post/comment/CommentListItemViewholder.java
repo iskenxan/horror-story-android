@@ -1,6 +1,7 @@
 package samatov.space.spookies.view_model.fragments.post.comment;
 
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -23,21 +24,25 @@ public class CommentListItemViewholder extends RecyclerView.ViewHolder {
     }
 
 
-    //TODO: some comments get wrong profile picture loaded
-    public void bind(Comment comment) {
+    public void bind(Comment comment, CommentClickedListener listener) {
         TextView usernameTextView = mContainerView.findViewById(R.id.commentItemUsernameTextView);
         TextView textTextView = mContainerView.findViewById(R.id.commentItemTextTextView);
         TextView timestampTextView = mContainerView.findViewById(R.id.commentItemTimestampTextView);
         CircleImageView profileImageView = mContainerView.findViewById(R.id.commentItemImageView);
+        ConstraintLayout clickableContainer = mContainerView.findViewById(R.id.commentItemClickableContainer);
+
 
         usernameTextView.setText(comment.getUsername());
         textTextView.setText(comment.getText());
         String time = TimeSince.getTimeAgo(comment.getTimestamp());
         timestampTextView.setText(time);
 
+        profileImageView.setImageResource(R.drawable.ic_profile_placeholder);
         if (!Validator.isNullOrEmpty(comment.getProfileImageUrl()))
             Picasso.get().load(comment.getProfileImageUrl())
                     .resize(50, 50)
                     .into(profileImageView);
+
+        clickableContainer.setOnClickListener((view) -> listener.onCommentClicked(comment.getUsername()));
     }
 }
