@@ -16,6 +16,7 @@ public class Post extends PostsMiddleware {
 
     private String id;
     private String title;
+    private String author;
     private int dialogCount = 0;
     private JsonObject dialog = new JsonObject();
     private JsonObject characters = new JsonObject();
@@ -225,5 +226,13 @@ public class Post extends PostsMiddleware {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

@@ -122,7 +122,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .timeout(10, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .timeout(20, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
                 .subscribe(requestObserver(listener));
     }
 

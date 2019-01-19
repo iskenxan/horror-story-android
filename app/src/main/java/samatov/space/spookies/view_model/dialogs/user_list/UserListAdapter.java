@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,10 +51,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListItemViewHolder
     public void onBindViewHolder(@NonNull UserListItemViewHolder userListItemViewHolder, int i) {
         JsonObject item = mUserList.get(i);
         String username = item.getAsJsonPrimitive("username").getAsString();
-        JsonPrimitive profileUrlObject =  item.getAsJsonPrimitive("profileUrl");
-        String profileUrl = profileUrlObject != null ? profileUrlObject.getAsString() : null;
 
-        userListItemViewHolder.bind(username, profileUrl, mListener);
+        userListItemViewHolder.bind(username, mListener);
     }
 
 

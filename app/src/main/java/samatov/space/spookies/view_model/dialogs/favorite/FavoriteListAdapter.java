@@ -33,11 +33,6 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<UserListItemViewHo
             JsonObject item = new JsonObject();
             String username = keyList.get(i);
             item.addProperty("username", username);
-            if (favoriteList.has(username) &&
-                    favoriteList.getAsJsonPrimitive("username") != null) { // if username has profile image url associated with it
-                String url = favoriteList.getAsJsonPrimitive("username").getAsString();
-                item.addProperty("profileImgUrl", url);
-            }
 
             mFavoriteList.add(item);
         }
@@ -58,12 +53,8 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<UserListItemViewHo
     public void onBindViewHolder(@NonNull UserListItemViewHolder favoriteListItemViewHolder, int i) {
         JsonObject item = mFavoriteList.get(i);
         String username = item.getAsJsonPrimitive("username").getAsString();
-        String profileImageUrl = null;
-        if (item.has("profileImgUrl") &&
-                item.getAsJsonPrimitive("profileImgUrl") != null)
-            profileImageUrl = item.getAsJsonPrimitive("profileImgUrl").getAsString();
 
-        favoriteListItemViewHolder.bind(username, profileImageUrl, mListener);
+        favoriteListItemViewHolder.bind(username, mListener);
     }
 
 

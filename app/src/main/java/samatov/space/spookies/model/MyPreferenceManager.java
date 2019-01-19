@@ -24,6 +24,9 @@ public class MyPreferenceManager {
     public static String CURRENT_POST = "current_edit_post";
     public static String CURRENT_POST_AUTHOR = "current_post_author";
     public static String CURRENT_CHAT_BUBBLE_COLOR = "current_bubble_color";
+    public static String FEED_TIMELINE = "feed_timeline_list";
+    public static String FEED_POPULAR = "feed_popular_list";
+
 
 
     private static List<SharedPreferences.OnSharedPreferenceChangeListener> mListeners = new ArrayList<>();
@@ -97,10 +100,18 @@ public class MyPreferenceManager {
 
 
     public static <T> Map<String, T> getMapOfObjects(Context context, String key, Class<T> cls) {
-        String jsonArray = getString(context, key);
-        Map<String, T> yourClassList = new Gson().fromJson(jsonArray, TypeToken.getParameterized(HashMap.class, String.class, cls).getType());
+        String json = getString(context, key);
+        Map<String, T> classMap = new Gson().fromJson(json, TypeToken.getParameterized(HashMap.class, String.class, cls).getType());
 
-        return yourClassList;
+        return classMap;
+    }
+
+
+    public static <T> List<T> getListOfObjects(Context context, String key, Class<T> cls) {
+        String jsonArray = getString(context, key);
+        List<T> list = new Gson().fromJson(jsonArray, TypeToken.getParameterized(List.class, cls).getType());
+
+        return list;
     }
 
 

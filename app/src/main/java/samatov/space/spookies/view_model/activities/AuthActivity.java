@@ -3,12 +3,8 @@ package samatov.space.spookies.view_model.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import java.util.concurrent.TimeUnit;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Auth;
@@ -51,17 +47,13 @@ public class AuthActivity extends BaseActivity {
 
     public void fetchUserData(String token) {
         mDialog.show();
-        User.getUserInfo(token)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .timeout(10, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
-                .subscribe(requestObserver((result, e) -> {
-                    mDialog.dismiss();
-                    if (e != null)
-                        onFetchUserError();
-                    else
-                        onFetchUserSuccess(result);
-        }));
+        listenToObservable(User.getUserInfo(token), (result, exception) -> {
+            mDialog.dismiss();
+            if (exception != null)
+                onFetchUserError();
+            else
+                onFetchUserSuccess(result);
+        });
     }
 
 

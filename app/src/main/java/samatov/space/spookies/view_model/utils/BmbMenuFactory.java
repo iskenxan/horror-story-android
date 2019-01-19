@@ -9,26 +9,27 @@ import com.nightonke.boommenu.BoomMenuButton;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.view_model.activities.AuthActivity;
+import samatov.space.spookies.view_model.activities.FeedActivity;
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
 
 public class BmbMenuFactory {
 
     public static void setupBmb(AppCompatActivity activity, BoomMenuButton bmb) {
-        addMyFeed(bmb);
+        addMyFeed(bmb, activity);
         addMyProfile(bmb, activity);
         addFeatured(bmb);
         addLogout(bmb, activity);
     }
 
 
-    private static void addMyFeed(BoomMenuButton bmb) {
+    private static void addMyFeed(BoomMenuButton bmb, AppCompatActivity activity) {
         HamButton.Builder builder = getBasicBuilder()
                 .normalText("My Feed")
                 .normalImageRes(R.drawable.menu_home_icon)
                 .highlightedImageRes(R.drawable.menu_home_icon_white)
-                .listener(index -> {
-                    //TODO: Inflate My feed activity
-                });
+                .listener(index ->
+                        ActivityFactory.startActivity(activity,
+                                FeedActivity.class, true, true));
         bmb.addBuilder(builder);
     }
 

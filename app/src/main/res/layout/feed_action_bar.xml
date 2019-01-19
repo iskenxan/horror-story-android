@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@color/colorPrimaryDark"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/toolbarBmb"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:bmb_backgroundEffect="false"
+        app:bmb_buttonEnum="ham"
+        app:bmb_boomEnum="boomParabola_2"
+        app:bmb_piecePlaceEnum="piecePlace_ham_4"
+        app:bmb_buttonPlaceEnum="buttonPlace_ham_4"
+        />
+    <ImageView
+        android:id="@+id/toolbarIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/actionbar_icon"
+        app:layout_constraintStart_toEndOf="@id/toolbarBmb"/>
+    
+
+</android.support.constraint.ConstraintLayout>

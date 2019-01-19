@@ -2,14 +2,11 @@ package samatov.space.spookies.view_model.activities;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -31,30 +28,31 @@ public class DemoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_action_bar_menu, menu);
-
-        Activity activity = this;
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat
-                .getActionView(menu.findItem(R.id.action_search));
-
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
-        searchView.setQueryHint("Search for users...");
-        String [] columNames = { SearchManager.SUGGEST_COLUMN_TEXT_1 };
-        int [] viewIds = { android.R.id.text1 };
-        CursorAdapter adapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_1, null, columNames, viewIds);
-
-        searchView.setSuggestionsAdapter(adapter);
-        searchView.setOnSuggestionListener(getOnSuggestionClickListener());
-        searchView.setOnQueryTextListener(getOnQueryTextListener(activity, adapter));
+//        getMenuInflater().inflate(R.menu.search_action_bar_menu, menu);
+//
+//        Activity activity = this;
+//        SearchManager searchManager =
+//                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        SearchView searchView = (SearchView) MenuItemCompat
+//                .getActionView(menu.findItem(R.id.action_search));
+//
+//        searchView.setSearchableInfo(
+//                searchManager.getSearchableInfo(getComponentName()));
+//        searchView.setQueryHint("Search for users...");
+//        String [] columNames = { SearchManager.SUGGEST_COLUMN_TEXT_1 };
+//        int [] viewIds = { android.R.id.text1 };
+//        CursorAdapter adapter = new SimpleCursorAdapter(this,
+//                android.R.layout.simple_list_item_1, null, columNames, viewIds);
+//
+//        searchView.setSuggestionsAdapter(adapter);
+//        searchView.setOnSuggestionListener(getOnSuggestionClickListener());
+//        searchView.setOnQueryTextListener(getOnQueryTextListener(activity, adapter));
 
         return true;
     }
