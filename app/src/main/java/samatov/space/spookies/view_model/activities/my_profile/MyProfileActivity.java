@@ -117,7 +117,7 @@ public class MyProfileActivity extends BaseToolbarActivity {
 
 
     private void startViewUserProfileActivity(User user) {
-        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.VIEWED_USER, user);
+        MyPreferenceManager.addToViewedUsersStack(this, user);
         ActivityFactory.startActivity(mActivity,
                 ViewProfileActivity.class, true, false);
     }

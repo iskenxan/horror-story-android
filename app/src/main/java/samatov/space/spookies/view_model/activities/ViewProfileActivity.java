@@ -44,8 +44,7 @@ public class ViewProfileActivity extends BaseToolbarActivity {
 
 
     private void getCurrentUser() {
-        mUser = MyPreferenceManager
-                .getObject(this, MyPreferenceManager.VIEWED_USER, User.class);
+        mUser = MyPreferenceManager.peekViewedUsersStack(this);
     }
 
 
@@ -108,7 +107,7 @@ public class ViewProfileActivity extends BaseToolbarActivity {
     @Override
     public void onBackPressed() {
         if (!handleBackPressed()) {
-            MyPreferenceManager.delete(this, MyPreferenceManager.VIEWED_USER);
+            MyPreferenceManager.popViewedUsersStack(this);
             finishAfterTransition();
         }
     }

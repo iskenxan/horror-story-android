@@ -40,7 +40,8 @@ public class BmbMenuFactory {
                 .normalImageRes(R.drawable.menu_profile_icon)
                 .highlightedImageRes(R.drawable.menu_profile_icon_white)
                 .listener(index -> {
-                    ActivityFactory.startActivity(activity, MyProfileActivity.class, true, false);
+                    MyPreferenceManager.cleanViewedUsersStack(activity);
+                    ActivityFactory.startActivity(activity, MyProfileActivity.class, true, true);
                 });
         bmb.addBuilder(builder);
     }

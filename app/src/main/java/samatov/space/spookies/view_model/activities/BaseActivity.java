@@ -50,7 +50,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
 
             User viewedUser = (User) result;
-            MyPreferenceManager.saveObjectAsJson(activity, MyPreferenceManager.VIEWED_USER, viewedUser);
+            MyPreferenceManager.addToViewedUsersStack(activity, viewedUser);
             ActivityFactory
                     .startActivity(activity, ViewProfileActivity.class, true, finishCurrent);
         });

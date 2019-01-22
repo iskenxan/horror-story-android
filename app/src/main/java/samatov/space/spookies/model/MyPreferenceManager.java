@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
+
+import samatov.space.spookies.model.api.beans.User;
 
 public class MyPreferenceManager {
 
@@ -18,7 +21,6 @@ public class MyPreferenceManager {
     public static String CURRENT_USER = "current_user";
     public static String SECURITY_TOKEN = "token";
     public static String USER_SEARCH_RESULT = "current_user_query_result";
-    public static String VIEWED_USER = "user_searched_clicked_item";
     public static String CURRENT_POST_ID = "current_post_id";
     public static String CURRENT_POST_TYPE = "current_post_type";
     public static String CURRENT_POST = "current_edit_post";
@@ -27,6 +29,7 @@ public class MyPreferenceManager {
     public static String FEED_TIMELINE = "feed_timeline_list";
     public static String FEED_POPULAR = "feed_popular_list";
 
+    private static String VIEWED_USERS = "user_searched_clicked_item";
 
 
     private static List<SharedPreferences.OnSharedPreferenceChangeListener> mListeners = new ArrayList<>();
@@ -40,7 +43,7 @@ public class MyPreferenceManager {
     public static void cleanPreferencesOnLogout(Context context) {
         delete(context, SECURITY_TOKEN);
         delete(context, CURRENT_USER);
-        delete(context, VIEWED_USER);
+        delete(context, VIEWED_USERS);
         delete(context, CURRENT_POST_TYPE);
         delete(context, CURRENT_POST_ID);
     }
@@ -59,6 +62,44 @@ public class MyPreferenceManager {
             preferences.unregisterOnSharedPreferenceChangeListener(listener);
         }
         mListeners = new ArrayList<>();
+    }
+
+
+    public static void addToViewedUsersStack(Context context, User viewedUser) {
+        Stack<User> viewedUsers = getStackOfObjects(context, VIEWED_USERS, User.class);
+        if (viewedUsers == null)
+            viewedUsers = new Stack<>();
+
+        viewedUsers.push(viewedUser);
+
+        saveObjectAsJson(context, VIEWED_USERS, viewedUsers);
+    }
+
+
+    public static User peekViewedUsersStack(Context context) {
+        Stack<User> viewedUsers = getStackOfObjects(context, VIEWED_USERS, User.class);
+
+        if (viewedUsers == null)
+            return null;
+
+        return viewedUsers.peek();
+    }
+
+
+    public static User popViewedUsersStack(Context context) {
+        Stack<User> viewedUsers = getStackOfObjects(context, VIEWED_USERS, User.class);
+
+        if (viewedUsers == null)
+            return null;
+        User user =  viewedUsers.pop();
+        saveObjectAsJson(context, VIEWED_USERS, viewedUsers);
+
+        return user;
+    }
+
+
+    public static void cleanViewedUsersStack(Context context) {
+        MyPreferenceManager.delete(context, VIEWED_USERS);
     }
 
 
@@ -110,6 +151,14 @@ public class MyPreferenceManager {
     public static <T> List<T> getListOfObjects(Context context, String key, Class<T> cls) {
         String jsonArray = getString(context, key);
         List<T> list = new Gson().fromJson(jsonArray, TypeToken.getParameterized(List.class, cls).getType());
+
+        return list;
+    }
+
+
+    private static <T> Stack<T> getStackOfObjects(Context context, String key, Class<T> cls) {
+        String jsonArray = getString(context, key);
+        Stack<T> list = new Gson().fromJson(jsonArray, TypeToken.getParameterized(Stack.class, cls).getType());
 
         return list;
     }

@@ -3,14 +3,14 @@ package samatov.space.spookies.view_model.fragments.feed_viewpager
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import samatov.space.spookies.model.api.beans.Post
+import samatov.space.spookies.model.api.beans.FeedItem
 
 
-class FeedViewPagerAdapter(fm: FragmentManager, timeline: List<Post>, popular: List<Post>)
+class FeedViewPagerAdapter(fm: FragmentManager, timeline: List<FeedItem>, popular: List<FeedItem>)
     : FragmentStatePagerAdapter(fm) {
 
-    private var timeline: List<Post> = timeline
-    private var popular: List<Post> = popular
+    private var timeline: List<FeedItem> = timeline
+    private var popular: List<FeedItem> = popular
 
 
     override fun getItem(p0: Int): Fragment =
