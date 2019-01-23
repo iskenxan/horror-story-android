@@ -147,16 +147,21 @@ public class ReadPostFragment extends Fragment {
         return (view) -> {
             ShineButton favoriteButton = (ShineButton) view;
             favoriteButton.setEnabled(false);
-            Completable completable = getCorrectFavoriteObservable();
+            Completable completable = getCorrectFavoriteCompletable();
+            if (completable == null) {
+                onRequestError();
+                return;
+            }
             mActivity.listenToCompletable(completable, (result, exception) ->
                     onRequestResult(favoriteButton, exception));
         };
     }
 
 
-    private Completable getCorrectFavoriteObservable() {
-        User viewedUser = MyPreferenceManager.peekViewedUsersStack(getContext());
-        String authorUsername = viewedUser.getUsername();
+    private Completable getCorrectFavoriteCompletable() {
+        String authorUsername = MyPreferenceManager.getString(getContext(), MyPreferenceManager.CURRENT_POST_AUTHOR);
+        if (authorUsername == null)
+            return null;
         Completable observable =
                 Post.addToFavorite(authorUsername, mPost.getId(), mPost.getTitle(), getContext());
         if (inFavorites())
@@ -195,17 +200,19 @@ public class ReadPostFragment extends Fragment {
 
     private void addToFavorites() {
         User currentUser = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
-        User viewedUser = MyPreferenceManager.peekViewedUsersStack(getContext());
         JsonObject favoriteItem = new JsonObject();
         favoriteItem.addProperty("profileImgUrl", currentUser.getProfileUrl());
         mPost.getFavorite().add(currentUser.getUsername(), favoriteItem);
+        MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST, mPost);
+
+        User viewedUser = MyPreferenceManager.peekViewedUsersStack(getContext());
+        if (viewedUser == null)
+            return;
 
         JsonObject postRef = viewedUser.getPublishedRefs().get(mPost.getId());
         if (postRef.has("favorite")) {
             postRef.getAsJsonObject("favorite").add(currentUser.getUsername(), favoriteItem);
         }
-
-        MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST, mPost);
         MyPreferenceManager.popViewedUsersStack(getContext());
         MyPreferenceManager.addToViewedUsersStack(getContext(), viewedUser);
     }
@@ -213,12 +220,13 @@ public class ReadPostFragment extends Fragment {
 
     private void removeFromFavorites() {
         User currentUser = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
-        User viewedUser = MyPreferenceManager.peekViewedUsersStack(getContext());
-
         mPost.getFavorite().remove(currentUser.getUsername());
-        viewedUser.getPublishedRefs().get(mPost.getId()).getAsJsonObject("favorite").remove(currentUser.getUsername());
-
         MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST, mPost);
+
+        User viewedUser = MyPreferenceManager.peekViewedUsersStack(getContext());
+        if (viewedUser == null)
+            return;
+        viewedUser.getPublishedRefs().get(mPost.getId()).getAsJsonObject("favorite").remove(currentUser.getUsername());
         MyPreferenceManager.popViewedUsersStack(getContext());
         MyPreferenceManager.addToViewedUsersStack(getContext(), viewedUser);
     }
