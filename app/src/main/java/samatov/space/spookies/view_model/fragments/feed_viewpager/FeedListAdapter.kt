@@ -9,7 +9,7 @@ import samatov.space.spookies.model.api.beans.FeedItem
 class FeedListAdapter(posts: List<FeedItem>, clickedListener: (clickedOn: FeedClickedOn, value: Any?) -> Unit )
     : RecyclerView.Adapter<FeedItemViewHolder>() {
 
-    private val posts = posts
+    private var posts = posts
     private val listener = clickedListener
 
 
@@ -17,6 +17,11 @@ class FeedListAdapter(posts: List<FeedItem>, clickedListener: (clickedOn: FeedCl
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_list_item, parent, false)
         return FeedItemViewHolder(view)
+    }
+
+    fun refreshList(newList: List<FeedItem>) {
+        posts = newList
+        notifyDataSetChanged()
     }
 
 

@@ -16,6 +16,7 @@ import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Feed;
 import samatov.space.spookies.model.api.beans.FeedItem;
+import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
 import samatov.space.spookies.view_model.fragments.FeedFragment;
 import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
@@ -52,9 +53,25 @@ public class FeedActivity extends BaseToolbarActivity {
     private void getFeed() {
         mDialog = DialogFactory.getLoadingDialog(this, "Loading your feed...");
         mDialog.show();
+        fetchFeed(() -> {
+            MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.FEED_TIMELINE, mFeed.getTimeline());
+            MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.FEED_POPULAR, mFeed.getPopular());
+            replaceFragment(FeedFragment.newInstance(), R.id.feedActivityMainPlaceholder);
+        });
+    }
+
+
+    public void fetchTimelineFeed(ApiRequestListener listener) {
+        fetchFeed(() ->
+                listener.onRequestComplete(mFeed.getTimeline(), null));
+    }
+
+
+    private void fetchFeed(Runnable onFetchSuccess) {
         Observable<Feed> feedObservable = Feed.getMyFeed(this);
         listenToObservable(feedObservable, (result, exception) -> {
-            mDialog.dismiss();
+            if (mDialog != null)
+                mDialog.dismiss();
 
             if (exception != null) {
                 String text = "Error loading your feed. Please try again later";
@@ -63,13 +80,12 @@ public class FeedActivity extends BaseToolbarActivity {
                     ActivityFactory.startActivity(mActivity,
                             MyProfileActivity.class, true, true);
                 });
+                mDialog.show();
                 return;
             }
 
             mFeed = (Feed) result;
-            MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.FEED_TIMELINE, mFeed.getTimeline());
-            MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.FEED_POPULAR, mFeed.getPopular());
-            replaceFragment(FeedFragment.newInstance(), R.id.feedActivityMainPlaceholder);
+            onFetchSuccess.run();
         });
     }
 

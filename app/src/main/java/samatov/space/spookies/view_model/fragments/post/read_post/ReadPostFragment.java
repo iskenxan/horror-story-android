@@ -62,7 +62,7 @@ public class ReadPostFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mActivity = (ReadPostActivity) getActivity();
-        mPost = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_POST, Post.class);
+        mPost = MyPreferenceManager.getObject(mActivity, MyPreferenceManager.CURRENT_POST, Post.class);
         setupViews();
 
         return view;
@@ -77,9 +77,11 @@ public class ReadPostFragment extends Fragment {
 
 
     private void setupMessageList() throws Exception {
-        MyPreferenceManager.saveString(getContext(), MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR, mPost.getChatBubbleColor());
+        MyPreferenceManager.saveString(getContext(),
+                MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR, mPost.getChatBubbleColor());
         MessagesListAdapter.HoldersConfig holdersConfig = new MessagesListAdapter.HoldersConfig();
-        holdersConfig.setOutcoming(MyOutcomingMessageViewHolder.class, com.stfalcon.chatkit.R.layout.item_outcoming_text_message);
+        holdersConfig.setOutcoming(MyOutcomingMessageViewHolder.class,
+                com.stfalcon.chatkit.R.layout.item_outcoming_text_message);
         mMessageListAdapter = new MessagesListAdapter<>("0", holdersConfig, null);
         mMessageList.setAdapter(mMessageListAdapter);
         mMessageListAdapter.setOnMessageViewClickListener((a, b) -> checkAndAddNextMessage());
@@ -102,7 +104,7 @@ public class ReadPostFragment extends Fragment {
           mMessageCounter ++;
       } else {
           mBottomDialog = DialogFactory.getDialogPlus
-                  (getContext(), false, R.layout.read_post_dialog, Gravity.BOTTOM);
+                  (mActivity, false, R.layout.read_post_dialog, Gravity.BOTTOM);
           View view = mBottomDialog.getHolderView();
           setupDialogViewListeners(view);
           mBottomDialog.show();
@@ -159,7 +161,8 @@ public class ReadPostFragment extends Fragment {
 
 
     private Completable getCorrectFavoriteCompletable() {
-        String authorUsername = MyPreferenceManager.getString(getContext(), MyPreferenceManager.CURRENT_POST_AUTHOR);
+        String authorUsername = MyPreferenceManager
+                .getString(mActivity, MyPreferenceManager.CURRENT_POST_AUTHOR);
         if (authorUsername == null)
             return null;
         Completable observable =
@@ -193,19 +196,24 @@ public class ReadPostFragment extends Fragment {
 
 
     private boolean inFavorites() {
-        User user = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
+        User user = MyPreferenceManager
+                .getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
         return mPost.getFavorite().has(user.getUsername());
     }
 
 
     private void addToFavorites() {
-        User currentUser = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
+        User currentUser = MyPreferenceManager
+                .getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
         JsonObject favoriteItem = new JsonObject();
         favoriteItem.addProperty("profileImgUrl", currentUser.getProfileUrl());
         mPost.getFavorite().add(currentUser.getUsername(), favoriteItem);
-        MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST, mPost);
+        MyPreferenceManager
+                .saveString(mActivity, MyPreferenceManager.FAVORITE_ACTION, "add " + mPost.getId());
+        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_POST, mPost);
 
-        User viewedUser = MyPreferenceManager.peekViewedUsersStack(getContext());
+
+        User viewedUser = MyPreferenceManager.peekViewedUsersStack(mActivity);
         if (viewedUser == null)
             return;
 
@@ -213,22 +221,28 @@ public class ReadPostFragment extends Fragment {
         if (postRef.has("favorite")) {
             postRef.getAsJsonObject("favorite").add(currentUser.getUsername(), favoriteItem);
         }
-        MyPreferenceManager.popViewedUsersStack(getContext());
-        MyPreferenceManager.addToViewedUsersStack(getContext(), viewedUser);
+        MyPreferenceManager.popViewedUsersStack(mActivity);
+        MyPreferenceManager.addToViewedUsersStack(mActivity, viewedUser);
     }
 
 
     private void removeFromFavorites() {
-        User currentUser = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
+        User currentUser = MyPreferenceManager
+                .getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
         mPost.getFavorite().remove(currentUser.getUsername());
-        MyPreferenceManager.saveObjectAsJson(getContext(), MyPreferenceManager.CURRENT_POST, mPost);
+        MyPreferenceManager
+                .saveString(mActivity, MyPreferenceManager.FAVORITE_ACTION, "remove " + mPost.getId());
+        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_POST, mPost);
 
-        User viewedUser = MyPreferenceManager.peekViewedUsersStack(getContext());
+
+        User viewedUser = MyPreferenceManager.peekViewedUsersStack(mActivity);
         if (viewedUser == null)
             return;
-        viewedUser.getPublishedRefs().get(mPost.getId()).getAsJsonObject("favorite").remove(currentUser.getUsername());
-        MyPreferenceManager.popViewedUsersStack(getContext());
-        MyPreferenceManager.addToViewedUsersStack(getContext(), viewedUser);
+
+        viewedUser.getPublishedRefs().
+                get(mPost.getId()).getAsJsonObject("favorite").remove(currentUser.getUsername());
+        MyPreferenceManager.popViewedUsersStack(mActivity);
+        MyPreferenceManager.addToViewedUsersStack(mActivity, viewedUser);
     }
 
 }

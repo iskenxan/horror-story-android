@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_feed_list.*
 import samatov.space.spookies.R
+import samatov.space.spookies.model.MyPreferenceManager
 import samatov.space.spookies.model.api.beans.FeedItem
 import samatov.space.spookies.view_model.activities.FeedActivity
 import samatov.space.spookies.view_model.fragments.BaseFragment
@@ -18,8 +19,8 @@ import samatov.space.spookies.view_model.fragments.BaseFragment
 class FeedListFragment : BaseFragment() {
 
 
-    var mAdapter: FeedListAdapter? = null
-    var mPosts: List<FeedItem>? = null
+    private var mAdapter: FeedListAdapter? = null
+    private var mPosts: List<FeedItem>? = null
     var mType: FeedType? = null
     var mActivity: FeedActivity? = null
 
@@ -44,13 +45,8 @@ class FeedListFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getArguments(arguments)
         mActivity = activity as FeedActivity?
+
         return inflater.inflate(R.layout.fragment_feed_list, container, false)
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setupRecyclerView()
-        super.onViewCreated(view, savedInstanceState)
     }
 
 
@@ -62,6 +58,26 @@ class FeedListFragment : BaseFragment() {
 
         val listType = object : TypeToken<List<FeedItem>>() {}.type
         mPosts = feedStr?.let { GsonBuilder().serializeNulls().create().fromJson(feedStr, listType) }
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setupSwipeRefreshListener()
+        setupRecyclerView()
+        addMyPreferenceListener()
+
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+
+    private fun setupSwipeRefreshListener() {
+        feedListSwipeRefresh.setOnRefreshListener {
+            mActivity?.fetchTimelineFeed { result, _ ->
+                mPosts = result as List<FeedItem>
+                mAdapter?.refreshList(mPosts as List<FeedItem>)
+                feedListSwipeRefresh.isRefreshing = false
+            }
+        }
     }
 
 
@@ -83,5 +99,36 @@ class FeedListFragment : BaseFragment() {
                     mActivity?.startReadCommentsFragment(value as FeedItem)
             }
         }
+    }
+
+
+    private fun addMyPreferenceListener() {
+        MyPreferenceManager.addSharedPreferenceListener(mActivity) { _, key ->
+            if (key == MyPreferenceManager.FAVORITE_ACTION) {
+                val action = MyPreferenceManager.getString(mActivity, MyPreferenceManager.FAVORITE_ACTION)
+                val actionArray = action.split(" ")
+                val type = actionArray[0]
+                val postId = actionArray[1]
+                findFeedItem(postId!!)?.let {
+                    if (type == "add")
+                        it.favoriteCount += 1
+                    else
+                        it.favoriteCount -= 1
+                }
+                mAdapter?.notifyDataSetChanged()
+            }
+        }
+    }
+
+
+    private fun findFeedItem(postId: String) : FeedItem? {
+        mPosts?.let {
+            for (item in it) {
+                if (item.id == postId)
+                    return item
+            }
+        }
+
+        return null
     }
 }

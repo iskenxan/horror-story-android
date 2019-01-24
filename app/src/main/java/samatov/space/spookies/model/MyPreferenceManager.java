@@ -28,6 +28,8 @@ public class MyPreferenceManager {
     public static String CURRENT_CHAT_BUBBLE_COLOR = "current_bubble_color";
     public static String FEED_TIMELINE = "feed_timeline_list";
     public static String FEED_POPULAR = "feed_popular_list";
+    public static String FAVORITE_ACTION = "like_post_action";
+
 
     private static String VIEWED_USERS = "user_searched_clicked_item";
 
@@ -46,6 +48,7 @@ public class MyPreferenceManager {
         delete(context, VIEWED_USERS);
         delete(context, CURRENT_POST_TYPE);
         delete(context, CURRENT_POST_ID);
+        delete(context, CURRENT_POST_AUTHOR);
     }
 
 
@@ -79,7 +82,7 @@ public class MyPreferenceManager {
     public static User peekViewedUsersStack(Context context) {
         Stack<User> viewedUsers = getStackOfObjects(context, VIEWED_USERS, User.class);
 
-        if (viewedUsers == null)
+        if (viewedUsers == null || viewedUsers.isEmpty())
             return null;
 
         return viewedUsers.peek();
