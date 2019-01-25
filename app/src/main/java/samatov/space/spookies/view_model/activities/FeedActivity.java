@@ -19,6 +19,7 @@ import samatov.space.spookies.model.api.beans.FeedItem;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
 import samatov.space.spookies.view_model.fragments.FeedFragment;
+import samatov.space.spookies.view_model.fragments.feed_viewpager.FeedType;
 import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
@@ -61,9 +62,14 @@ public class FeedActivity extends BaseToolbarActivity {
     }
 
 
-    public void fetchTimelineFeed(ApiRequestListener listener) {
-        fetchFeed(() ->
-                listener.onRequestComplete(mFeed.getTimeline(), null));
+    public void fetchTimelineFeed( FeedType type, ApiRequestListener listener) {
+        fetchFeed(() -> {
+            if (type == FeedType.TIMELINE)
+                listener.onRequestComplete(mFeed.getTimeline(), null);
+            else
+                listener.onRequestComplete(mFeed.getPopular(), null);
+        });
+
     }
 
 

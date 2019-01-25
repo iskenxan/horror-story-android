@@ -207,23 +207,29 @@ public class ViewProfileFragment extends BaseFragment {
                 .getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
         mUser.getFollowers().remove(currentUser.getUsername());
         updateSearchResultItem(); // we're updating the search result list because the searchView caches the most current results for a quick load
+        MyPreferenceManager.popViewedUsersStack(mActivity);
+        MyPreferenceManager.addToViewedUsersStack(mActivity, mUser);
     }
 
 
     private void addCurrentUserToFollowers() {
         User currentUser = MyPreferenceManager
-                .getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
+                .getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
         JsonObject currentsUserFollower = new JsonObject();
         currentsUserFollower.addProperty("profile_url", currentUser.getProfileUrl());
         mUser.getFollowers().put(currentUser.getUsername(), currentsUserFollower);
         updateSearchResultItem();
+        MyPreferenceManager.popViewedUsersStack(mActivity);
+        MyPreferenceManager.addToViewedUsersStack(mActivity, mUser);
     }
 
 
     private void updateSearchResultItem() {
         String resultKey = MyPreferenceManager.USER_SEARCH_RESULT;
-        Map<String, User> users = MyPreferenceManager.getMapOfObjects(getContext(), resultKey, User.class);
-        users.put(mUser.getUsername(), mUser);
-        MyPreferenceManager.saveObjectAsJson(getContext(), resultKey, users);
+        Map<String, User> users = MyPreferenceManager.getMapOfObjects(mActivity, resultKey, User.class);
+        if (users != null) {
+            users.put(mUser.getUsername(), mUser);
+            MyPreferenceManager.saveObjectAsJson(getContext(), resultKey, users);
+        }
     }
 }

@@ -72,7 +72,7 @@ class FeedListFragment : BaseFragment() {
 
     private fun setupSwipeRefreshListener() {
         feedListSwipeRefresh.setOnRefreshListener {
-            mActivity?.fetchTimelineFeed { result, _ ->
+            mActivity?.fetchTimelineFeed(mType) { result, _ ->
                 mPosts = result as List<FeedItem>
                 mAdapter?.refreshList(mPosts as List<FeedItem>)
                 feedListSwipeRefresh.isRefreshing = false
