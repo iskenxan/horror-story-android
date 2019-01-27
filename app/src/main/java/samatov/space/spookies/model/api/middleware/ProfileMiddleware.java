@@ -37,7 +37,7 @@ public class ProfileMiddleware {
     }
 
 
-    public static Observable<User> follow(Context context, String followingUsername, String followingProfileUrl) {
+    public static Observable<User> follow(Context context, String followingUsername) {
         ProfileApi profileApi = ApiManager.getRetrofit().create(ProfileApi.class);
         User currentUser = MyPreferenceManager
                 .getObject(context, MyPreferenceManager.CURRENT_USER, User.class);
@@ -47,7 +47,6 @@ public class ProfileMiddleware {
         params.put("token", token);
         params.put("user", currentUser);
         params.put("followingUsername", followingUsername);
-        params.put("followingProfileUrl", followingProfileUrl);
 
 
         return profileApi.follow(params);

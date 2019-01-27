@@ -85,6 +85,7 @@ class FeedListFragment : BaseFragment() {
         feedListRecyclerView.layoutManager = LinearLayoutManager(context)
         mAdapter = FeedListAdapter(mPosts!!, getItemClickedListener())
         feedListRecyclerView.adapter = mAdapter
+        mPosts?.let { if (it.isEmpty()) feedListItemEmptyContainer.visibility = View.VISIBLE }
     }
 
 

@@ -65,7 +65,7 @@ public class ViewProfileFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_profile, container, false);
-        ButterKnife.bind(this, view);;
+        ButterKnife.bind(this, view);
         mActivity = (ViewProfileActivity) getActivity();
 
 
@@ -198,7 +198,7 @@ public class ViewProfileFragment extends BaseFragment {
     private boolean followingSelectedUser() {
         User currentUser = MyPreferenceManager
                 .getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
-       return mUser.getFollowers().containsKey(currentUser.getUsername());
+       return mUser.getFollowers().contains(currentUser.getUsername());
     }
 
 
@@ -215,9 +215,7 @@ public class ViewProfileFragment extends BaseFragment {
     private void addCurrentUserToFollowers() {
         User currentUser = MyPreferenceManager
                 .getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
-        JsonObject currentsUserFollower = new JsonObject();
-        currentsUserFollower.addProperty("profile_url", currentUser.getProfileUrl());
-        mUser.getFollowers().put(currentUser.getUsername(), currentsUserFollower);
+        mUser.getFollowers().add(currentUser.getUsername());
         updateSearchResultItem();
         MyPreferenceManager.popViewedUsersStack(mActivity);
         MyPreferenceManager.addToViewedUsersStack(mActivity, mUser);

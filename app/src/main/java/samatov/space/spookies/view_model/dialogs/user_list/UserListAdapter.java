@@ -6,34 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.JsonObject;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import samatov.space.spookies.R;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListItemViewHolder> {
 
-    List<JsonObject> mUserList;
+    List<String> mUserList;
     UserListItemClickedListener mListener;
 
 
-    public UserListAdapter(Map<String, JsonObject> userMap, UserListItemClickedListener listItemClickedListener) {
+    public UserListAdapter(List<String> userList, UserListItemClickedListener listItemClickedListener) {
         mListener = listItemClickedListener;
-        Set<String> keyset = userMap.keySet();
-        List<String> keyList = new ArrayList<>(keyset);
-        Collections.sort(keyList, Collections.reverseOrder());
-        mUserList = new ArrayList<>();
-
-        for (int i = 0; i < userMap.size(); i++) {
-            JsonObject item = userMap.get(keyList.get(i)).deepCopy();
-            item.addProperty("username", keyList.get(i));
-            mUserList.add(item);
-        }
+        mUserList = userList;
     }
 
 
@@ -49,9 +34,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListItemViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull UserListItemViewHolder userListItemViewHolder, int i) {
-        JsonObject item = mUserList.get(i);
-        String username = item.getAsJsonPrimitive("username").getAsString();
-
+        String username = mUserList.get(i);
         userListItemViewHolder.bind(username, mListener);
     }
 

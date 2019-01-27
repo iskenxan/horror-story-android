@@ -2,6 +2,7 @@ package samatov.space.spookies.model.api.beans;
 
 import com.google.gson.JsonObject;
 
+import java.util.List;
 import java.util.Map;
 
 import samatov.space.spookies.model.api.middleware.ProfileMiddleware;
@@ -9,8 +10,8 @@ import samatov.space.spookies.model.api.middleware.ProfileMiddleware;
 public class User extends ProfileMiddleware {
     private String username;
     private String profileUrl;
-    private Map<String, JsonObject> followers; //username, picture_url
-    private Map<String, JsonObject> following; //username, picture_url
+    private List<String> followers;
+    private List<String> following;
     private Map<String, JsonObject> draftRefs; //draftId, draft data
     private Map<String, JsonObject> publishedRefs; //postId, draft data
 
@@ -47,20 +48,19 @@ public class User extends ProfileMiddleware {
         this.profileUrl = profileUrl;
     }
 
-
-    public Map<String, JsonObject> getFollowers() {
+    public List<String> getFollowers() {
         return followers;
     }
 
-    public void setFollowers(Map<String, JsonObject> followers) {
+    public void setFollowers(List<String> followers) {
         this.followers = followers;
     }
 
-    public Map<String, JsonObject> getFollowing() {
+    public List<String> getFollowing() {
         return following;
     }
 
-    public void setFollowing(Map<String, JsonObject> following) {
+    public void setFollowing(List<String> following) {
         this.following = following;
     }
 }

@@ -65,7 +65,7 @@ public class ViewProfileActivity extends BaseToolbarActivity {
 
     public void followSelectedUser(ApiRequestListener listener) {
         displayLoadingDialog();
-        Observable<User> observable = User.follow(this, mUser.getUsername(), mUser.getProfileUrl());
+        Observable<User> observable = User.follow(this, mUser.getUsername());
         listenToObservable(observable, (result, exception) ->
                 onRequestComplete(result, exception, listener));
     }

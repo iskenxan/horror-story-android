@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="300dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minHeight="300dp">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/favoritesDialogRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"/>
+    <LinearLayout
+        android:id="@+id/userListEmptyContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/colorSecondary"
+            android:text="No users on this list"/>
+        <ImageView
+            style="@style/emptyListImageView"/>
+    </LinearLayout>
 
-    </android.support.v7.widget.RecyclerView>
 </android.support.constraint.ConstraintLayout>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorBg"
     tools:context=".view_model.fragments.feed_viewpager.FeedListFragment">
 
@@ -18,4 +19,24 @@
             android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/feedListItemEmptyContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/colorSecondary"
+            android:text="Your feed is empty. Try following more people"/>
+        <ImageView
+            style="@style/emptyListImageView"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
