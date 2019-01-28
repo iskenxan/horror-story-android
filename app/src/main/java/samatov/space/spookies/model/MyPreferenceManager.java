@@ -5,15 +5,14 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
 import samatov.space.spookies.model.api.beans.User;
+import samatov.space.spookies.model.utils.Serializer;
 
 public class MyPreferenceManager {
 
@@ -145,7 +144,7 @@ public class MyPreferenceManager {
 
     public static <T> Map<String, T> getMapOfObjects(Context context, String key, Class<T> cls) {
         String json = getString(context, key);
-        Map<String, T> classMap = new Gson().fromJson(json, TypeToken.getParameterized(HashMap.class, String.class, cls).getType());
+        Map<String, T> classMap = Serializer.toMapOfObjects(json, cls);
 
         return classMap;
     }
@@ -153,7 +152,7 @@ public class MyPreferenceManager {
 
     public static <T> List<T> getListOfObjects(Context context, String key, Class<T> cls) {
         String jsonArray = getString(context, key);
-        List<T> list = new Gson().fromJson(jsonArray, TypeToken.getParameterized(List.class, cls).getType());
+        List<T> list = Serializer.toListOfObjects(jsonArray, cls);
 
         return list;
     }
@@ -161,7 +160,7 @@ public class MyPreferenceManager {
 
     private static <T> Stack<T> getStackOfObjects(Context context, String key, Class<T> cls) {
         String jsonArray = getString(context, key);
-        Stack<T> list = new Gson().fromJson(jsonArray, TypeToken.getParameterized(Stack.class, cls).getType());
+        Stack<T> list = Serializer.toStackOfObjects(jsonArray, cls);
 
         return list;
     }

@@ -8,10 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
 import java.util.List;
 import java.util.Map;
 
@@ -19,11 +15,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
-import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.IdPostRef;
+import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.enums.POST_TYPE;
+import samatov.space.spookies.model.utils.Serializer;
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
-import samatov.space.spookies.view_model.fragments.BaseFragment;
 import samatov.space.spookies.view_model.dialogs.favorite.FavoriteDialogHandler;
+import samatov.space.spookies.view_model.fragments.BaseFragment;
 
 
 public class PostsListFragment extends BaseFragment {
@@ -32,11 +30,10 @@ public class PostsListFragment extends BaseFragment {
     public PostsListFragment() { }
 
 
-    public static PostsListFragment newInstance(Map<String, JsonObject> posts, POST_TYPE type) {
+    public static PostsListFragment newInstance(Map<String, PostRef> posts, POST_TYPE type) {
         PostsListFragment fragment = new PostsListFragment();
 
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        String jsonStr = gson.toJson(posts);
+        String jsonStr = Serializer.toString(posts);
         Bundle bundle = new Bundle();
         bundle.putString("posts", jsonStr);
         bundle.putString("post_type", type.toString());
@@ -50,7 +47,7 @@ public class PostsListFragment extends BaseFragment {
     @BindView(R.id.postListEmptyListContainer) LinearLayout mEmptyListView;
 
 
-    JsonObject mPosts;
+    Map<String, PostRef> mPosts;
     private RecyclerView.LayoutManager mLayoutManager;
     private PostsListAdapter mAdapter;
     private MyProfileActivity mActivity;
@@ -72,14 +69,14 @@ public class PostsListFragment extends BaseFragment {
         String postsStr = getArguments().getString("posts");
         String postType = getArguments().getString("post_type");
         if (postsStr != null)
-            mPosts = new GsonBuilder().serializeNulls().create().fromJson(postsStr, JsonObject.class);
+            mPosts = Serializer.toMapOfObjects(postsStr, PostRef.class);
         if (postType != null)
             mPostsType = POST_TYPE.valueOf(postType);
     }
 
 
     private void setupViews() {
-        List<JsonObject> list = getFormattedPostList(mPosts);
+        List<IdPostRef> list = getFormattedPostList(mPosts);
         if (list.size() <= 0) {
             mRecyclerView.setVisibility(View.GONE);
             mEmptyListView.setVisibility(View.VISIBLE);
@@ -88,7 +85,7 @@ public class PostsListFragment extends BaseFragment {
     }
 
 
-    private void setupRecyclerView(List<JsonObject> list) {
+    private void setupRecyclerView(List<IdPostRef> list) {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new PostsListAdapter(list, getItemClickedListener(), true, mPostsType);
@@ -116,24 +113,22 @@ public class PostsListFragment extends BaseFragment {
 
 
     private void onViewLikesClicked(String postId) {
-        Post post = getPost(postId);
+        IdPostRef post = getPost(postId);
         FavoriteDialogHandler dialogHandler = new FavoriteDialogHandler(mActivity, post.getFavorite());
         dialogHandler.showDialog();
     }
 
 
     private void onViewCommentsClicked(String postId) {
-       Post post = getPost(postId);
+       IdPostRef post = getPost(postId);
        mActivity.startViewCommentFragment(post);
     }
 
 
-    private Post getPost(String postId) {
-        JsonObject postObj = mPosts.getAsJsonObject(postId);
-        Post post = new GsonBuilder().serializeNulls().create().fromJson(postObj, Post.class);
-        post.setId(postId);
+    private IdPostRef getPost(String postId) {
+        IdPostRef postRef = getIdPostRef(postId, mPosts);
 
-        return post;
+        return postRef;
     }
 
 

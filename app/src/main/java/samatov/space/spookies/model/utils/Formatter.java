@@ -2,13 +2,14 @@ package samatov.space.spookies.model.utils;
 
 import android.graphics.drawable.Drawable;
 
-import com.google.gson.JsonObject;
-
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import retrofit2.HttpException;
 import samatov.space.spookies.model.api.beans.ApiError;
 import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.PostRef;
 
 public class Formatter {
 
@@ -34,11 +35,12 @@ public class Formatter {
     }
 
 
-    public static JsonObject constructRefFromPost(Post post) {
-        JsonObject draftRef = new JsonObject();
-        draftRef.addProperty("created", post.getCreated());
-        draftRef.addProperty("lastUpdated", post.getLastUpdated());
-        draftRef.addProperty("title", post.getTitle());
+    public static PostRef constructRefFromPost(Post post) {
+        PostRef draftRef = new PostRef();
+        draftRef.setCreated(post.getCreated());
+        draftRef.setLastUpdated(post.getLastUpdated());
+        draftRef.setFavorite(new ArrayList<>(post.getFavorite().keySet()));
+        draftRef.setTitle(post.getTitle());
 
         return draftRef;
     }

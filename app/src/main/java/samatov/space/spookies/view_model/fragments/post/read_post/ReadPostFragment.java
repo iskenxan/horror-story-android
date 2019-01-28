@@ -26,6 +26,7 @@ import io.reactivex.Completable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.post.Message;
 import samatov.space.spookies.view_model.activities.ReadPostActivity;
@@ -217,10 +218,8 @@ public class ReadPostFragment extends Fragment {
         if (viewedUser == null)
             return;
 
-        JsonObject postRef = viewedUser.getPublishedRefs().get(mPost.getId());
-        if (postRef.has("favorite")) {
-            postRef.getAsJsonObject("favorite").add(currentUser.getUsername(), favoriteItem);
-        }
+        PostRef postRef = viewedUser.getPublishedRefs().get(mPost.getId());
+        postRef.getFavorite().add(currentUser.getUsername());
         MyPreferenceManager.popViewedUsersStack(mActivity);
         MyPreferenceManager.addToViewedUsersStack(mActivity, viewedUser);
     }
@@ -239,8 +238,7 @@ public class ReadPostFragment extends Fragment {
         if (viewedUser == null)
             return;
 
-        viewedUser.getPublishedRefs().
-                get(mPost.getId()).getAsJsonObject("favorite").remove(currentUser.getUsername());
+        viewedUser.getPublishedRefs().get(mPost.getId()).getFavorite().remove(currentUser.getUsername());
         MyPreferenceManager.popViewedUsersStack(mActivity);
         MyPreferenceManager.addToViewedUsersStack(mActivity, viewedUser);
     }

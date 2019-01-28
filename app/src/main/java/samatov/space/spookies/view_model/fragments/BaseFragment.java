@@ -3,15 +3,17 @@ package samatov.space.spookies.view_model.fragments;
 import android.support.v4.app.Fragment;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import samatov.space.spookies.R;
+import samatov.space.spookies.model.api.beans.IdPostRef;
+import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.utils.Validator;
 
@@ -35,11 +37,11 @@ public class BaseFragment extends Fragment {
     }
 
 
-    protected List<JsonObject> getFormattedPostList(JsonObject posts) {
-        List<JsonObject> list = new ArrayList<>();
+    protected List<IdPostRef> getFormattedPostList(Map<String, PostRef> posts) {
+        List<IdPostRef> list = new ArrayList<>();
 
         for (String key: posts.keySet()) {
-            JsonObject item = getFormattedListItem(key, posts);
+            IdPostRef item = getIdPostRef(key, posts);
             list.add(item);
         }
         sortPostsByTimestamp(list);
@@ -48,19 +50,18 @@ public class BaseFragment extends Fragment {
     }
 
 
-    private JsonObject getFormattedListItem(String key, JsonObject posts) {
-        JsonObject value;
-        value = posts.get(key).getAsJsonObject();
-        value.addProperty("id", key);
+    //TODO: finish removing all profileUrl references, remove one from favorite Post class, test and make sure everything works fine
+    protected IdPostRef getIdPostRef(String key, Map<String, PostRef> posts) {
+        IdPostRef value = new IdPostRef(posts.get(key));
+        value.setId(key);
 
         return value;
     }
 
 
-    private void sortPostsByTimestamp(List<JsonObject> list) {
+    private void sortPostsByTimestamp(List<IdPostRef> list) {
         Collections.sort(list, (a, b) ->
-                (int) (b.getAsJsonPrimitive("created").getAsLong()
-                        - (a.getAsJsonPrimitive("created").getAsLong())));
+                (int) (b.getLastUpdated() - (a.getLastUpdated())));
     }
 
 }

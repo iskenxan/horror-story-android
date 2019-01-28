@@ -10,11 +10,11 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
-import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.IdPostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
-import samatov.space.spookies.view_model.fragments.view_profile.ViewProfileFragment;
 import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
+import samatov.space.spookies.view_model.fragments.view_profile.ViewProfileFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
@@ -55,7 +55,7 @@ public class ViewProfileActivity extends BaseToolbarActivity {
     }
 
 
-    public void startReadCommentFragment(Post post, String authorUsername) {
+    public void startReadCommentFragment(IdPostRef post, String authorUsername) {
         mToolbar.setVisibility(View.GONE);
         MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, post);
         MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, authorUsername);

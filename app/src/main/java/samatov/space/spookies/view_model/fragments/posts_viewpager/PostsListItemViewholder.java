@@ -8,14 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import samatov.space.spookies.R;
-import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.IdPostRef;
 import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.model.utils.TimeSince;
 
 public class PostsListItemViewholder extends RecyclerView.ViewHolder {
 
     View mContainerView;
-    Post mPost;
+    IdPostRef mPost;
     boolean mDisplayTimestamp;
 
 
@@ -25,7 +25,7 @@ public class PostsListItemViewholder extends RecyclerView.ViewHolder {
     }
 
 
-    public void bind(Post post, PostListItemClicked itemClicked, boolean displayTimeStamp, POST_TYPE postType) {
+    public void bind(IdPostRef post, PostListItemClicked itemClicked, boolean displayTimeStamp, POST_TYPE postType) {
         mPost = post;
         mDisplayTimestamp = displayTimeStamp;
 
@@ -41,7 +41,7 @@ public class PostsListItemViewholder extends RecyclerView.ViewHolder {
     }
 
 
-    private void setupLikesAndComments(Post post, PostListItemClicked itemClicked) {
+    private void setupLikesAndComments(IdPostRef post, PostListItemClicked itemClicked) {
         TextView favoriteTextView = mContainerView.findViewById(R.id.MyProfileListItemLikesTextView);
         favoriteTextView.setVisibility(View.VISIBLE);
         ImageView favoritesImageView = mContainerView.findViewById(R.id.MyProfileListItemLikesImageView);

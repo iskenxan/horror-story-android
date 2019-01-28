@@ -6,24 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
 import java.util.List;
 
 import samatov.space.spookies.R;
-import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.IdPostRef;
 import samatov.space.spookies.model.enums.POST_TYPE;
 
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListItemViewholder> {
 
-    List<JsonObject> mPosts;
+    List<IdPostRef> mPosts;
     PostListItemClicked mListener;
     boolean mDisplayTimestamp;
     POST_TYPE mPostType;
 
 
-    public PostsListAdapter(List<JsonObject> posts, PostListItemClicked listener,
+    public PostsListAdapter(List<IdPostRef> posts, PostListItemClicked listener,
                             boolean displayTimestamp, POST_TYPE postType) {
         this.mPosts = posts;
         this.mListener = listener;
@@ -44,9 +41,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListItemViewhold
 
     @Override
     public void onBindViewHolder(@NonNull PostsListItemViewholder postsListItemViewholder, int position) {
-        JsonObject postJson = mPosts.get(position);
-        Post post = new GsonBuilder().serializeNulls().create().fromJson(postJson, Post.class);
-
+        IdPostRef post = mPosts.get(position);
 
         postsListItemViewholder.bind(post, mListener, mDisplayTimestamp, mPostType);
     }

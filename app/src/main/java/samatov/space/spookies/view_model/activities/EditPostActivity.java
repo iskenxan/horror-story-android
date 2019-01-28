@@ -3,13 +3,12 @@ package samatov.space.spookies.view_model.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.google.gson.JsonObject;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.model.utils.Formatter;
@@ -123,7 +122,7 @@ public class EditPostActivity extends BaseActivity {
     private void movePostToDrafts(Object result) {
         Post draft = (Post) result;
         User user = MyPreferenceManager.getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
-        JsonObject postRef = Formatter.constructRefFromPost(draft);
+        PostRef postRef = Formatter.constructRefFromPost(draft);
         user.getDraftRefs().put(draft.getId(), postRef);
         user.getPublishedRefs().remove(draft.getId());
         MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_USER, user);
@@ -188,7 +187,7 @@ public class EditPostActivity extends BaseActivity {
     private void addDraftToMyPref(Object result) {
         Post savedDraft = (Post) result;
         User user = MyPreferenceManager.getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
-        JsonObject draftRef = Formatter.constructRefFromPost(savedDraft);
+        PostRef draftRef = Formatter.constructRefFromPost(savedDraft);
         user.getDraftRefs().put(savedDraft.getId(), draftRef);
         MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_USER, user);
     }
@@ -211,7 +210,7 @@ public class EditPostActivity extends BaseActivity {
     private void moveDraftToPublished(Object result, String oldDraftId) {
         Post publishedPost = (Post) result;
         User user = MyPreferenceManager.getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
-        JsonObject postRef = Formatter.constructRefFromPost(publishedPost);
+        PostRef postRef = Formatter.constructRefFromPost(publishedPost);
         user.getPublishedRefs().put(publishedPost.getId(), postRef);
         user.getDraftRefs().remove(oldDraftId);
         MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_USER, user);

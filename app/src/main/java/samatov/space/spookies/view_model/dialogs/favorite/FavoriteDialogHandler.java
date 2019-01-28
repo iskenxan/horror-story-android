@@ -7,6 +7,8 @@ import android.view.View;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 import samatov.space.spookies.R;
 import samatov.space.spookies.view_model.activities.BaseActivity;
 
@@ -15,10 +17,10 @@ public class FavoriteDialogHandler {
     View mContainerView;
     BottomDialog mDialog;
     BaseActivity mActivity;
-    JsonObject mFavorite;
+    List<String> mFavorite;
 
 
-    public FavoriteDialogHandler(BaseActivity activity, JsonObject favorite) {
+    public FavoriteDialogHandler(BaseActivity activity, List<String> favorite) {
         mActivity = activity;
         mContainerView = activity.getLayoutInflater()
                 .inflate(R.layout.user_list_view, null, false);

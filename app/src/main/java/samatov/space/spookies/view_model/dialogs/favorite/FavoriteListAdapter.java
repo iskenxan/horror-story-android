@@ -6,12 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.JsonObject;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import samatov.space.spookies.R;
 import samatov.space.spookies.view_model.dialogs.user_list.UserListItemClickedListener;
@@ -19,23 +15,13 @@ import samatov.space.spookies.view_model.dialogs.user_list.UserListItemViewHolde
 
 public class FavoriteListAdapter extends RecyclerView.Adapter<UserListItemViewHolder> {
 
-    List<JsonObject> mFavoriteList;
+    List<String> mFavoriteList;
     UserListItemClickedListener mListener;
 
-    public FavoriteListAdapter(JsonObject favoriteList, UserListItemClickedListener listener) {
+    public FavoriteListAdapter(List<String> favoriteList, UserListItemClickedListener listener) {
         mListener = listener;
-        Set<String> keyset = favoriteList.keySet();
-        List<String> keyList = new ArrayList<>(keyset);
-        Collections.sort(keyList, Collections.reverseOrder());
-        mFavoriteList = new ArrayList<>();
-
-        for (int i = 0; i < favoriteList.size(); i++) {
-            JsonObject item = new JsonObject();
-            String username = keyList.get(i);
-            item.addProperty("username", username);
-
-            mFavoriteList.add(item);
-        }
+        Collections.sort(favoriteList, Collections.reverseOrder());
+        mFavoriteList = favoriteList;
     }
 
 
@@ -51,8 +37,7 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<UserListItemViewHo
 
     @Override
     public void onBindViewHolder(@NonNull UserListItemViewHolder favoriteListItemViewHolder, int i) {
-        JsonObject item = mFavoriteList.get(i);
-        String username = item.getAsJsonPrimitive("username").getAsString();
+        String username = mFavoriteList.get(i);
 
         favoriteListItemViewHolder.bind(username, mListener);
     }

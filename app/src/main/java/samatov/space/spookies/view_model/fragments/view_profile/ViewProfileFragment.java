@@ -12,10 +12,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
 import java.util.List;
 import java.util.Map;
 
@@ -25,13 +21,14 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
-import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.IdPostRef;
+import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.view_model.activities.ViewProfileActivity;
+import samatov.space.spookies.view_model.dialogs.favorite.FavoriteDialogHandler;
 import samatov.space.spookies.view_model.dialogs.user_list.UserListDialogHandler;
 import samatov.space.spookies.view_model.fragments.BaseFragment;
-import samatov.space.spookies.view_model.dialogs.favorite.FavoriteDialogHandler;
 import samatov.space.spookies.view_model.fragments.posts_viewpager.ClickItemType;
 import samatov.space.spookies.view_model.fragments.posts_viewpager.PostListItemClicked;
 import samatov.space.spookies.view_model.fragments.posts_viewpager.PostsListAdapter;
@@ -100,17 +97,13 @@ public class ViewProfileFragment extends BaseFragment {
 
 
     private void setupRecyclerView() {
-        Map<String, JsonObject> posts = mUser.getPublishedRefs();
+        Map<String, PostRef> posts = mUser.getPublishedRefs();
         if (posts.size() <= 0) {
             mEmptyListContainer.setVisibility(View.VISIBLE);
             return;
         }
 
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        String postsStr = gson.toJson(posts);
-
-        JsonObject postsJson = gson.fromJson(postsStr, JsonObject.class);
-        List<JsonObject> formattedPostsList = getFormattedPostList(postsJson);
+        List<IdPostRef> formattedPostsList = getFormattedPostList(posts);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new PostsListAdapter(formattedPostsList, getOnItemClicked(),
@@ -121,9 +114,7 @@ public class ViewProfileFragment extends BaseFragment {
 
     private PostListItemClicked getOnItemClicked() {
         return (postId, clickType) -> {
-            JsonObject postObj = mUser.getPublishedRefs().get(postId);
-            Post post = new Gson().fromJson(postObj, Post.class);
-            post.setId(postId);
+            IdPostRef post = getIdPostRef(postId, mUser.getPublishedRefs());
             if (clickType == ClickItemType.READ_POST)
                 mActivity.startReadPostActivity(postId);
             else if (clickType == ClickItemType.COMMENT) {

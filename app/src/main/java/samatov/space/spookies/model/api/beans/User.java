@@ -1,7 +1,5 @@
 package samatov.space.spookies.model.api.beans;
 
-import com.google.gson.JsonObject;
-
 import java.util.List;
 import java.util.Map;
 
@@ -12,8 +10,8 @@ public class User extends ProfileMiddleware {
     private String profileUrl;
     private List<String> followers;
     private List<String> following;
-    private Map<String, JsonObject> draftRefs; //draftId, draft data
-    private Map<String, JsonObject> publishedRefs; //postId, draft data
+    private Map<String, PostRef> draftRefs; //draftId, draft data
+    private Map<String, PostRef> publishedRefs; //postId, draft data
 
     public String getUsername() {
         return username;
@@ -24,19 +22,19 @@ public class User extends ProfileMiddleware {
     }
 
 
-    public Map<String, JsonObject> getDraftRefs() {
+    public Map<String, PostRef> getDraftRefs() {
         return draftRefs;
     }
 
-    public void setDraftRefs(Map<String, JsonObject> draftRefs) {
+    public void setDraftRefs(Map<String, PostRef> draftRefs) {
         this.draftRefs = draftRefs;
     }
 
-    public Map<String, JsonObject> getPublishedRefs() {
+    public Map<String, PostRef> getPublishedRefs() {
         return publishedRefs;
     }
 
-    public void setPublishedRefs(Map<String, JsonObject> publishedRefs) {
+    public void setPublishedRefs(Map<String, PostRef> publishedRefs) {
         this.publishedRefs = publishedRefs;
     }
 

@@ -27,7 +27,7 @@ import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
-import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.IdPostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.activities.BaseToolbarActivity;
@@ -64,7 +64,7 @@ public class MyProfileActivity extends BaseToolbarActivity {
     }
 
 
-    public void startViewCommentFragment(Post post) {
+    public void startViewCommentFragment(IdPostRef post) {
         mToolbar.setVisibility(View.GONE);
         User currentUser = MyPreferenceManager
                 .getObject(this, MyPreferenceManager.CURRENT_USER, User.class);
