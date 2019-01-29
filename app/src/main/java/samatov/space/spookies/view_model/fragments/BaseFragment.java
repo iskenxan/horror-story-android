@@ -15,16 +15,18 @@ import samatov.space.spookies.R;
 import samatov.space.spookies.model.api.beans.IdPostRef;
 import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.api.beans.User;
-import samatov.space.spookies.model.utils.Validator;
+import samatov.space.spookies.model.utils.FormatterK;
 
 public class BaseFragment extends Fragment {
 
     protected void setProfileImage(User user, CircleImageView profileImageView) {
-        if (!Validator.isNullOrEmpty(user.getProfileUrl()))
+        String profileUrl = FormatterK.Companion.getUserProfileUrl(user.getUsername());
             Picasso.get()
-                    .load(user.getProfileUrl())
+                    .load(profileUrl)
                     .resize(90,90)
-                    .centerCrop().placeholder(R.drawable.ic_profile_placeholder)
+                    .centerCrop()
+                    .error(R.drawable.ic_profile_placeholder)
+                    .placeholder(R.drawable.ic_profile_placeholder)
                     .into(profileImageView);
     }
 
@@ -50,7 +52,6 @@ public class BaseFragment extends Fragment {
     }
 
 
-    //TODO: finish removing all profileUrl references, remove one from favorite Post class, test and make sure everything works fine
     protected IdPostRef getIdPostRef(String key, Map<String, PostRef> posts) {
         IdPostRef value = new IdPostRef(posts.get(key));
         value.setId(key);

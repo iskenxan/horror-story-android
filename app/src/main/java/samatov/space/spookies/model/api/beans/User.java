@@ -7,7 +7,6 @@ import samatov.space.spookies.model.api.middleware.ProfileMiddleware;
 
 public class User extends ProfileMiddleware {
     private String username;
-    private String profileUrl;
     private List<String> followers;
     private List<String> following;
     private Map<String, PostRef> draftRefs; //draftId, draft data
@@ -36,14 +35,6 @@ public class User extends ProfileMiddleware {
 
     public void setPublishedRefs(Map<String, PostRef> publishedRefs) {
         this.publishedRefs = publishedRefs;
-    }
-
-    public String getProfileUrl() {
-        return profileUrl;
-    }
-
-    public void setProfileUrl(String profileUrl) {
-        this.profileUrl = profileUrl;
     }
 
     public List<String> getFollowers() {

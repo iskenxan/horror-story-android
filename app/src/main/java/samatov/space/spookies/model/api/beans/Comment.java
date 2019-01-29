@@ -4,7 +4,6 @@ public class Comment {
 
     private String username;
     private String text;
-    private String profileImageUrl;
     private long timestamp;
 
     public String getUsername() {
@@ -31,11 +30,4 @@ public class Comment {
         this.timestamp = timestamp;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
 }

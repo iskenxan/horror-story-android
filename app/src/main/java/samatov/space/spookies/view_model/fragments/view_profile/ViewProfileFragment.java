@@ -118,7 +118,7 @@ public class ViewProfileFragment extends BaseFragment {
             if (clickType == ClickItemType.READ_POST)
                 mActivity.startReadPostActivity(postId);
             else if (clickType == ClickItemType.COMMENT) {
-                mActivity.startReadCommentFragment(post, mUser.getUsername());
+                mActivity.fetchPostAndStartReadCommentFragment(postId);
             } else if (clickType == ClickItemType.FAVORITE) {
                 FavoriteDialogHandler handler = new FavoriteDialogHandler(mActivity, post.getFavorite());
                 handler.showDialog();

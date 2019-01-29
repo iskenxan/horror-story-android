@@ -74,7 +74,7 @@ public class ReadPostActivity extends BaseToolbarActivity {
 
     public void startCommentFragment() {
         mToolbar.setVisibility(View.GONE);
-        CommentFragment fragment = CommentFragment.newInstance(this, false);
+        CommentFragment fragment = CommentFragment.newInstance(this);
         stackFragment(fragment, R.id.readPostMainPlaceholder, "comment_fragment");
     }
 

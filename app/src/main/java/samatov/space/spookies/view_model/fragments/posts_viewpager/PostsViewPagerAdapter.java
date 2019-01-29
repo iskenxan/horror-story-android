@@ -28,9 +28,9 @@ public class PostsViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int i) {
         if (i == 0)
-            return PostsListFragment.newInstance(mUser.getPublishedRefs(), POST_TYPE.PUBLISHED);
+            return PostsListFragment.Companion.newInstance(mUser.getPublishedRefs(), POST_TYPE.PUBLISHED);
         else
-            return PostsListFragment.newInstance(mUser.getDraftRefs(), POST_TYPE.DRAFT);
+            return PostsListFragment.Companion.newInstance(mUser.getDraftRefs(), POST_TYPE.DRAFT);
     }
 
     @Override

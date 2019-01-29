@@ -18,7 +18,6 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -34,7 +33,6 @@ import samatov.space.spookies.view_model.activities.BaseToolbarActivity;
 import samatov.space.spookies.view_model.activities.EditPostActivity;
 import samatov.space.spookies.view_model.activities.ViewProfileActivity;
 import samatov.space.spookies.view_model.fragments.my_profile.MyProfileFragment;
-import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
@@ -44,7 +42,6 @@ public class MyProfileActivity extends BaseToolbarActivity {
     AppCompatActivity mActivity;
 
     MyProfileFragment myProfileFragment;
-    SweetAlertDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +65,7 @@ public class MyProfileActivity extends BaseToolbarActivity {
         mToolbar.setVisibility(View.GONE);
         User currentUser = MyPreferenceManager
                 .getObject(this, MyPreferenceManager.CURRENT_USER, User.class);
-        MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, post);
-        MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, currentUser.getUsername());
-        CommentFragment fragment = CommentFragment.newInstance(this, true);
-        stackFragment(fragment, R.id.myProfilePlaceholder, "comment_fragment");
+        fetchPostAndStartReadCommentFragment(post.getId(), currentUser.getUsername(), R.id.myProfilePlaceholder);
     }
 
 
@@ -165,7 +159,6 @@ public class MyProfileActivity extends BaseToolbarActivity {
             @Override
             public void onNext(String profileUrl) {
                 User user = MyPreferenceManager.getObject(mActivity, "user", User.class);
-                user.setProfileUrl(profileUrl);
                 MyPreferenceManager.saveObjectAsJson(mActivity, "user", user);
                 myProfileFragment.onImagePicked(file);
                 mDialog.dismiss();

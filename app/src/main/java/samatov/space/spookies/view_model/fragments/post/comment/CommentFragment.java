@@ -15,15 +15,12 @@ import com.stfalcon.chatkit.messages.MessageInput;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.pedant.SweetAlert.SweetAlertDialog;
-import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.view_model.activities.BaseToolbarActivity;
-import samatov.space.spookies.view_model.utils.DialogFactory;
 
 
 public class CommentFragment extends Fragment implements MessageInput.InputListener {
@@ -33,16 +30,12 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
     }
 
 
-    public static CommentFragment newInstance(AppCompatActivity activity, boolean fetchPost) {
+    public static CommentFragment newInstance(AppCompatActivity activity) {
         CommentFragment fragment = new CommentFragment();
         fragment.setEnterTransition(TransitionInflater.from(activity)
                 .inflateTransition(android.R.transition.slide_right));
         fragment.setExitTransition(TransitionInflater.from(activity)
                 .inflateTransition(android.R.transition.slide_right));
-
-        Bundle args = new Bundle();
-        args.putBoolean("fetch_post", fetchPost);
-        fragment.setArguments(args);
 
         return fragment;
     }
@@ -55,8 +48,6 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
     Post mPost;
     BaseToolbarActivity mActivity;
     CommentListAdapter mAdapter;
-    SweetAlertDialog mDialog;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,43 +61,10 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
 
 
     private void getPost() {
-        mPost = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_POST, Post.class);
-        Boolean fetchPost = getArguments().getBoolean("fetch_post");
-        if (fetchPost) {
-            fetchPost();
-            return;
-        }
+        mPost = MyPreferenceManager
+                .getObject(getContext(), MyPreferenceManager.CURRENT_POST, Post.class);
 
         setupViews();
-    }
-
-
-    //current post doesn't have the actual comments so we have to fetch the full post from the server
-    private void fetchPost() {
-        mDialog = DialogFactory.getLoadingDialog(mActivity, "Loading comments...");
-        mDialog.show();
-        String postAuthor =
-                MyPreferenceManager.getString(getContext(), MyPreferenceManager.CURRENT_POST_AUTHOR);
-        Observable<Post> observable = Post.getOtherUserPost(mPost.getId(), postAuthor, getContext());
-        mActivity.listenToObservable(observable, (result, exception) -> {
-            mDialog.dismiss();
-            if (exception != null) {
-                showFetchError();
-                return;
-            }
-            mPost = (Post) result;
-            setupViews();
-        });
-    }
-
-
-    private void showFetchError() {
-        String errorText = "Error retrieving the post. Please try again later";
-        SweetAlertDialog dialog = DialogFactory.getErrorDialog(mActivity, errorText, (d) -> {
-            d.dismiss();
-            mActivity.onBackPressed();
-        });
-        dialog.show();
     }
 
 
@@ -140,7 +98,6 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
                 .getString(getContext(), MyPreferenceManager.CURRENT_POST_AUTHOR);
 
         Comment comment = new Comment();
-        comment.setProfileImageUrl(user.getProfileUrl());
         comment.setText(text);
         comment.setUsername(user.getUsername());
 

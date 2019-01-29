@@ -37,7 +37,6 @@ public class FeedActivity extends BaseToolbarActivity {
     Feed mFeed;
 
 
-    //TODO: finish setting up activity. Test the whole like and comment workflow, seems buggy
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +68,6 @@ public class FeedActivity extends BaseToolbarActivity {
             else
                 listener.onRequestComplete(mFeed.getPopular(), null);
         });
-
     }
 
 
@@ -106,11 +104,7 @@ public class FeedActivity extends BaseToolbarActivity {
 
     public void startReadCommentsFragment(FeedItem item) {
         mAppBarLayout.setVisibility(View.GONE);
-        MyPreferenceManager
-                .saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, item.getAuthor());
-        MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, item);
-        stackFragment(CommentFragment.newInstance(this, true),
-                R.id.feedActivityMainPlaceholder, "read_comment_fragment");
+        fetchPostAndStartReadCommentFragment(item.getId(), item.getAuthor(), R.id.feedActivityMainPlaceholder);
     }
 
 

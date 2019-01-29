@@ -110,7 +110,7 @@ class FeedListFragment : BaseFragment() {
                 val actionArray = action.split(" ")
                 val type = actionArray[0]
                 val postId = actionArray[1]
-                findFeedItem(postId!!)?.let {
+                findFeedItem(postId)?.let {
                     if (type == "add")
                         it.favoriteCount += 1
                     else

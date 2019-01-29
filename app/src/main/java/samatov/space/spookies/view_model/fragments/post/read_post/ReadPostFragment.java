@@ -207,7 +207,6 @@ public class ReadPostFragment extends Fragment {
         User currentUser = MyPreferenceManager
                 .getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
         JsonObject favoriteItem = new JsonObject();
-        favoriteItem.addProperty("profileImgUrl", currentUser.getProfileUrl());
         mPost.getFavorite().add(currentUser.getUsername(), favoriteItem);
         MyPreferenceManager
                 .saveString(mActivity, MyPreferenceManager.FAVORITE_ACTION, "add " + mPost.getId());

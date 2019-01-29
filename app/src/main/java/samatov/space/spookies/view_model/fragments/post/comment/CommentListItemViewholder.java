@@ -11,8 +11,8 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.api.beans.Comment;
+import samatov.space.spookies.model.utils.FormatterK;
 import samatov.space.spookies.model.utils.TimeSince;
-import samatov.space.spookies.model.utils.Validator;
 
 public class CommentListItemViewholder extends RecyclerView.ViewHolder {
 
@@ -38,8 +38,10 @@ public class CommentListItemViewholder extends RecyclerView.ViewHolder {
         timestampTextView.setText(time);
 
         profileImageView.setImageResource(R.drawable.ic_profile_placeholder);
-        if (!Validator.isNullOrEmpty(comment.getProfileImageUrl()))
-            Picasso.get().load(comment.getProfileImageUrl())
+        String profileUrl = FormatterK.Companion.getUserProfileUrl(comment.getUsername());
+            Picasso.get()
+                    .load(profileUrl)
+                    .error(R.drawable.ic_profile_placeholder)
                     .resize(50, 50)
                     .into(profileImageView);
 

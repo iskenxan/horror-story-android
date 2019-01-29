@@ -27,11 +27,14 @@ import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
+import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.BmbMenuFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+    protected  SweetAlertDialog mDialog;
 
 
     public void getUserAndStartViewProfileActivity(String username, boolean finishCurrent) {
@@ -54,6 +57,28 @@ public abstract class BaseActivity extends AppCompatActivity {
             ActivityFactory
                     .startActivity(activity, ViewProfileActivity.class, true, finishCurrent);
         });
+    }
+
+
+    protected void fetchPostAndStartReadCommentFragment(String postId, String username, int placeholder) {
+        displayLoadingDialog();
+        Observable<Post> observable = Post.getOtherUserPost(postId, username, this);
+        listenToObservable(observable, (result, exception) -> {
+            mDialog.dismiss();
+            if (exception != null) {
+                displayErrorDialog();
+                return;
+            }
+            Post post = (Post) result;
+            startReadCommentFragment(post, username, placeholder);
+        });
+    }
+
+
+    private void startReadCommentFragment(Post post, String username, int placeholder) {
+        MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, post);
+        MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, username);
+        stackFragment(CommentFragment.newInstance(this), placeholder, "current_post");
     }
 
 
@@ -115,6 +140,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         ((Toolbar) actionBar.getParent()).setContentInsetsAbsolute(0,0);
         BoomMenuButton bmb = actionBar.findViewById(R.id.toolbarBmb);
         BmbMenuFactory.setupBmb(this, bmb);
+    }
+
+
+    protected void displayLoadingDialog() {
+        mDialog = DialogFactory.getLoadingDialog(this, "Performing your request...");
+        mDialog.show();
+    }
+
+
+    protected void displayErrorDialog() {
+        String errorText = "Couldn't complete your request. Please try again later.";
+        mDialog = DialogFactory.getErrorDialog(this, errorText, null);
+        mDialog.show();
     }
 
 

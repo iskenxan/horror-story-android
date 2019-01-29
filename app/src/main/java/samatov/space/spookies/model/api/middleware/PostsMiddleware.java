@@ -10,7 +10,6 @@ import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.ApiManager;
 import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
-import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.calls.PostsApi;
 
 public class PostsMiddleware {
@@ -32,13 +31,11 @@ public class PostsMiddleware {
     public static Completable addToFavorite(String authorUsername, String postId, String title, Context context) {
         PostsApi postsApi = ApiManager.getRetrofit().create(PostsApi.class);
 
-        User currentUser = MyPreferenceManager.getObject(context, MyPreferenceManager.CURRENT_USER, User.class);
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", postId);
         params.put("token", MyPreferenceManager.getToken(context));
         params.put("authorUsername", authorUsername);
         params.put("postTitle", title);
-        params.put("userProfileImgUrl", currentUser.getProfileUrl());
 
         return postsApi.addToFavorite(params);
     }

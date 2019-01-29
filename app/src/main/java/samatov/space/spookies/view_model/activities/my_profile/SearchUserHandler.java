@@ -17,6 +17,7 @@ import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.model.api.middleware.SearchMiddleware;
+import samatov.space.spookies.model.utils.FormatterK;
 import samatov.space.spookies.model.utils.Validator;
 import samatov.space.spookies.view_model.activities.BaseActivity;
 
@@ -108,7 +109,8 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
 
         for (String username : mUsers.keySet()) {
             User user = mUsers.get(username);
-            cursor.addRow(new Object[] { counter, user.getUsername(), user.getProfileUrl(), user.getUsername() });
+            String profileUrl = FormatterK.Companion.getUserProfileUrl(username);
+            cursor.addRow(new Object[] { counter, user.getUsername(), profileUrl, user.getUsername() });
             counter++;
         }
 

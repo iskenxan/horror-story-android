@@ -6,24 +6,19 @@ import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
-import samatov.space.spookies.model.api.beans.IdPostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
-import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.fragments.view_profile.ViewProfileFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
-import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class ViewProfileActivity extends BaseToolbarActivity {
 
 
     @BindView(R.id.viewProfileToolbar) Toolbar mToolbar;
     User mUser;
-    SweetAlertDialog mDialog;
     ViewProfileActivity mActivity;
 
 
@@ -47,7 +42,6 @@ public class ViewProfileActivity extends BaseToolbarActivity {
         mUser = MyPreferenceManager.peekViewedUsersStack(this);
     }
 
-
     public void startReadPostActivity(String postId) {
         MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, mUser.getUsername());
         MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_ID, postId);
@@ -55,11 +49,9 @@ public class ViewProfileActivity extends BaseToolbarActivity {
     }
 
 
-    public void startReadCommentFragment(IdPostRef post, String authorUsername) {
+    public void fetchPostAndStartReadCommentFragment(String postId) {
         mToolbar.setVisibility(View.GONE);
-        MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, post);
-        MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, authorUsername);
-        stackFragment(CommentFragment.newInstance(this, true), R.id.viewProfileMainPlaceholder, "current_post");
+        fetchPostAndStartReadCommentFragment(postId, mUser.getUsername(), R.id.viewProfileMainPlaceholder);
     }
 
 
@@ -88,19 +80,6 @@ public class ViewProfileActivity extends BaseToolbarActivity {
             MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_USER, currentUser);
         }
         listener.onRequestComplete(result, exception);
-    }
-
-
-    private void displayLoadingDialog() {
-        mDialog = DialogFactory.getLoadingDialog(this, "Performing your request...");
-        mDialog.show();
-    }
-
-
-    private void displayErrorDialog() {
-        String errorText = "Couldn't complete your request. Please try again later.";
-        mDialog = DialogFactory.getErrorDialog(this, errorText, null);
-        mDialog.show();
     }
 
 
