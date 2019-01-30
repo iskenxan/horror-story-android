@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import butterknife.ButterKnife
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_posts_list.*
 import samatov.space.spookies.R
 import samatov.space.spookies.model.MyPreferenceManager
@@ -15,7 +14,7 @@ import samatov.space.spookies.model.api.beans.IdPostRef
 import samatov.space.spookies.model.api.beans.PostRef
 import samatov.space.spookies.model.enums.POST_TYPE
 import samatov.space.spookies.model.utils.Serializer
-import samatov.space.spookies.model.utils.fromGenericJson
+import samatov.space.spookies.model.utils.SerializerK
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity
 import samatov.space.spookies.view_model.dialogs.favorite.FavoriteDialogHandler
 import samatov.space.spookies.view_model.fragments.BaseFragment
@@ -67,7 +66,7 @@ class PostsListFragment : BaseFragment() {
         val postsStr = arguments!!.getString("posts")
         val postType = arguments!!.getString("post_type")
         if (postsStr != null)
-            mPosts = Gson().fromGenericJson(postsStr)
+            mPosts = SerializerK.fromJson(postsStr)
         if (postType != null)
             mPostsType = POST_TYPE.valueOf(postType)
     }

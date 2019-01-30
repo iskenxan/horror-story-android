@@ -26,6 +26,7 @@ import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
+import samatov.space.spookies.model.api.beans.notification.NotificationsFeed;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
@@ -37,18 +38,31 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected  SweetAlertDialog mDialog;
 
 
+    protected void getNotificationFeed(boolean showLoading, boolean showError, ApiRequestListener listener) {
+        if (showLoading)
+            displayLoadingDialog();
+
+        Observable<NotificationsFeed> observable = NotificationsFeed.getNotificationFeed(this);
+        listenToObservable(observable, (result, exception) -> {
+            if (mDialog != null)
+                mDialog.dismiss();
+            if (exception != null && showError) {
+                displayErrorDialog();
+                return;
+            }
+            listener.onRequestComplete(result, null);
+        });
+    }
+
+
     public void getUserAndStartViewProfileActivity(String username, boolean finishCurrent) {
         BaseActivity activity = this;
-        SweetAlertDialog loadingDialog =
-                DialogFactory.getLoadingDialog(this, "Loading...");
-        loadingDialog.show();
+        displayLoadingDialog();
         Observable<User> observable = User.getOtherUserInfo(username, this);
         listenToObservable(observable, (result, exception) -> {
-            loadingDialog.dismiss();
+            mDialog.dismiss();
             if (exception != null) {
-                SweetAlertDialog dialog = DialogFactory.getErrorDialog(this,
-                        "Error completing your request. Please try again later", null);
-                dialog.show();
+                displayErrorDialog();
                 return;
             }
 
@@ -83,12 +97,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     public void addComment(String authorUsername, String postId, Comment comment, ApiRequestListener listener) {
-        SweetAlertDialog loadingDialog =
-                DialogFactory.getLoadingDialog(this, "Posting your comment...");
-        loadingDialog.show();
+        displayLoadingDialog();
         Observable<Comment> observable = Post.addComment(authorUsername, postId, comment, this);
         listenToObservable(observable, (result, exception) -> {
-            loadingDialog.dismiss();
+            mDialog.dismiss();
             onAddCommentResult(result, exception);
             listener.onRequestComplete(result, exception);
         });
@@ -97,9 +109,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void onAddCommentResult(Object result, Throwable exception) {
         if (exception != null) {
-            SweetAlertDialog dialog = DialogFactory.getErrorDialog(this,
-                    "Error completing your request. Please try again later", null);
-            dialog.show();
+            displayErrorDialog();
         } else {
             Post currentPost = MyPreferenceManager.getObject(this,
                     MyPreferenceManager.CURRENT_POST, Post.class);
@@ -144,7 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     protected void displayLoadingDialog() {
-        mDialog = DialogFactory.getLoadingDialog(this, "Performing your request...");
+        mDialog = DialogFactory.getLoadingDialog(this, "Loading...");
         mDialog.show();
     }
 

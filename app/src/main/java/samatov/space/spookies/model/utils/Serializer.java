@@ -45,7 +45,6 @@ public class Serializer {
     }
 
 
-
     public static String toString(Object object) {
         return new GsonBuilder().serializeNulls().create().toJson(object);
     }

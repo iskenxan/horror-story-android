@@ -8,5 +8,10 @@
             app:actionViewClass="android.support.v7.widget.SearchView"
             android:icon="@drawable/ic_search_icon"
             android:title="Search Users" />
+        <item
+            android:id="@+id/action_notifications"
+            app:showAsAction="collapseActionView|ifRoom"
+            android:icon="@drawable/notification_icon"
+            android:title="Search Users" />
     </group>
 </menu>

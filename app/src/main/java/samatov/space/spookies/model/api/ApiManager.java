@@ -17,10 +17,13 @@ import samatov.space.spookies.model.api.beans.Feed;
 import samatov.space.spookies.model.api.beans.FeedItem;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
+import samatov.space.spookies.model.api.beans.notification.NotificationActivity;
+import samatov.space.spookies.model.api.beans.notification.NotificationGroup;
+import samatov.space.spookies.model.api.beans.notification.NotificationsFeed;
 
 public class ApiManager {
 
-    private static String BASE_URL = "https://707c4568.ngrok.io";
+    private static String BASE_URL = "https://1d7d5584.ngrok.io";
 
 
     public static Retrofit getRetrofit() {
@@ -49,6 +52,9 @@ public class ApiManager {
                         .registerTypeAdapter(Comment.class, new MyDeserializer<Comment>())
                         .registerTypeAdapter(Feed.class, new MyDeserializer<Feed>())
                         .registerTypeAdapter(FeedItem.class, new MyDeserializer<FeedItem>())
+                        .registerTypeAdapter(NotificationsFeed.class, new MyDeserializer<NotificationsFeed>())
+                        .registerTypeAdapter(NotificationGroup.class, new MyDeserializer<NotificationGroup>())
+                        .registerTypeAdapter(NotificationActivity.class, new MyDeserializer<NotificationActivity>())
                         .create();
     }
 }

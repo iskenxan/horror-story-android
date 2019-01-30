@@ -8,6 +8,7 @@ import io.reactivex.Observable;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.ApiManager;
 import samatov.space.spookies.model.api.beans.Feed;
+import samatov.space.spookies.model.api.beans.notification.NotificationsFeed;
 import samatov.space.spookies.model.api.calls.FeedApi;
 
 public class FeedMiddleware {
@@ -20,5 +21,15 @@ public class FeedMiddleware {
         params.put("token", MyPreferenceManager.getToken(context));
 
         return feedApi.getMyFeed(params);
+    }
+
+
+    public static Observable<NotificationsFeed> getNotificationFeed(Context context) {
+        FeedApi feedApi = ApiManager.getRetrofit().create(FeedApi.class);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", MyPreferenceManager.getToken(context));
+
+        return feedApi.getNotificationFeed(params);
     }
 }

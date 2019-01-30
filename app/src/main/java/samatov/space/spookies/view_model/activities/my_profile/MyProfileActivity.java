@@ -28,6 +28,7 @@ import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.IdPostRef;
 import samatov.space.spookies.model.api.beans.User;
+import samatov.space.spookies.model.api.beans.notification.NotificationsFeed;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.activities.BaseToolbarActivity;
 import samatov.space.spookies.view_model.activities.EditPostActivity;
@@ -71,6 +72,7 @@ public class MyProfileActivity extends BaseToolbarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_action_bar_menu, menu);
         setupSearchAction(menu);
 
         return true;
@@ -78,13 +80,30 @@ public class MyProfileActivity extends BaseToolbarActivity {
 
 
     private void setupSearchAction(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_action_bar_menu, menu);
-
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat
                 .getActionView(menu.findItem(R.id.action_search));
         SearchUserHandler searchHandler = new SearchUserHandler(searchView,
                 searchManager, this, onSearchResultListener(), onSearchItemClickListener());
+    }
+
+
+    private void setupNotificationAction(Menu menu) {
+        View itemView = MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+
+        itemView.setOnClickListener((view) -> {
+
+        });
+    }
+
+
+
+    private void fetchNotifications() {
+        getNotificationFeed(false, false, (result, exception) -> {
+            NotificationsFeed feed = (NotificationsFeed) result;
+            int feedCount = feed.getUnseen();
+            //TODO: finish this method
+        });
     }
 
 

@@ -115,7 +115,7 @@ public class DemoActivity extends AppCompatActivity {
 
             @Override
             public boolean onSuggestionClick(int index) {
-                // TODO: handle suggestion item click
+
                 return true;
             }
         };
