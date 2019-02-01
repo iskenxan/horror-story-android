@@ -4,13 +4,20 @@
     <group>
         <item
             android:id="@+id/action_search"
-            app:showAsAction="collapseActionView|ifRoom"
+            app:showAsAction="always"
             app:actionViewClass="android.support.v7.widget.SearchView"
             android:icon="@drawable/ic_search_icon"
             android:title="Search Users" />
         <item
+            android:id="@+id/action_notifications_badge"
+            app:showAsAction="always"
+            android:visible="false"
+            app:actionLayout="@layout/menu_action_item_badge"
+            android:icon="@drawable/notification_icon"
+            android:title="Search Users" />
+        <item
             android:id="@+id/action_notifications"
-            app:showAsAction="collapseActionView|ifRoom"
+            app:showAsAction="always"
             android:icon="@drawable/notification_icon"
             android:title="Search Users" />
     </group>

@@ -25,6 +25,7 @@ public class Serializer {
         Map<String, T> classMap = new Gson()
                 .fromJson(json, TypeToken.getParameterized(HashMap.class, String.class, cls).getType());
 
+        
         return classMap;
     }
 

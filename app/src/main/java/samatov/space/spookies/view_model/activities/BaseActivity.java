@@ -36,9 +36,26 @@ import samatov.space.spookies.view_model.utils.DialogFactory;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected  SweetAlertDialog mDialog;
+    public int mPlaceholder;
 
 
-    protected void getNotificationFeed(boolean showLoading, boolean showError, ApiRequestListener listener) {
+    public void fetchMyPublished(String postId, ApiRequestListener listener) {
+        Observable<Post> observable = Post.getPublished(postId, this);
+        displayLoadingDialog();
+        listenToObservable(observable, (result, exception) -> {
+            mDialog.dismiss();
+            if (exception != null) {
+                displayErrorDialog();
+                return;
+            }
+
+            listener.onRequestComplete(result, null);
+        });
+    }
+
+
+
+    public void getNotificationFeed(boolean showLoading, boolean showError, ApiRequestListener listener) {
         if (showLoading)
             displayLoadingDialog();
 
@@ -74,7 +91,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void fetchPostAndStartReadCommentFragment(String postId, String username, int placeholder) {
+    public void fetchPostAndStartReadCommentFragment(String postId, String username, int placeholder) {
         displayLoadingDialog();
         Observable<Post> observable = Post.getOtherUserPost(postId, username, this);
         listenToObservable(observable, (result, exception) -> {
@@ -135,8 +152,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     protected void setupMainActionbar(Toolbar toolbar, String title) {
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        View actionBar = mInflater.inflate(R.layout.main_action_bar, null);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View actionBar = inflater.inflate(R.layout.main_action_bar, null);
 
         TextView titleTextView = actionBar.findViewById(R.id.toolbarTitleTextView);
         titleTextView.setText(title);
@@ -153,13 +170,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void displayLoadingDialog() {
+    public void displayLoadingDialog() {
         mDialog = DialogFactory.getLoadingDialog(this, "Loading...");
         mDialog.show();
     }
 
 
-    protected void displayErrorDialog() {
+    public void displayErrorDialog() {
         String errorText = "Couldn't complete your request. Please try again later.";
         mDialog = DialogFactory.getErrorDialog(this, errorText, null);
         mDialog.show();

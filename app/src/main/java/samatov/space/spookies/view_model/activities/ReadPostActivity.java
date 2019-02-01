@@ -31,6 +31,7 @@ public class ReadPostActivity extends BaseToolbarActivity {
         ButterKnife.bind(this);
         super.mToolbar = mToolbar;
         mActivity = this;
+        mPlaceholder = R.id.readPostMainPlaceholder;
         getPost();
     }
 
@@ -65,7 +66,7 @@ public class ReadPostActivity extends BaseToolbarActivity {
 
 
     private void onPostLoadSuccess() {
-        setToolbarTitle(mPost.getOtherCharacterName());
+        setReadPostToolbarTitle(mPost.getOtherCharacterName());
         setupToolbar();
         MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, mPost);
         replaceFragment(ReadPostFragment.newInstance(), R.id.readPostMainPlaceholder);
@@ -79,7 +80,7 @@ public class ReadPostActivity extends BaseToolbarActivity {
     }
 
 
-    private void setToolbarTitle(String title) {
+    private void setReadPostToolbarTitle(String title) {
         TextView titleTextView = mToolbar.findViewById(R.id.readPostToolbarTitleTextView);
         titleTextView.setText(title);
     }

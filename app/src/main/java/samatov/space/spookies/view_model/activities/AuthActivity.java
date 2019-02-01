@@ -26,6 +26,7 @@ public class AuthActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
         mDialog = DialogFactory.getLoadingDialog(this, "Loading...");
+        mPlaceholder = R.id.authMainPlaceholder;
         checkIfLoggedInAndRedirect();
     }
 

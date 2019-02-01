@@ -32,6 +32,7 @@ public class ViewProfileActivity extends BaseToolbarActivity {
 
         super.mToolbar = this.mToolbar;
 
+        mPlaceholder = R.id.viewProfileMainPlaceholder;
         setupMainActionbar(mToolbar, "View profile");
         getCurrentUser();
         replaceFragment(ViewProfileFragment.newInstance(), R.id.viewProfileMainPlaceholder);

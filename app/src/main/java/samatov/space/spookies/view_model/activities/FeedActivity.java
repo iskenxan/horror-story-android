@@ -44,6 +44,7 @@ public class FeedActivity extends BaseToolbarActivity {
         ButterKnife.bind(this);
         mActivity = this;
         super.mToolbar = mToolbar;
+        mPlaceholder = R.id.feedActivityMainPlaceholder;
         setupMainActionbar(mToolbar, "");
         getFeed();
     }
