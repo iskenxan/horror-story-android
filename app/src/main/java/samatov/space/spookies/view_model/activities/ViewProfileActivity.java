@@ -2,6 +2,8 @@ package samatov.space.spookies.view_model.activities;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import butterknife.BindView;
@@ -12,6 +14,7 @@ import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.fragments.view_profile.ViewProfileFragment;
+import samatov.space.spookies.view_model.utils.ActionbarItemsManager;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 
 public class ViewProfileActivity extends BaseToolbarActivity {
@@ -20,6 +23,7 @@ public class ViewProfileActivity extends BaseToolbarActivity {
     @BindView(R.id.viewProfileToolbar) Toolbar mToolbar;
     User mUser;
     ViewProfileActivity mActivity;
+    ActionbarItemsManager mManager;
 
 
 
@@ -36,6 +40,23 @@ public class ViewProfileActivity extends BaseToolbarActivity {
         setupMainActionbar(mToolbar, "View profile");
         getCurrentUser();
         replaceFragment(ViewProfileFragment.newInstance(), R.id.viewProfileMainPlaceholder);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_action_bar_menu, menu);
+        mManager = new ActionbarItemsManager(this, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        mManager.onActionBarItemClicked(item);
+
+        return super.onOptionsItemSelected(item);
     }
 
 

@@ -137,7 +137,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void stackFragment(Fragment fragment, int placeholder, String tag) {
+    public void stackFragment(Fragment fragment, int placeholder, String tag) {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(placeholder, fragment, tag)

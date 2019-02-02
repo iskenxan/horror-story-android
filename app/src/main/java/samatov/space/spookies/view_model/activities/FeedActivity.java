@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -21,6 +23,7 @@ import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity
 import samatov.space.spookies.view_model.fragments.FeedFragment;
 import samatov.space.spookies.view_model.fragments.feed_viewpager.FeedType;
 import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
+import samatov.space.spookies.view_model.utils.ActionbarItemsManager;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
@@ -35,6 +38,7 @@ public class FeedActivity extends BaseToolbarActivity {
     SweetAlertDialog mDialog;
     FeedActivity mActivity;
     Feed mFeed;
+    ActionbarItemsManager mManager;
 
 
     @Override
@@ -49,6 +53,21 @@ public class FeedActivity extends BaseToolbarActivity {
         getFeed();
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_action_bar_menu, menu);
+        mManager = new ActionbarItemsManager(this, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        mManager.onActionBarItemClicked(item);
+        return super.onOptionsItemSelected(item);
+    }
 
 
     private void getFeed() {

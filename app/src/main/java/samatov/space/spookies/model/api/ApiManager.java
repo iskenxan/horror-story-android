@@ -23,7 +23,7 @@ import samatov.space.spookies.model.api.beans.notification.NotificationsFeed;
 
 public class ApiManager {
 
-    private static String BASE_URL = "https://7cb5194a.ngrok.io";
+    private static String BASE_URL = "https://5da5d22e.ngrok.io";
 
 
     public static Retrofit getRetrofit() {
