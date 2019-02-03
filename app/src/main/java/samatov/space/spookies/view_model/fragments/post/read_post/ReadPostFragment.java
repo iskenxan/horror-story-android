@@ -213,8 +213,10 @@ public class ReadPostFragment extends Fragment {
         MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_POST, mPost);
 
 
+        String currentAuthor = MyPreferenceManager.getString(mActivity, MyPreferenceManager.CURRENT_POST_AUTHOR);
+
         User viewedUser = MyPreferenceManager.peekViewedUsersStack(mActivity);
-        if (viewedUser == null)
+        if (viewedUser == null || currentAuthor == null || !currentAuthor.equals(viewedUser.getUsername()))
             return;
 
         PostRef postRef = viewedUser.getPublishedRefs().get(mPost.getId());
@@ -233,8 +235,10 @@ public class ReadPostFragment extends Fragment {
         MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_POST, mPost);
 
 
+        String currentAuthor = MyPreferenceManager.getString(mActivity, MyPreferenceManager.CURRENT_POST_AUTHOR);
+
         User viewedUser = MyPreferenceManager.peekViewedUsersStack(mActivity);
-        if (viewedUser == null)
+        if (viewedUser == null || currentAuthor == null || !currentAuthor.equals(viewedUser.getUsername()))
             return;
 
         viewedUser.getPublishedRefs().get(mPost.getId()).getFavorite().remove(currentUser.getUsername());
