@@ -107,6 +107,7 @@ public class ViewProfileActivity extends BaseToolbarActivity {
 
     @Override
     public void onBackPressed() {
+        checkIfCurrentFragmentNotificationAndResetToolbarTitle("View profile");
         if (!handleBackPressed()) {
             MyPreferenceManager.popViewedUsersStack(this);
             finishAfterTransition();

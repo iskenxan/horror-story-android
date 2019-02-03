@@ -6,6 +6,10 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.provider.BaseColumns;
 import android.support.v7.widget.SearchView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 
@@ -13,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
@@ -28,6 +33,7 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
     OnSearchSuggestionClick mSuggestionClickListener;
     SearchView mSearchView;
     SearchUsersCursorAdapter mAdapter;
+    MatrixCursor mCursor;
 
 
     public SearchUserHandler(SearchView searchView, SearchManager searchManager,
@@ -39,10 +45,15 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
         searchView.setQueryHint("Search for users...");
+
         mAdapter = new SearchUsersCursorAdapter(activity, null, 0);
+        mAdapter.swapCursor(mCursor);
         searchView.setSuggestionsAdapter(mAdapter);
+        AutoCompleteTextView autoCompleteTextView = searchView.findViewById(R.id.search_src_text);
+        autoCompleteTextView.setThreshold(0);
         setupQueryListenerForSearchView(searchView, apiRequestListener);
         searchView.setOnSuggestionListener(this);
+        searchView.setOnSearchClickListener((view) -> requestSearch("", apiRequestListener));
     }
 
 
@@ -68,6 +79,8 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
                 .debounce(300, TimeUnit.MILLISECONDS)
                 .subscribe(charSequence -> {
                     String query = charSequence + "";
+                    if (query.equals(""))
+                        return;
                     requestSearch(query, listener);
                 });
     }
@@ -75,17 +88,40 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
 
     private void requestSearch(String query, ApiRequestListener listener) {
         try {
-            if (Validator.isNullOrEmpty(query))
-                return;
 
             Observable<Map<String, User>> observable = SearchMiddleware.searchForUsers(query, mActivity);
-            mActivity.listenToObservable(observable, (result, exception) ->
-                    onSearchComplete(listener, result, exception));
+            if (Validator.isNullOrEmpty(query))
+                observable = SearchMiddleware.searchSuggested(mActivity);
+
+            mActivity.runOnUiThread(() -> showProgressBar());
+
+            mActivity.listenToObservable(observable, (result, exception) -> {
+                hideProgressBar();
+                onSearchComplete(listener, result, exception);
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
+    public void showProgressBar() {
+        View searchViewPalette = mSearchView.findViewById(R.id.search_plate);
+        if (searchViewPalette.findViewById(R.id.searchProgressBar) != null)
+            searchViewPalette.findViewById(R.id.searchProgressBar).setVisibility(View.VISIBLE);
+
+        else {
+            View v = LayoutInflater.from(mActivity).inflate(R.layout.searchview_loading, null);
+            ((ViewGroup) searchViewPalette).addView(v, 1);
+        }
+    }
+
+
+    public void hideProgressBar() {
+        View searchViewPalette = mSearchView.findViewById(R.id.search_plate);
+        if (searchViewPalette.findViewById(R.id.searchProgressBar) != null)
+            searchViewPalette.findViewById(R.id.searchProgressBar).setVisibility(View.GONE);
+    }
 
 
     private void onSearchComplete(ApiRequestListener listener, Object result, Throwable exception) {
@@ -95,25 +131,23 @@ public class SearchUserHandler implements SearchView.OnSuggestionListener {
         mUsers = (Map<String, User>) result;
         MyPreferenceManager.saveObjectAsJson(mActivity,
                 MyPreferenceManager.USER_SEARCH_RESULT, mUsers);
-        Cursor cursor = createCursorFromResult();
-        mAdapter.swapCursor(cursor);
+
+        createCursorFromResult();
+        mAdapter.swapCursor(mCursor);
     }
 
 
-    private Cursor createCursorFromResult()  {
+    private void createCursorFromResult()  {
         String[] menuCols = new String[] { BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1,
                 SearchManager.SUGGEST_COLUMN_ICON_1, SearchManager.SUGGEST_COLUMN_INTENT_DATA };
 
-        MatrixCursor cursor = new MatrixCursor(menuCols);
+        mCursor = new MatrixCursor(menuCols);
         int counter = 0;
-
         for (String username : mUsers.keySet()) {
             User user = mUsers.get(username);
             String profileUrl = FormatterK.Companion.getUserProfileUrl(username);
-            cursor.addRow(new Object[] { counter, user.getUsername(), profileUrl, user.getUsername() });
+            mCursor.addRow(new Object[] { counter, user.getUsername(), profileUrl, user.getUsername() });
             counter++;
         }
-
-        return cursor;
     }
 }

@@ -13,4 +13,7 @@ public interface SearchApi {
 
     @POST("/search/users")
     Observable<Map<String, User>> searchForUsers(@Body HashMap<String, Object> params);
+
+    @POST("/search/suggested")
+    Observable<Map<String, User>> searchSuggested(@Body HashMap<String, Object> params);
 }

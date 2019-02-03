@@ -139,6 +139,7 @@ public class FeedActivity extends BaseToolbarActivity {
 
         if (currentFragment instanceof CommentFragment)
             mAppBarLayout.setVisibility(View.VISIBLE);
+        checkIfCurrentFragmentNotificationAndResetToolbarTitle("");
 
         handleBackPressed();
     }

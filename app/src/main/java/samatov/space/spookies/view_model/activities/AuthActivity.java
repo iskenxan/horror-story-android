@@ -73,7 +73,7 @@ public class AuthActivity extends BaseActivity {
     private void onFetchUserSuccess(Object result) {
         User user = (User) result;
         MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_USER, user);
-        ActivityFactory.startActivity(this, MyProfileActivity.class, true, true);
+        ActivityFactory.startActivity(this, FeedActivity.class, true, true);
     }
 
 

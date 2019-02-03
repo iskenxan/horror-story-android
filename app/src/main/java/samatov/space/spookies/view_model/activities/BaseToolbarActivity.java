@@ -1,5 +1,7 @@
 package samatov.space.spookies.view_model.activities;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -27,5 +29,13 @@ public  abstract class BaseToolbarActivity extends BaseActivity {
     public void setMainToolbarTitle(String newTitle) {
         TextView textView = mToolbar.findViewById(R.id.toolbarTitleTextView);
         textView.setText(newTitle);
+    }
+
+
+    public void checkIfCurrentFragmentNotificationAndResetToolbarTitle(String title) {
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment fragment = manager.findFragmentByTag("notification_fragment");
+        if (fragment != null && fragment.isVisible())
+            setMainToolbarTitle(title);
     }
 }

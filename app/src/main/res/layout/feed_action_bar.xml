@@ -13,8 +13,8 @@
         app:bmb_backgroundEffect="false"
         app:bmb_buttonEnum="ham"
         app:bmb_boomEnum="boomParabola_2"
-        app:bmb_piecePlaceEnum="piecePlace_ham_4"
-        app:bmb_buttonPlaceEnum="buttonPlace_ham_4"
+        app:bmb_piecePlaceEnum="piecePlace_ham_3"
+        app:bmb_buttonPlaceEnum="buttonPlace_ham_3"
         />
     <ImageView
         android:id="@+id/toolbarIcon"

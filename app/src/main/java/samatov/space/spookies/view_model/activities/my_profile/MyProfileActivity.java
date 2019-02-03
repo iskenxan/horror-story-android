@@ -3,8 +3,6 @@ package samatov.space.spookies.view_model.activities.my_profile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -148,10 +146,7 @@ public class MyProfileActivity extends BaseToolbarActivity {
 
     @Override
     public void onBackPressed() {
-        FragmentManager manager = getSupportFragmentManager();
-        Fragment fragment = manager.findFragmentByTag("notification_fragment");
-        if (fragment != null && fragment.isVisible())
-            setMainToolbarTitle("My Profile");
+        checkIfCurrentFragmentNotificationAndResetToolbarTitle("My profile");
         handleBackPressed();
     }
 }

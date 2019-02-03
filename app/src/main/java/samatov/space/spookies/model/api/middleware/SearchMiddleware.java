@@ -22,4 +22,13 @@ public class SearchMiddleware {
 
         return searchApi.searchForUsers(params);
     }
+
+
+    public static Observable<Map<String, User>> searchSuggested(Context context) {
+        SearchApi searchApi = ApiManager.getRetrofit().create(SearchApi.class);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", MyPreferenceManager.getToken(context));
+
+        return searchApi.searchSuggested(params);
+    }
 }

@@ -17,7 +17,6 @@ public class BmbMenuFactory {
     public static void setupBmb(AppCompatActivity activity, BoomMenuButton bmb) {
         addMyFeed(bmb, activity);
         addMyProfile(bmb, activity);
-        addFeatured(bmb);
         addLogout(bmb, activity);
     }
 
@@ -43,15 +42,6 @@ public class BmbMenuFactory {
                     MyPreferenceManager.cleanViewedUsersStack(activity);
                     ActivityFactory.startActivity(activity, MyProfileActivity.class, true, true);
                 });
-        bmb.addBuilder(builder);
-    }
-
-
-    private static void addFeatured(BoomMenuButton bmb) {
-        HamButton.Builder builder = getBasicBuilder()
-                .normalText("Featured")
-                .normalImageRes(R.drawable.menu_featured_icon)
-                .highlightedImageRes(R.drawable.menu_featured_icon_white);
         bmb.addBuilder(builder);
     }
 
