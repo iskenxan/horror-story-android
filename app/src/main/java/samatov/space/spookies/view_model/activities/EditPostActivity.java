@@ -7,6 +7,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
+import samatov.space.spookies.model.api.beans.BasePostReference;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.api.beans.User;
@@ -32,15 +33,16 @@ public class EditPostActivity extends BaseActivity {
 
 
     private void checkCurrentPostAndStartFragment() {
-        String currentPostId = MyPreferenceManager.getString(this, MyPreferenceManager.CURRENT_POST_ID);
-        if (Validator.isNullOrEmpty(currentPostId)) {
+        BasePostReference postRef = MyPreferenceManager
+                .getObject(this, MyPreferenceManager.CURRENT_POST_REF, BasePostReference.class);
+        if (postRef == null) {
             replaceFragment(EditPostFragment.newInstance(), R.id.editPostActivityPlaceHolder);
             return;
         }
 
         mDialog = DialogFactory.getLoadingDialog(this, "Loading...");
         mDialog.show();
-        Observable observable = getPostRequestObservable(currentPostId);
+        Observable observable = getPostRequestObservable(postRef.getId());
         listenToObservable(observable, (result, exception) -> {
             mDialog.dismiss();
             if (exception == null) {

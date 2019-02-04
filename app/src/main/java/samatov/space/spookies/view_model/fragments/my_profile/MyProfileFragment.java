@@ -77,7 +77,7 @@ public class MyProfileFragment extends BaseFragment implements GalleryImagePicke
 
     private void setupFab() {
         mFab.setOnClickListener(event -> {
-            MyPreferenceManager.delete(getContext(), MyPreferenceManager.CURRENT_POST_ID);
+            MyPreferenceManager.delete(getContext(), MyPreferenceManager.CURRENT_POST_REF);
             MyPreferenceManager.delete(getContext(), MyPreferenceManager.CURRENT_POST);
             MyPreferenceManager.saveObjectAsJson(getContext(),
                     MyPreferenceManager.CURRENT_POST_TYPE, POST_TYPE.DRAFT);

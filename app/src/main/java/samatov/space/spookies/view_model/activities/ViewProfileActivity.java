@@ -11,6 +11,7 @@ import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
+import samatov.space.spookies.model.api.beans.BasePostReference;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.fragments.view_profile.ViewProfileFragment;
@@ -64,16 +65,15 @@ public class ViewProfileActivity extends BaseToolbarActivity {
         mUser = MyPreferenceManager.peekViewedUsersStack(this);
     }
 
-    public void startReadPostActivity(String postId) {
-        MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, mUser.getUsername());
-        MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_ID, postId);
+    public void startReadPostActivity(BasePostReference postReference) {
+        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_POST_REF, postReference);
         ActivityFactory.startActivity(this, ReadPostActivity.class, true, false);
     }
 
 
-    public void fetchPostAndStartReadCommentFragment(String postId) {
+    public void fetchPostAndStartReadCommentFragment(BasePostReference postReference) {
         mToolbar.setVisibility(View.GONE);
-        fetchPostAndStartReadCommentFragment(postId, mUser.getUsername(), R.id.viewProfileMainPlaceholder);
+        fetchPostAndStartReadCommentFragment(postReference, R.id.viewProfileMainPlaceholder);
     }
 
 

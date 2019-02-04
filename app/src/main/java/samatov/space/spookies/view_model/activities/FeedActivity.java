@@ -54,6 +54,16 @@ public class FeedActivity extends BaseToolbarActivity {
     }
 
 
+    private void getFeed() {
+        displayLoadingDialog();
+        fetchFeed(() -> {
+            MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.FEED_TIMELINE, mFeed.getTimeline());
+            MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.FEED_POPULAR, mFeed.getPopular());
+            replaceFragment(FeedFragment.newInstance(), R.id.feedActivityMainPlaceholder);
+        });
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_action_bar_menu, menu);
@@ -67,17 +77,6 @@ public class FeedActivity extends BaseToolbarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         mManager.onActionBarItemClicked(item);
         return super.onOptionsItemSelected(item);
-    }
-
-
-    private void getFeed() {
-        mDialog = DialogFactory.getLoadingDialog(this, "Loading your feed...");
-        mDialog.show();
-        fetchFeed(() -> {
-            MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.FEED_TIMELINE, mFeed.getTimeline());
-            MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.FEED_POPULAR, mFeed.getPopular());
-            replaceFragment(FeedFragment.newInstance(), R.id.feedActivityMainPlaceholder);
-        });
     }
 
 
@@ -115,8 +114,7 @@ public class FeedActivity extends BaseToolbarActivity {
 
 
     public void startReadPostActivity(FeedItem item) {
-        MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_ID, item.getId());
-        MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, item.getAuthor());
+        MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST_REF, item);
         ActivityFactory
                 .startActivity(this, ReadPostActivity.class, true, false);
     }
@@ -124,7 +122,7 @@ public class FeedActivity extends BaseToolbarActivity {
 
     public void startReadCommentsFragment(FeedItem item) {
         mAppBarLayout.setVisibility(View.GONE);
-        fetchPostAndStartReadCommentFragment(item.getId(), item.getAuthor(), R.id.feedActivityMainPlaceholder);
+        fetchPostAndStartReadCommentFragment(item, R.id.feedActivityMainPlaceholder);
     }
 
 

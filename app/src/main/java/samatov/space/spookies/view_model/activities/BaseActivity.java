@@ -23,6 +23,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
+import samatov.space.spookies.model.api.beans.BasePostReference;
 import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
@@ -91,9 +92,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    public void fetchPostAndStartReadCommentFragment(String postId, String username, int placeholder) {
+    public void fetchPostAndStartReadCommentFragment(BasePostReference postRef, int placeholder) {
         displayLoadingDialog();
-        Observable<Post> observable = Post.getOtherUserPost(postId, username, this);
+        Observable<Post> observable = Post.getOtherUserPost(postRef, this);
         listenToObservable(observable, (result, exception) -> {
             mDialog.dismiss();
             if (exception != null) {
@@ -101,21 +102,20 @@ public abstract class BaseActivity extends AppCompatActivity {
                 return;
             }
             Post post = (Post) result;
-            startReadCommentFragment(post, username, placeholder);
+            startReadCommentFragment(post, placeholder);
         });
     }
 
 
-    private void startReadCommentFragment(Post post, String username, int placeholder) {
+    private void startReadCommentFragment(Post post, int placeholder) {
         MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, post);
-        MyPreferenceManager.saveString(this, MyPreferenceManager.CURRENT_POST_AUTHOR, username);
         stackFragment(CommentFragment.newInstance(this), placeholder, "current_post");
     }
 
 
-    public void addComment(String authorUsername, String postId, Comment comment, ApiRequestListener listener) {
+    public void addComment(BasePostReference postRef, Comment comment, ApiRequestListener listener) {
         displayLoadingDialog();
-        Observable<Comment> observable = Post.addComment(authorUsername, postId, comment, this);
+        Observable<Comment> observable = Post.addComment(postRef, comment, this);
         listenToObservable(observable, (result, exception) -> {
             mDialog.dismiss();
             onAddCommentResult(result, exception);

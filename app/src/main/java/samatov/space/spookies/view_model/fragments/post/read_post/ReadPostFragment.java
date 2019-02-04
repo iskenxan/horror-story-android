@@ -131,8 +131,6 @@ public class ReadPostFragment extends Fragment {
     private View.OnClickListener getOnBackClickedListener() {
         return (view) -> {
             MyPreferenceManager.delete(mActivity, MyPreferenceManager.CURRENT_POST);
-            MyPreferenceManager.delete(mActivity, MyPreferenceManager.CURRENT_POST_ID);
-            MyPreferenceManager.delete(mActivity, MyPreferenceManager.CURRENT_POST_AUTHOR);
             mActivity.finishAfterTransition();
         };
     }
@@ -162,14 +160,12 @@ public class ReadPostFragment extends Fragment {
 
 
     private Completable getCorrectFavoriteCompletable() {
-        String authorUsername = MyPreferenceManager
-                .getString(mActivity, MyPreferenceManager.CURRENT_POST_AUTHOR);
-        if (authorUsername == null)
+        if (mPost.getAuthor() == null)
             return null;
         Completable observable =
-                Post.addToFavorite(authorUsername, mPost.getId(), mPost.getTitle(), getContext());
+                Post.addToFavorite(new PostRef(mPost), getContext());
         if (inFavorites())
-            observable = Post.removeFromFavorite(authorUsername, mPost.getId(), getContext());
+            observable = Post.removeFromFavorite(new PostRef(mPost), getContext());
 
         return observable;
     }
@@ -213,10 +209,8 @@ public class ReadPostFragment extends Fragment {
         MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_POST, mPost);
 
 
-        String currentAuthor = MyPreferenceManager.getString(mActivity, MyPreferenceManager.CURRENT_POST_AUTHOR);
-
         User viewedUser = MyPreferenceManager.peekViewedUsersStack(mActivity);
-        if (viewedUser == null || currentAuthor == null || !currentAuthor.equals(viewedUser.getUsername()))
+        if (viewedUser == null || mPost.getAuthor() == null || !mPost.getAuthor().equals(viewedUser.getUsername()))
             return;
 
         PostRef postRef = viewedUser.getPublishedRefs().get(mPost.getId());
@@ -235,10 +229,8 @@ public class ReadPostFragment extends Fragment {
         MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_POST, mPost);
 
 
-        String currentAuthor = MyPreferenceManager.getString(mActivity, MyPreferenceManager.CURRENT_POST_AUTHOR);
-
         User viewedUser = MyPreferenceManager.peekViewedUsersStack(mActivity);
-        if (viewedUser == null || currentAuthor == null || !currentAuthor.equals(viewedUser.getUsername()))
+        if (viewedUser == null || mPost.getAuthor() == null || !mPost.getAuthor().equals(viewedUser.getUsername()))
             return;
 
         viewedUser.getPublishedRefs().get(mPost.getId()).getFavorite().remove(currentUser.getUsername());

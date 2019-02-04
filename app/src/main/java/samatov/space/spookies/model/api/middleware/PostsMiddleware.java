@@ -8,6 +8,7 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.ApiManager;
+import samatov.space.spookies.model.api.beans.BasePostReference;
 import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.calls.PostsApi;
@@ -15,51 +16,51 @@ import samatov.space.spookies.model.api.calls.PostsApi;
 public class PostsMiddleware {
 
 
-    public static Observable<Comment> addComment(String authorUsername, String postId, Comment comment, Context context) {
+    public static Observable<Comment> addComment(BasePostReference postReference, Comment comment, Context context) {
         PostsApi postsApi = ApiManager.getRetrofit().create(PostsApi.class);
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("id", postId);
+        params.put("id", postReference.getId());
         params.put("token", MyPreferenceManager.getToken(context));
-        params.put("authorUsername", authorUsername);
+        params.put("authorUsername", postReference.getAuthor());
         params.put("comment", comment);
 
         return postsApi.addComment(params);
     }
 
 
-    public static Completable addToFavorite(String authorUsername, String postId, String title, Context context) {
+    public static Completable addToFavorite(BasePostReference postReference, Context context) {
         PostsApi postsApi = ApiManager.getRetrofit().create(PostsApi.class);
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("id", postId);
+        params.put("id", postReference.getId());
         params.put("token", MyPreferenceManager.getToken(context));
-        params.put("authorUsername", authorUsername);
-        params.put("postTitle", title);
+        params.put("authorUsername", postReference.getAuthor());
+        params.put("postTitle", postReference.getTitle());
 
         return postsApi.addToFavorite(params);
     }
 
 
-    public static Completable removeFromFavorite(String authorUsername, String postId, Context context) {
+    public static Completable removeFromFavorite(BasePostReference postReference, Context context) {
         PostsApi postsApi = ApiManager.getRetrofit().create(PostsApi.class);
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("id", postId);
+        params.put("id", postReference.getId());
         params.put("token", MyPreferenceManager.getToken(context));
-        params.put("authorUsername", authorUsername);
+        params.put("authorUsername", postReference.getAuthor());
 
         return postsApi.removeFromFavorite(params);
     }
 
 
-    public static Observable<Post> getOtherUserPost(String postId, String authorUsername, Context context) {
+    public static Observable<Post> getOtherUserPost(BasePostReference postReference, Context context) {
         PostsApi postsApi = ApiManager.getRetrofit().create(PostsApi.class);
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("id", postId);
+        params.put("id", postReference.getId());
         params.put("token", MyPreferenceManager.getToken(context));
-        params.put("authorUsername", authorUsername);
+        params.put("authorUsername", postReference.getAuthor());
 
         return postsApi.getOtherUserPost(params);
     }

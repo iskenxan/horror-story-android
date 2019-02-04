@@ -11,6 +11,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
+import samatov.space.spookies.model.api.beans.BasePostReference;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.fragments.post.read_post.ReadPostFragment;
@@ -39,10 +40,11 @@ public class ReadPostActivity extends BaseToolbarActivity {
     private void getPost() {
         mDialog = DialogFactory.getLoadingDialog(this, "Loading...");
         mDialog.show();
-        String postId = MyPreferenceManager.getString(this, MyPreferenceManager.CURRENT_POST_ID);
-        String authorUsername = MyPreferenceManager.getString(this, MyPreferenceManager.CURRENT_POST_AUTHOR);
 
-        Observable<Post> observable = Post.getOtherUserPost(postId, authorUsername, this);
+        BasePostReference postRef = MyPreferenceManager
+                .getObject(this, MyPreferenceManager.CURRENT_POST_REF, BasePostReference.class);
+
+        Observable<Post> observable = Post.getOtherUserPost(postRef, this);
         listenToObservable(observable, (result, exception) -> {
            mDialog.dismiss();
            if (exception != null) {

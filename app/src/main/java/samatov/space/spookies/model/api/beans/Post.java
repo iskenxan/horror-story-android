@@ -14,9 +14,9 @@ import samatov.space.spookies.model.post.Message;
 
 public class Post extends PostsMiddleware {
 
-    private String id;
     private String title;
     private String author;
+    private String id;
     private int dialogCount = 0;
     private JsonObject dialog = new JsonObject();
     private JsonObject characters = new JsonObject();
@@ -188,13 +188,6 @@ public class Post extends PostsMiddleware {
         this.characters = characters;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public long getCreated() {
         return created;
@@ -234,5 +227,13 @@ public class Post extends PostsMiddleware {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

@@ -36,7 +36,7 @@ public class Formatter {
 
 
     public static PostRef constructRefFromPost(Post post) {
-        PostRef draftRef = new PostRef();
+        PostRef draftRef = new PostRef(post);
         draftRef.setCreated(post.getCreated());
         draftRef.setLastUpdated(post.getLastUpdated());
         draftRef.setFavorite(new ArrayList<>(post.getFavorite().keySet()));

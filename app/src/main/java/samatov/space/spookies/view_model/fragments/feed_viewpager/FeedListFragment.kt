@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_feed_list.*
 import samatov.space.spookies.R
 import samatov.space.spookies.model.MyPreferenceManager
 import samatov.space.spookies.model.api.beans.FeedItem
+import samatov.space.spookies.model.utils.SerializerK
 import samatov.space.spookies.view_model.activities.FeedActivity
 import samatov.space.spookies.view_model.fragments.BaseFragment
 
@@ -56,8 +56,7 @@ class FeedListFragment : BaseFragment() {
 
         mType = typeStr?.let { FeedType.valueOf(it) }
 
-        val listType = object : TypeToken<List<FeedItem>>() {}.type
-        mPosts = feedStr?.let { GsonBuilder().serializeNulls().create().fromJson(feedStr, listType) }
+        mPosts = feedStr?.let { SerializerK.fromJson(feedStr) }
     }
 
 

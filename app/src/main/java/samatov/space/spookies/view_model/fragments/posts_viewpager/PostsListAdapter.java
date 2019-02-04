@@ -9,19 +9,19 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import samatov.space.spookies.R;
-import samatov.space.spookies.model.api.beans.IdPostRef;
+import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.enums.POST_TYPE;
 
 public class PostsListAdapter extends RecyclerView.Adapter<PostsListItemViewholder> {
 
-    List<IdPostRef> mPosts;
+    List<PostRef> mPosts;
     PostListItemClicked mListener;
     boolean mDisplayTimestamp;
     POST_TYPE mPostType;
 
 
-    public PostsListAdapter(List<IdPostRef> posts, PostListItemClicked listener,
-                            boolean displayTimestamp, POST_TYPE postType) {
+    public PostsListAdapter(List<PostRef> posts,
+                            boolean displayTimestamp, POST_TYPE postType, PostListItemClicked listener) {
         this.mPosts = posts;
         this.mListener = listener;
         this.mDisplayTimestamp = displayTimestamp;
@@ -41,7 +41,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListItemViewhold
 
     @Override
     public void onBindViewHolder(@NonNull PostsListItemViewholder postsListItemViewholder, int position) {
-        IdPostRef post = mPosts.get(position);
+        PostRef post = mPosts.get(position);
 
         postsListItemViewholder.bind(post, mListener, mDisplayTimestamp, mPostType);
     }

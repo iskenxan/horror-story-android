@@ -10,9 +10,9 @@ import butterknife.ButterKnife
 import kotlinx.android.synthetic.main.fragment_posts_list.*
 import samatov.space.spookies.R
 import samatov.space.spookies.model.MyPreferenceManager
-import samatov.space.spookies.model.api.beans.IdPostRef
 import samatov.space.spookies.model.api.beans.PostRef
 import samatov.space.spookies.model.enums.POST_TYPE
+import samatov.space.spookies.model.utils.FormatterK
 import samatov.space.spookies.model.utils.Serializer
 import samatov.space.spookies.model.utils.SerializerK
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity
@@ -73,56 +73,51 @@ class PostsListFragment : BaseFragment() {
 
 
     private fun setupViews() {
-        val list = getFormattedPostList(mPosts)
-        if (list.size <= 0) {
-            postListFragmentRecyclerView!!.visibility = View.GONE
-            postListEmptyListContainer!!.visibility = View.VISIBLE
-        } else
-            setupRecyclerView(list)
+        val list = FormatterK.getFormattedPostList(mPosts)
+        list?.let {
+            if (it.isEmpty()) {
+                postListFragmentRecyclerView!!.visibility = View.GONE
+                postListEmptyListContainer!!.visibility = View.VISIBLE
+            } else
+                setupRecyclerView(list)
+        }
     }
 
 
-    private fun setupRecyclerView(list: List<IdPostRef>) {
+    private fun setupRecyclerView(list: List<PostRef>) {
         mLayoutManager = LinearLayoutManager(context)
         postListFragmentRecyclerView!!.layoutManager = mLayoutManager
-        mAdapter = PostsListAdapter(list, itemClickedListener, true, mPostsType)
+        mAdapter = PostsListAdapter(list, true, mPostsType, itemClickedListener)
         postListFragmentRecyclerView!!.adapter = mAdapter
     }
 
 
-    private val itemClickedListener: (String, ClickItemType) -> Unit
-        get() = { postId, clickedType ->
+    private val itemClickedListener: (PostRef, ClickItemType) -> Unit
+        get() = { post, clickedType ->
             when (clickedType) {
-                ClickItemType.READ_POST -> onReadPostClicked(postId)
-                ClickItemType.FAVORITE -> onViewLikesClicked(postId)
-                ClickItemType.COMMENT -> onViewCommentsClicked(postId)
+                ClickItemType.READ_POST -> onReadPostClicked(post)
+                ClickItemType.FAVORITE -> onViewLikesClicked(post)
+                ClickItemType.COMMENT -> onViewCommentsClicked(post)
             }
         }
 
 
-    private fun onReadPostClicked(postId: String) {
-        MyPreferenceManager.saveObjectAsJson(context, MyPreferenceManager.CURRENT_POST_TYPE, mPostsType)
-        MyPreferenceManager.saveString(context, MyPreferenceManager.CURRENT_POST_ID, postId)
+    private fun onReadPostClicked(post: PostRef) {
+        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_POST_TYPE, mPostsType)
+        MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.CURRENT_POST_REF, post)
+
         mActivity!!.startEditPostActivity()
     }
 
 
-    private fun onViewLikesClicked(postId: String) {
-        val post = getPost(postId)
+    private fun onViewLikesClicked(post: PostRef) {
         val dialogHandler = FavoriteDialogHandler(mActivity!!, post.favorite)
         dialogHandler.showDialog()
     }
 
 
-    private fun onViewCommentsClicked(postId: String) {
-        val post = getPost(postId)
+    private fun onViewCommentsClicked(post: PostRef) {
         mActivity!!.startViewCommentFragment(post)
-    }
-
-
-    private fun getPost(postId: String): IdPostRef {
-
-        return getIdPostRef(postId, mPosts)
     }
 
 

@@ -8,14 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import samatov.space.spookies.R;
-import samatov.space.spookies.model.api.beans.IdPostRef;
+import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.model.utils.TimeSince;
 
 public class PostsListItemViewholder extends RecyclerView.ViewHolder {
 
     View mContainerView;
-    IdPostRef mPost;
+    PostRef mPostRef;
     boolean mDisplayTimestamp;
 
 
@@ -25,39 +25,39 @@ public class PostsListItemViewholder extends RecyclerView.ViewHolder {
     }
 
 
-    public void bind(IdPostRef post, PostListItemClicked itemClicked, boolean displayTimeStamp, POST_TYPE postType) {
-        mPost = post;
+    public void bind(PostRef post, PostListItemClicked itemClicked, boolean displayTimeStamp, POST_TYPE postType) {
+        mPostRef = post;
         mDisplayTimestamp = displayTimeStamp;
 
         TextView textView = mContainerView.findViewById(R.id.myProfilePostsListItemTextView);
         textView.setText(post.getTitle());
 
         Button button = mContainerView.findViewById(R.id.myProfilePostsListItemViewButton);
-        button.setOnClickListener(view -> itemClicked.onItemClicked(post.getId(), ClickItemType.READ_POST));
+        button.setOnClickListener(view -> itemClicked.onItemClicked(post, ClickItemType.READ_POST));
         displayTimeSinceLastUpdated();
 
         if (postType == POST_TYPE.PUBLISHED)
-            setupLikesAndComments(post, itemClicked);
+            setupLikesAndComments(itemClicked);
     }
 
 
-    private void setupLikesAndComments(IdPostRef post, PostListItemClicked itemClicked) {
+    private void setupLikesAndComments(PostListItemClicked itemClicked) {
         TextView favoriteTextView = mContainerView.findViewById(R.id.MyProfileListItemLikesTextView);
         favoriteTextView.setVisibility(View.VISIBLE);
         ImageView favoritesImageView = mContainerView.findViewById(R.id.MyProfileListItemLikesImageView);
-        ImageView commmentsImageView = mContainerView.findViewById(R.id.MyProfileListItemCommentImageView);
+        ImageView commentsImageView = mContainerView.findViewById(R.id.MyProfileListItemCommentImageView);
 
-        favoriteTextView.setText(post.getFavorite().size() + "");
+        favoriteTextView.setText(mPostRef.getFavorite().size() + "");
 
-        favoritesImageView.setOnClickListener(view -> itemClicked.onItemClicked(post.getId(), ClickItemType.FAVORITE));
-        commmentsImageView.setOnClickListener(view -> itemClicked.onItemClicked(post.getId(), ClickItemType.COMMENT));
+        favoritesImageView.setOnClickListener(view -> itemClicked.onItemClicked(mPostRef, ClickItemType.FAVORITE));
+        commentsImageView.setOnClickListener(view -> itemClicked.onItemClicked(mPostRef, ClickItemType.COMMENT));
     }
 
 
     private void displayTimeSinceLastUpdated() {
         TextView timeTextView = mContainerView.findViewById(R.id.myProfilePostsListTimeTextView);
-        if (mPost.getLastUpdated() != -1 && mDisplayTimestamp) {
-            String timeSince = "Edited: " + TimeSince.getTimeAgo(mPost.getLastUpdated());
+        if (mPostRef.getLastUpdated() != -1 && mDisplayTimestamp) {
+            String timeSince = "Edited: " + TimeSince.getTimeAgo(mPostRef.getLastUpdated());
 
             timeTextView.setText(timeSince);
         } else

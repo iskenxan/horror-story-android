@@ -98,8 +98,8 @@ class NotificationFragment : Fragment() {
         mActivity?.let {
             val currentUser = MyPreferenceManager
                     .getObject(it, MyPreferenceManager.CURRENT_USER, User::class.java)
-            it.fetchPostAndStartReadCommentFragment(activity.activityObject,
-                    currentUser.username, it.mPlaceholder)
+            val ref = PostRef(activity.activityObject!!, currentUser.username)
+            it.fetchPostAndStartReadCommentFragment(ref, it.mPlaceholder)
         }
     }
 

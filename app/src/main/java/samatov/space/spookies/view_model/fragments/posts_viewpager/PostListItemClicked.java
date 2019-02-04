@@ -1,5 +1,7 @@
 package samatov.space.spookies.view_model.fragments.posts_viewpager;
 
+import samatov.space.spookies.model.api.beans.PostRef;
+
 public interface PostListItemClicked {
-    void onItemClicked(String postId, ClickItemType clickedType);
+    void onItemClicked(PostRef post, ClickItemType clickedType);
 }

@@ -19,6 +19,7 @@ import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Comment;
 import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.view_model.activities.BaseToolbarActivity;
 
@@ -94,14 +95,14 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
         String text = input + "";
 
         User user = MyPreferenceManager.getObject(getContext(), MyPreferenceManager.CURRENT_USER, User.class);
-        String postAuthor = MyPreferenceManager
-                .getString(getContext(), MyPreferenceManager.CURRENT_POST_AUTHOR);
 
         Comment comment = new Comment();
         comment.setText(text);
         comment.setUsername(user.getUsername());
 
-        mActivity.addComment(postAuthor, mPost.getId(), comment, (result, exception) -> {
+        PostRef ref = new PostRef(mPost);
+
+        mActivity.addComment(ref, comment, (result, exception) -> {
             if (exception != null)
                 return;
 

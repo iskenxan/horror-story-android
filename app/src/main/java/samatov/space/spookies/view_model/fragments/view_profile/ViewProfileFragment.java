@@ -21,10 +21,10 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
-import samatov.space.spookies.model.api.beans.IdPostRef;
 import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.enums.POST_TYPE;
+import samatov.space.spookies.model.utils.FormatterK;
 import samatov.space.spookies.view_model.activities.ViewProfileActivity;
 import samatov.space.spookies.view_model.dialogs.favorite.FavoriteDialogHandler;
 import samatov.space.spookies.view_model.dialogs.user_list.UserListDialogHandler;
@@ -103,22 +103,22 @@ public class ViewProfileFragment extends BaseFragment {
             return;
         }
 
-        List<IdPostRef> formattedPostsList = getFormattedPostList(posts);
+        List<PostRef> formattedPostsList = FormatterK.Companion.getFormattedPostList(posts);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new PostsListAdapter(formattedPostsList, getOnItemClicked(),
-                false, POST_TYPE.PUBLISHED);
+        mAdapter = new PostsListAdapter(formattedPostsList,
+                false, POST_TYPE.PUBLISHED, getOnItemClicked());
         mRecyclerView.setAdapter(mAdapter);
     }
 
 
     private PostListItemClicked getOnItemClicked() {
         return (postId, clickType) -> {
-            IdPostRef post = getIdPostRef(postId, mUser.getPublishedRefs());
+            PostRef post = mUser.getPublishedRefs().get(postId);
             if (clickType == ClickItemType.READ_POST)
                 mActivity.startReadPostActivity(postId);
             else if (clickType == ClickItemType.COMMENT) {
-                mActivity.fetchPostAndStartReadCommentFragment(postId);
+                mActivity.fetchPostAndStartReadCommentFragment(post);
             } else if (clickType == ClickItemType.FAVORITE) {
                 FavoriteDialogHandler handler = new FavoriteDialogHandler(mActivity, post.getFavorite());
                 handler.showDialog();
