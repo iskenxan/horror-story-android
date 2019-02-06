@@ -96,7 +96,7 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
     private void setupModel() {
         setupForCurrentPost();
-        MyPreferenceManager.saveString(getContext(), "current_bubble_color", mPost.getChatBubbleColor());
+        MyPreferenceManager.saveString(getContext(), MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR, mPost.getChatBubbleColor());
     }
 
 

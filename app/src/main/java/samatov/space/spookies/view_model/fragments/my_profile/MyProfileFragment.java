@@ -67,7 +67,7 @@ public class MyProfileFragment extends BaseFragment implements GalleryImagePicke
 
 
     private void setupViews() {
-        setProfileImage(mUser, mProfileImageView);
+        setProfileImage(mUser, mProfileImageView, true);
         mUsernameTextView.setText(mUser.getUsername());
         setupFollowersViews(mUser, mFollowersTextView, mFollowingTextView, mPostsTextView);
         setupFab();

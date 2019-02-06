@@ -30,7 +30,6 @@
         android:id="@+id/readPostDialogFavoriteButton"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="20dp"
         android:layout_centerInParent="true"
         app:btn_color="@android:color/darker_gray"
         app:btn_fill_color="@color/colorAccent"
@@ -45,10 +44,12 @@
     android:layout_width="30dp"
     android:layout_height="30dp"
     android:src="@drawable/comment_icon"
+    android:layout_marginTop="20dp"
     android:layout_marginRight="10dp"
-    app:layout_constraintTop_toTopOf="@id/readPostDialogFavoriteButton"
+    app:layout_constraintTop_toBottomOf="@id/readPostDialogSeparator"
     app:layout_constraintStart_toEndOf="@id/readPostDialogFavoriteButton"
     app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/readPostDialogBackTextView"/>
     />
 <TextView
     android:id="@+id/readPostDialogBackTextView"
@@ -57,7 +58,7 @@
     android:text="Back"
     android:textColor="@color/colorSecondary"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/readPostDialogFavoriteButton"
+    app:layout_constraintTop_toBottomOf="@id/readPostDialogCommendImageView"
     app:layout_constraintBottom_toBottomOf="parent"
     android:textSize="18sp"
     android:layout_marginTop="20dp"

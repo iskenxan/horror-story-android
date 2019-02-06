@@ -3,7 +3,6 @@ package samatov.space.spookies.view_model.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
@@ -19,7 +18,6 @@ import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class EditPostActivity extends BaseActivity {
 
-    SweetAlertDialog mDialog;
     AppCompatActivity mActivity;
 
     @Override
@@ -40,8 +38,7 @@ public class EditPostActivity extends BaseActivity {
             return;
         }
 
-        mDialog = DialogFactory.getLoadingDialog(this, "Loading...");
-        mDialog.show();
+        displayLoadingDialog();
         Observable observable = getPostRequestObservable(postRef.getId());
         listenToObservable(observable, (result, exception) -> {
             mDialog.dismiss();

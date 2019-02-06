@@ -70,10 +70,27 @@ public class DialogFactory {
     }
 
 
-
     public static SweetAlertDialog getAlertDialog(AppCompatActivity activity, String title,
                                                   String text, boolean showCancel, SweetAlertDialog.OnSweetClickListener listener) {
-        SweetAlertDialog dialog = new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE);
+        SweetAlertDialog dialog = getInformationDialog(activity,
+                title, text, showCancel, listener, SweetAlertDialog.WARNING_TYPE);
+        return dialog;
+    }
+
+
+    public static SweetAlertDialog getNormalDialog(AppCompatActivity activity, String title,
+                                                  String text, boolean showCancel, SweetAlertDialog.OnSweetClickListener listener) {
+        SweetAlertDialog dialog = getInformationDialog(activity, title,
+                text, showCancel, listener, SweetAlertDialog.NORMAL_TYPE);
+
+        return dialog;
+    }
+
+
+    private static SweetAlertDialog getInformationDialog(AppCompatActivity activity, String title,
+                                                         String text, boolean showCancel, SweetAlertDialog.OnSweetClickListener listener, int type) {
+        SweetAlertDialog dialog = new SweetAlertDialog(activity, type);
+
         dialog.setTitleText(title);
         dialog.setContentText(text);
         dialog.setCancelable(false);

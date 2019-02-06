@@ -16,12 +16,14 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
+import samatov.space.spookies.model.api.beans.BasePostReference;
 import samatov.space.spookies.model.api.beans.Feed;
 import samatov.space.spookies.model.api.beans.FeedItem;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
 import samatov.space.spookies.view_model.fragments.FeedFragment;
 import samatov.space.spookies.view_model.fragments.feed_viewpager.FeedType;
+import samatov.space.spookies.view_model.fragments.notification.NotificationFragment;
 import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.utils.ActionbarItemsManager;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
@@ -120,9 +122,14 @@ public class FeedActivity extends BaseToolbarActivity {
     }
 
 
-    public void startReadCommentsFragment(FeedItem item) {
+    public void startReadCommentsFragment(BasePostReference item) {
         mAppBarLayout.setVisibility(View.GONE);
         fetchPostAndStartReadCommentFragment(item, R.id.feedActivityMainPlaceholder);
+    }
+
+
+    public void hideViewPagerTabs() {
+        mViewPagerTabs.setVisibility(View.GONE);
     }
 
 
@@ -137,6 +144,8 @@ public class FeedActivity extends BaseToolbarActivity {
 
         if (currentFragment instanceof CommentFragment)
             mAppBarLayout.setVisibility(View.VISIBLE);
+        if (currentFragment instanceof NotificationFragment)
+            mViewPagerTabs.setVisibility(View.VISIBLE);
         checkIfCurrentFragmentNotificationAndResetToolbarTitle("");
 
         handleBackPressed();

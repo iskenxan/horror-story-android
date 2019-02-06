@@ -6,31 +6,55 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     tools:context=".view_model.fragments.post.comment.CommentFragment">
-    <TextView
-        android:id="@+id/commentFragmentCommentCountTextView"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp"
-        android:text="0 comments"
-        android:textColor="@color/colorPrimaryLight"
+        android:id="@+id/commentFragmentTopSection"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/commentFragmentTopSeparator"
-        />
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginTop="5dp"
-        android:id="@+id/commentFragmentTopSeparator"
-        android:background="@color/colorBg"
-        app:layout_constraintTop_toBottomOf="@id/commentFragmentCommentCountTextView"/>
+        android:background="@color/colorPrimary"
+        android:padding="16dp"
+        app:layout_constraintBottom_toTopOf="@id/commentFragmentRecyclerView"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/commentFragmentTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:text="Alone and Scared"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/commentFragmentCommentCountTextView"
+            />
+        <View
+            android:layout_width="20dp"
+            android:layout_height="1dp"
+            app:layout_constraintStart_toStartOf="@id/commentFragmentTitleTextView"
+            app:layout_constraintEnd_toEndOf="@id/commentFragmentTitleTextView"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorBg"
+            app:layout_constraintTop_toBottomOf="@id/commentFragmentTitleTextView"/>
+        <TextView
+            android:id="@+id/commentFragmentCommentCountTextView"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:layout_marginTop="26dp"
+            android:text="0 comments"
+            android:textColor="@color/colorBg"
+            app:layout_constraintTop_toBottomOf="@id/commentFragmentTitleTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+    </android.support.constraint.ConstraintLayout>
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:id="@+id/commentFragmentRecyclerView"
-        app:layout_constraintTop_toBottomOf="@id/commentFragmentTopSeparator"
+        app:layout_constraintTop_toBottomOf="@id/commentFragmentTopSection"
         app:layout_constraintBottom_toTopOf="@id/commentFragmentMessageInput"/>
     <com.stfalcon.chatkit.messages.MessageInput
         android:id="@+id/commentFragmentMessageInput"

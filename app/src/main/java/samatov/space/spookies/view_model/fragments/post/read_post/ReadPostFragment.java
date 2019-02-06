@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
@@ -117,14 +118,36 @@ public class ReadPostFragment extends Fragment {
         TextView backTextView = view.findViewById(R.id.readPostDialogBackTextView);
         backTextView.setOnClickListener(getOnBackClickedListener());
 
-        ShineButton favoriteButton = view.findViewById(R.id.readPostDialogFavoriteButton);
-        favoriteButton.init(mActivity);
-        if (inFavorites())
-            favoriteButton.setChecked(true);
-        favoriteButton.setOnClickListener(getOnFavoriteClickedListener());
-
+        boolean favoriteVisible = setupFavoriteButton(view);
         ImageView commentImageView = view.findViewById(R.id.readPostDialogCommendImageView);
         commentImageView.setOnClickListener(getOnCommentClickedListener());
+        if (!favoriteVisible) {
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(0, 20, 0, 20);
+        }
+    }
+
+
+    private boolean setupFavoriteButton(View view) {
+        User currentUser = MyPreferenceManager
+                .getObject(mActivity, MyPreferenceManager.CURRENT_USER, User.class);
+        ShineButton favoriteButton = view.findViewById(R.id.readPostDialogFavoriteButton);
+        if (!mPost.getAuthor().equals(currentUser.getUsername())) {
+
+            favoriteButton.init(mActivity);
+            if (inFavorites())
+                favoriteButton.setChecked(true);
+            favoriteButton.setOnClickListener(getOnFavoriteClickedListener());
+
+            return true;
+        }
+
+        favoriteButton.setVisibility(View.GONE);
+
+        return false;
     }
 
 
@@ -160,8 +183,6 @@ public class ReadPostFragment extends Fragment {
 
 
     private Completable getCorrectFavoriteCompletable() {
-        if (mPost.getAuthor() == null)
-            return null;
         Completable observable =
                 Post.addToFavorite(new PostRef(mPost), getContext());
         if (inFavorites())

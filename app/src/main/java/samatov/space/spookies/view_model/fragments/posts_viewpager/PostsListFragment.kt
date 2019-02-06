@@ -110,8 +110,8 @@ class PostsListFragment : BaseFragment() {
     }
 
 
-    private fun onViewLikesClicked(post: PostRef) {
-        val dialogHandler = FavoriteDialogHandler(mActivity!!, post.favorite)
+    private fun onViewLikesClicked(postRef: PostRef) {
+        val dialogHandler = FavoriteDialogHandler(mActivity!!, postRef.favorite, postRef.title)
         dialogHandler.showDialog()
     }
 

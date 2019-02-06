@@ -14,6 +14,7 @@ import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.BasePostReference;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
+import samatov.space.spookies.view_model.activities.my_profile.MyProfileActivity;
 import samatov.space.spookies.view_model.fragments.view_profile.ViewProfileFragment;
 import samatov.space.spookies.view_model.utils.ActionbarItemsManager;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
@@ -62,7 +63,14 @@ public class ViewProfileActivity extends BaseToolbarActivity {
 
 
     private void getCurrentUser() {
+        User currentUser = MyPreferenceManager
+                .getObject(this, MyPreferenceManager.CURRENT_USER, User.class);
+
         mUser = MyPreferenceManager.peekViewedUsersStack(this);
+        if (mUser.getUsername().equals(currentUser.getUsername())) {
+            MyPreferenceManager.cleanViewedUsersStack(this);
+            ActivityFactory.startActivity(this, MyProfileActivity.class, true, true);
+        }
     }
 
     public void startReadPostActivity(BasePostReference postReference) {

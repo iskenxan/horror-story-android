@@ -16,6 +16,7 @@ import samatov.space.spookies.model.api.beans.notification.NotificationActivity
 import samatov.space.spookies.model.api.beans.notification.NotificationsFeed
 import samatov.space.spookies.model.utils.Formatter
 import samatov.space.spookies.view_model.activities.BaseToolbarActivity
+import samatov.space.spookies.view_model.activities.FeedActivity
 import samatov.space.spookies.view_model.dialogs.favorite.FavoriteDialogHandler
 
 
@@ -88,7 +89,7 @@ class NotificationFragment : Fragment() {
 
     private fun displayLikesDialog(post: Post?) {
         val postRef: PostRef = Formatter.constructRefFromPost(post)
-        val dialogHandler = FavoriteDialogHandler(mActivity!!, postRef.favorite)
+        val dialogHandler = FavoriteDialogHandler(mActivity!!, postRef.favorite, postRef.title)
         dialogHandler.showDialog()
     }
 
@@ -99,7 +100,10 @@ class NotificationFragment : Fragment() {
             val currentUser = MyPreferenceManager
                     .getObject(it, MyPreferenceManager.CURRENT_USER, User::class.java)
             val ref = PostRef(activity.activityObject!!, currentUser.username)
-            it.fetchPostAndStartReadCommentFragment(ref, it.mPlaceholder)
+            if (it is FeedActivity)
+                it.startReadCommentsFragment(ref)
+            else
+                it.fetchPostAndStartReadCommentFragment(ref, it.mPlaceholder)
         }
     }
 

@@ -12,14 +12,15 @@ import samatov.space.spookies.model.utils.FormatterK;
 
 public class BaseFragment extends Fragment {
 
-    protected void setProfileImage(User user, CircleImageView profileImageView) {
+    protected void setProfileImage(User user, CircleImageView profileImageView, boolean isMyProfile) {
+        int placeholder = isMyProfile ? R.drawable.add_profile_placeholder : R.drawable.ic_profile_placeholder;
         String profileUrl = FormatterK.Companion.getUserProfileUrl(user.getUsername());
             Picasso.get()
                     .load(profileUrl)
                     .resize(90,90)
                     .centerCrop()
-                    .error(R.drawable.ic_profile_placeholder)
-                    .placeholder(R.drawable.ic_profile_placeholder)
+                    .error(placeholder)
+                    .placeholder(placeholder)
                     .into(profileImageView);
     }
 

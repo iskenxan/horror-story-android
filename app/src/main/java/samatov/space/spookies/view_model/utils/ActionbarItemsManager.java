@@ -18,6 +18,7 @@ import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.beans.notification.NotificationsFeed;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.view_model.activities.BaseToolbarActivity;
+import samatov.space.spookies.view_model.activities.FeedActivity;
 import samatov.space.spookies.view_model.activities.ViewProfileActivity;
 import samatov.space.spookies.view_model.activities.my_profile.OnSearchSuggestionClick;
 import samatov.space.spookies.view_model.activities.my_profile.SearchUserHandler;
@@ -48,7 +49,7 @@ public class ActionbarItemsManager {
     private void setupNotificationAction() {
         mActivity.getNotificationFeed(false, false, (result, exception) -> {
             NotificationsFeed feed = (NotificationsFeed) result;
-            int feedCount = feed.getUnseen();
+            int feedCount = feed != null ? feed.getUnseen() : 0;
 
             if (feedCount <= 0)
                 return;
@@ -72,6 +73,9 @@ public class ActionbarItemsManager {
 
 
     private void startNotificationFragment() {
+        if (mActivity instanceof FeedActivity)
+            ((FeedActivity) mActivity).hideViewPagerTabs();
+
         mActivity.stackFragment(NotificationFragment.Companion.newInstance(),
                 mActivity.mPlaceholder, "notification_fragment");
     }

@@ -22,12 +22,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.HttpException;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.api.beans.ApiError;
 import samatov.space.spookies.model.utils.Formatter;
 import samatov.space.spookies.model.utils.InputValidator;
 import samatov.space.spookies.view_model.activities.AuthActivity;
+import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class SignupFragment extends Fragment {
 
@@ -81,7 +83,20 @@ public class SignupFragment extends Fragment {
     public void onSignup() {
         if (inputsEmpty() || !passwordsMatch())
             return;
-        requestSignup();
+        displayWarningDialog();
+    }
+
+
+    private void displayWarningDialog() {
+        String title = "Save your password";
+        String text = "Please make sure to save your password as there's no way to recover it.";
+
+        SweetAlertDialog dialog = DialogFactory.getNormalDialog(mActivity, title,
+                text, true, (d) -> {
+                    d.dismiss();
+                    requestSignup();
+                });
+        dialog.show();
     }
 
 

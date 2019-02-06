@@ -45,6 +45,8 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
     @BindView(R.id.commentFragmentCommentCountTextView)TextView mCommentCountTextView;
     @BindView(R.id.commentFragmentMessageInput)MessageInput mMessageInput;
     @BindView(R.id.commentFragmentRecyclerView)RecyclerView mRecyclerView;
+    @BindView(R.id.commentFragmentTitleTextView)TextView mTitleTextView;
+
 
     Post mPost;
     BaseToolbarActivity mActivity;
@@ -71,6 +73,7 @@ public class CommentFragment extends Fragment implements MessageInput.InputListe
 
     private void setupViews() {
         mCommentCountTextView.setText(mPost.getComments().size() + " comments");
+        mTitleTextView.setText(mPost.getTitle());
         setupRecyclerView();
         mMessageInput.setInputListener(this);
     }

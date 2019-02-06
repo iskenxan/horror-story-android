@@ -30,7 +30,7 @@
                 android:id="@+id/myProfileImageView"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:src="@drawable/ic_profile_placeholder" />
+                android:src="@drawable/add_profile_placeholder" />
             <android.support.constraint.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="0dp"

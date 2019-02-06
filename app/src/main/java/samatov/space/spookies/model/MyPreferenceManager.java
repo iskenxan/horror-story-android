@@ -48,7 +48,6 @@ public class MyPreferenceManager {
         delete(context, CURRENT_POST);
         delete(context, CURRENT_POST_REF);
         delete(context, USER_SEARCH_RESULT);
-        delete(context, FAVORITE_ACTION);
         delete(context, FEED_TIMELINE);
         delete(context, FEED_POPULAR);
     }

@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
@@ -20,7 +19,6 @@ import samatov.space.spookies.view_model.utils.DialogFactory;
 public class ReadPostActivity extends BaseToolbarActivity {
 
     Post mPost;
-    SweetAlertDialog mDialog;
     BaseActivity mActivity;
 
     @BindView(R.id.readPostToolbar) Toolbar mToolbar;
@@ -38,9 +36,7 @@ public class ReadPostActivity extends BaseToolbarActivity {
 
 
     private void getPost() {
-        mDialog = DialogFactory.getLoadingDialog(this, "Loading...");
-        mDialog.show();
-
+        displayLoadingDialog();
         BasePostReference postRef = MyPreferenceManager
                 .getObject(this, MyPreferenceManager.CURRENT_POST_REF, BasePostReference.class);
 

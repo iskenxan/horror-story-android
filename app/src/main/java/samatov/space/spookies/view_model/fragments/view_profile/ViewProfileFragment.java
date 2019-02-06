@@ -87,7 +87,7 @@ public class ViewProfileFragment extends BaseFragment {
 
 
     private void setupViews() {
-        setProfileImage(mUser, mProfileImageView);
+        setProfileImage(mUser, mProfileImageView, false);
         mUsernameTextView.setText(mUser.getUsername());
         setupFollowersViews(mUser, mFollowersTextView, mFollowingTextView, mPostsTextView);
         setupRecyclerView();
@@ -113,14 +113,13 @@ public class ViewProfileFragment extends BaseFragment {
 
 
     private PostListItemClicked getOnItemClicked() {
-        return (postId, clickType) -> {
-            PostRef post = mUser.getPublishedRefs().get(postId);
+        return (postRef, clickType) -> {
             if (clickType == ClickItemType.READ_POST)
-                mActivity.startReadPostActivity(postId);
+                mActivity.startReadPostActivity(postRef);
             else if (clickType == ClickItemType.COMMENT) {
-                mActivity.fetchPostAndStartReadCommentFragment(post);
+                mActivity.fetchPostAndStartReadCommentFragment(postRef);
             } else if (clickType == ClickItemType.FAVORITE) {
-                FavoriteDialogHandler handler = new FavoriteDialogHandler(mActivity, post.getFavorite());
+                FavoriteDialogHandler handler = new FavoriteDialogHandler(mActivity, postRef.getFavorite(), postRef.getTitle());
                 handler.showDialog();
             }
         };

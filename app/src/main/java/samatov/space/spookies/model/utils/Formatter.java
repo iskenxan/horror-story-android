@@ -29,7 +29,7 @@ public class Formatter {
                 break;
             default:
                 error.setMessage("There was an issue on the server. Please try again later.");
-        }
+    }
 
         return error;
     }
