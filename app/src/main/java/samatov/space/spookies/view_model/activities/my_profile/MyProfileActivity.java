@@ -46,7 +46,7 @@ public class MyProfileActivity extends BaseToolbarActivity {
         ButterKnife.bind(this);
         mActivity = this;
         super.mToolbar = this.mToolbar;
-        setupMainActionbar(mToolbar, "My profile");
+        setupMainActionbar(mToolbar);
         mPlaceholder = R.id.myProfilePlaceholder;
         myProfileFragment = MyProfileFragment.newInstance();
         replaceFragment(myProfileFragment, R.id.myProfilePlaceholder);
@@ -143,7 +143,7 @@ public class MyProfileActivity extends BaseToolbarActivity {
 
     @Override
     public void onBackPressed() {
-        checkIfCurrentFragmentNotificationAndResetToolbarTitle("My profile");
         handleBackPressed();
+        checkFragmentAndResetTitle();
     }
 }

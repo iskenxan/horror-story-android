@@ -39,7 +39,7 @@ public class ViewProfileActivity extends BaseToolbarActivity {
         super.mToolbar = this.mToolbar;
 
         mPlaceholder = R.id.viewProfileMainPlaceholder;
-        setupMainActionbar(mToolbar, "View profile");
+        setupMainActionbar(mToolbar);
         getCurrentUser();
         replaceFragment(ViewProfileFragment.newInstance(), R.id.viewProfileMainPlaceholder);
     }
@@ -115,7 +115,7 @@ public class ViewProfileActivity extends BaseToolbarActivity {
 
     @Override
     public void onBackPressed() {
-        checkIfCurrentFragmentNotificationAndResetToolbarTitle("View profile");
+        checkFragmentAndResetTitle();
         if (!handleBackPressed()) {
             MyPreferenceManager.popViewedUsersStack(this);
             finishAfterTransition();

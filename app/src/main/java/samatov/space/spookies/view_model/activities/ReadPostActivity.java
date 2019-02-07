@@ -3,7 +3,6 @@ package samatov.space.spookies.view_model.activities;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,7 +63,6 @@ public class ReadPostActivity extends BaseToolbarActivity {
 
 
     private void onPostLoadSuccess() {
-        setReadPostToolbarTitle(mPost.getOtherCharacterName());
         setupToolbar();
         MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, mPost);
         replaceFragment(ReadPostFragment.newInstance(), R.id.readPostMainPlaceholder);
@@ -75,11 +73,5 @@ public class ReadPostActivity extends BaseToolbarActivity {
         mToolbar.setVisibility(View.GONE);
         CommentFragment fragment = CommentFragment.newInstance(this);
         stackFragment(fragment, R.id.readPostMainPlaceholder, "comment_fragment");
-    }
-
-
-    private void setReadPostToolbarTitle(String title) {
-        TextView titleTextView = mToolbar.findViewById(R.id.readPostToolbarTitleTextView);
-        titleTextView.setText(title);
     }
 }

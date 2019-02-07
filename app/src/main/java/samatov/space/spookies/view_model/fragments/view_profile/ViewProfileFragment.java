@@ -74,7 +74,8 @@ public class ViewProfileFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         getUser();
-        mActivity.showToolbar();
+        mActivity.setMainToolbarTitle("View profile");
+
         setupViews();
     }
 

@@ -98,7 +98,7 @@ public class EditPostActivity extends BaseActivity {
 
     public void unpublishPost(Post published) {
         mDialog = DialogFactory.getAlertDialog(this, "Unpublish?",
-                "Are you sure you want to unpublish this post and move it to drafts?", true, d -> {
+                "Are you sure you want to un-publish this post and move it to drafts?", true, d -> {
                     d.dismiss();
                     sendUnpublishRequest(published);
                 });
@@ -107,12 +107,13 @@ public class EditPostActivity extends BaseActivity {
 
 
     private void sendUnpublishRequest(Post published) {
+        displayLoadingDialog();
         listenToObservable(Post.unpublishPost(published.getId(), this), (result, exception) -> {
+            mDialog.dismiss();
             if (exception == null)
                 movePostToDrafts(result);
-            String error = "There was an error unpublishing your post. Please try again in a few moments.";
+            String error = "There was an error un-publishing your post. Please try again in a few moments.";
             String success = "Your post was unpublished.";
-            mDialog.dismiss();
             displayApiResult(exception, error, success);
         });
     }

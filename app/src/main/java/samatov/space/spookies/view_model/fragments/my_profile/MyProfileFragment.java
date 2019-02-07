@@ -59,6 +59,7 @@ public class MyProfileFragment extends BaseFragment implements GalleryImagePicke
         mContentView = inflater.inflate(R.layout.fragment_my_profile, container, false);
         ButterKnife.bind(this, mContentView);
         mActivity = (MyProfileActivity) getActivity();
+        mActivity.setMainToolbarTitle("My profile");
         mUser = MyPreferenceManager.getObject(getActivity(), MyPreferenceManager.CURRENT_USER, User.class);
         setupViews();
 

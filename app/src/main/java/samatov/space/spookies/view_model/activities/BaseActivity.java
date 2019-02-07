@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.nightonke.boommenu.BoomMenuButton;
 
@@ -109,7 +108,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void startReadCommentFragment(Post post, int placeholder) {
         MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_POST, post);
-        stackFragment(CommentFragment.newInstance(this), placeholder, "current_post");
+        stackFragment(CommentFragment.newInstance(this), placeholder, "comment_fragment");
     }
 
 
@@ -151,12 +150,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void setupMainActionbar(Toolbar toolbar, String title) {
+    protected void setupMainActionbar(Toolbar toolbar) {
         LayoutInflater inflater = LayoutInflater.from(this);
         View actionBar = inflater.inflate(R.layout.main_action_bar, null);
-
-        TextView titleTextView = actionBar.findViewById(R.id.toolbarTitleTextView);
-        titleTextView.setText(title);
 
         setSupportActionBar(toolbar);
         ActionBar bar = getSupportActionBar();

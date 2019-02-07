@@ -100,6 +100,7 @@ class NotificationFragment : Fragment() {
             val currentUser = MyPreferenceManager
                     .getObject(it, MyPreferenceManager.CURRENT_USER, User::class.java)
             val ref = PostRef(activity.activityObject!!, currentUser.username)
+            it.hideToolbar()
             if (it is FeedActivity)
                 it.startReadCommentsFragment(ref)
             else

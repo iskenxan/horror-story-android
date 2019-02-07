@@ -65,6 +65,8 @@ public class ReadPostFragment extends Fragment {
 
         mActivity = (ReadPostActivity) getActivity();
         mPost = MyPreferenceManager.getObject(mActivity, MyPreferenceManager.CURRENT_POST, Post.class);
+        mActivity.setMainToolbarTitle(mPost.getOtherCharacterName());
+
         setupViews();
 
         return view;

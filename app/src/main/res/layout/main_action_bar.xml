@@ -31,7 +31,6 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#fff"
-        android:text="My profile"
         app:layout_constraintStart_toEndOf="@id/toolbarIcon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

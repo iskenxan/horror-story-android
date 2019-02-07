@@ -51,7 +51,7 @@ public class FeedActivity extends BaseToolbarActivity {
         mActivity = this;
         super.mToolbar = mToolbar;
         mPlaceholder = R.id.feedActivityMainPlaceholder;
-        setupMainActionbar(mToolbar, "");
+        setupMainActionbar(mToolbar);
         getFeed();
     }
 
@@ -146,7 +146,7 @@ public class FeedActivity extends BaseToolbarActivity {
             mAppBarLayout.setVisibility(View.VISIBLE);
         if (currentFragment instanceof NotificationFragment)
             mViewPagerTabs.setVisibility(View.VISIBLE);
-        checkIfCurrentFragmentNotificationAndResetToolbarTitle("");
+        checkFragmentAndResetTitle();
 
         handleBackPressed();
     }
