@@ -9,7 +9,7 @@
         android:paddingTop="20dp"
         android:paddingBottom="30dp"
         android:layout_height="match_parent"
-        android:background="@drawable/login_bg">
+        android:background="@drawable/bg_new">
 
         <ImageView
             android:id="@+id/signupTopIcon"
@@ -20,7 +20,7 @@
             app:layout_constraintBottom_toTopOf="@id/signupTittleTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/ic_icon"
+            app:srcCompat="@drawable/icon_white_transparent"
             tools:layout_editor_absoluteY="123dp" />
         <TextView
             android:id="@+id/signupTittleTextView"
@@ -30,7 +30,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="Spookies"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@android:color/white"
             android:paddingTop="10dp"
             android:textAlignment="center"
             android:textSize="22dp"

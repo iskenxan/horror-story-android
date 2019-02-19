@@ -2,6 +2,8 @@ package samatov.space.spookies.model.utils;
 
 import android.widget.EditText;
 
+import java.util.regex.Pattern;
+
 public class InputValidator {
 
     public static boolean inputNotEmpty(EditText editText) {
@@ -11,4 +13,10 @@ public class InputValidator {
     }
 
 
+    public static boolean hasSpecialCharacters(String text) {
+        Pattern p = Pattern.compile("[^a-zA-Z0-9]");
+        boolean hasSpecialChar = p.matcher(text).find();
+
+        return hasSpecialChar;
+    }
 }

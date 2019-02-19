@@ -81,32 +81,28 @@ public class SignupFragment extends Fragment {
 
     @OnClick(R.id.signupButton)
     public void onSignup() {
-        if (inputsEmpty() || !passwordsMatch())
+        String username = mUsernameEditText.getText() + "".trim().toLowerCase();
+        String password = mPassEditText.getText() + "".trim().toLowerCase();
+        String repeatPassword = mPassRepeatEditText.getText() + "".trim().toLowerCase();
+
+        if (inputsEmpty() || !passwordsMatch() || invalidCharacters(username, password, repeatPassword))
             return;
-        displayWarningDialog();
+        displayWarningDialog(username, password, repeatPassword);
     }
 
 
-    private void displayWarningDialog() {
+    private void displayWarningDialog(String username, String password, String repeatPassword) {
         String title = "Save your password";
         String text = "Please make sure to save your password as there's no way to recover it.";
 
         SweetAlertDialog dialog = DialogFactory.getNormalDialog(mActivity, title,
                 text, true, (d) -> {
                     d.dismiss();
-                    requestSignup();
+                    mActivity.startSignup(username, password, repeatPassword, e -> handleAuthError(e));
                 });
         dialog.show();
     }
 
-
-    private void requestSignup() {
-        String username = mUsernameEditText.getText() + "";
-        String password = mPassEditText.getText() + "";
-        String repeatPassword = mPassRepeatEditText.getText() + "";
-
-        mActivity.startSignup(username, password, repeatPassword, e -> handleAuthError(e));
-    }
 
 
     private void handleAuthError(Throwable e) {
@@ -137,6 +133,18 @@ public class SignupFragment extends Fragment {
             displayErrorMessage("Username and password must be at least 3 characters");
             return true;
         }
+    }
+
+
+    private boolean invalidCharacters(String username, String password, String repeatPassword) {
+        if (InputValidator.hasSpecialCharacters(username)
+                || InputValidator.hasSpecialCharacters(password)
+                || InputValidator.hasSpecialCharacters(repeatPassword)) {
+            displayErrorMessage("Invalid characters. Please use only letters and numbers. No spaces");
+            return true;
+        }
+
+        return false;
     }
 
 
