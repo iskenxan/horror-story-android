@@ -24,7 +24,7 @@ import samatov.space.spookies.model.api.beans.notification.NotificationsFeed;
 public class ApiManager {
 
     private static String BASE_URL = "https://spookies-server.herokuapp.com";
-//    private static String BASE_URL = "https://acb4fdbe.ngrok.io";
+//    private static String BASE_URL = "https://699215c2.ngrok.io/";
 
 
     public static Retrofit getRetrofit() {
