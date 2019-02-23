@@ -31,7 +31,8 @@ import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.post.Message;
 import samatov.space.spookies.view_model.activities.ReadPostActivity;
-import samatov.space.spookies.view_model.fragments.post.MyOutcomingMessageViewHolder;
+import samatov.space.spookies.view_model.fragments.post.messageViewHolder.FirstCharMessageViewHolder;
+import samatov.space.spookies.view_model.fragments.post.messageViewHolder.SecondCharMessageViewHolder;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 
@@ -65,7 +66,7 @@ public class ReadPostFragment extends Fragment {
 
         mActivity = (ReadPostActivity) getActivity();
         mPost = MyPreferenceManager.getObject(mActivity, MyPreferenceManager.CURRENT_POST, Post.class);
-        mActivity.setMainToolbarTitle(mPost.getOtherCharacterName());
+        mActivity.setMainToolbarTitle(mPost.getTitle());
 
         setupViews();
 
@@ -82,10 +83,14 @@ public class ReadPostFragment extends Fragment {
 
     private void setupMessageList() throws Exception {
         MyPreferenceManager.saveString(getContext(),
-                MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR, mPost.getChatBubbleColor());
+                MyPreferenceManager.FIRST_CHARACTER_COLOR, mPost.getCharacterColor(1)); // characterId 0 belongs to the narrator
+        MyPreferenceManager.saveString(getContext(),
+                MyPreferenceManager.SECOND_CHARACTER_COLOR, mPost.getCharacterColor(2));
         MessagesListAdapter.HoldersConfig holdersConfig = new MessagesListAdapter.HoldersConfig();
-        holdersConfig.setOutcoming(MyOutcomingMessageViewHolder.class,
+        holdersConfig.setOutcoming(FirstCharMessageViewHolder.class,
                 com.stfalcon.chatkit.R.layout.item_outcoming_text_message);
+        holdersConfig.setIncoming(SecondCharMessageViewHolder.class,
+                com.stfalcon.chatkit.R.layout.item_incoming_text_message);
         mMessageListAdapter = new MessagesListAdapter<>("0", holdersConfig, null);
         mMessageList.setAdapter(mMessageListAdapter);
         mMessageListAdapter.setOnMessageViewClickListener((a, b) -> checkAndAddNextMessage());

@@ -23,7 +23,9 @@ public class MyPreferenceManager {
     public static String CURRENT_POST_TYPE = "current_post_type";
     public static String CURRENT_POST_REF = "current_post_ref";
     public static String CURRENT_POST = "current_edit_post";
-    public static String CURRENT_CHAT_BUBBLE_COLOR = "current_bubble_color";
+//    public static String CURRENT_CHAT_BUBBLE_COLOR = "current_bubble_color";
+    public static String FIRST_CHARACTER_COLOR = "first_character_color";
+    public static String SECOND_CHARACTER_COLOR = "second_character_color";
     public static String FEED_TIMELINE = "feed_timeline_list";
     public static String FEED_POPULAR = "feed_popular_list";
     public static String FAVORITE_ACTION = "like_post_action";

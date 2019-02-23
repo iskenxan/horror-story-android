@@ -8,7 +8,7 @@
         android:id="@+id/chatSettingsDialogLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chat Settings"
+        android:text="Character settings"
         android:textColor="@color/colorPrimary"
         android:textSize="19sp"
         android:textStyle="bold"
@@ -17,52 +17,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/chatSettingsTitleLabel"/>
-    <TextView
-        android:id="@+id/chatSettingsTitleLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:textColor="@color/colorPrimary"
-        android:text="Title:"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/chatSettingsDialogLabel"
-        app:layout_constraintBottom_toTopOf="@id/chatSettingsChatWithLabel"/>
-    <EditText
-        android:id="@+id/chatSettingsTitleEditText"
-        android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        app:layout_constraintStart_toEndOf="@id/chatSettingsTitleLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/chatSettingsTitleLabel"
-        style="@style/customEditText"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/chatSettingsChatWithLabel"/>
     <TextView
         android:id="@+id/chatSettingsChatWithLabel"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:textColor="@color/colorPrimary"
-        android:text="Chat with:"
+        android:text="Name:"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/chatSettingsTitleLabel"
+        app:layout_constraintTop_toBottomOf="@+id/chatSettingsDialogLabel"
         app:layout_constraintBottom_toTopOf="@id/chatSettingsPickColorLabel"
         />
     <EditText
         android:id="@+id/chatSettingsChatWithEditText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_marginLeft="10dp"
         app:layout_constraintStart_toEndOf="@id/chatSettingsChatWithLabel"
         app:layout_constraintBottom_toBottomOf="@id/chatSettingsChatWithLabel"
+        app:layout_constraintEnd_toEndOf="parent"
         style="@style/customEditText"
+        android:layout_marginRight="10dp"
         />
     <TextView
         android:id="@+id/chatSettingsPickColorLabel"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:textColor="@color/colorPrimary"
-        android:text="Pick chat color:"
+        android:text="Buble color:"
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@id/chatSettingsSeparator"
         app:layout_constraintTop_toBottomOf="@id/chatSettingsChatWithLabel"

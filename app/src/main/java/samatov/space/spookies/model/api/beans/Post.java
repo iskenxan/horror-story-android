@@ -27,8 +27,10 @@ public class Post extends PostsMiddleware {
 
 
     public Post() {
-        characters.add("User", new JsonObject());
-        changeCharacterSettings("User", "isMain", "true");
+//        characters.add("User", new JsonObject());
+//        changeCharacterSettings("User", "isMain", "true");
+        characters.add("Narrator", new JsonObject());
+        changeCharacterSettings("Narrator", "id", 0);
     }
 
 
@@ -64,8 +66,8 @@ public class Post extends PostsMiddleware {
         Message message = new Message();
         message.setId(id);
         String messageBy = msgObject.getAsJsonPrimitive("name").getAsString();
-        String author =  messageBy.equals("User") ? "User" : getOtherCharacterName();
-        String authorId  = messageBy.equals("User") ? "0" : "1";
+        String author = messageBy;
+        String authorId  = author.equals("Narrator") ? "0" : getCharacterId(author) + ""; //narrator is always the first character by default
 
         String text = msgObject.getAsJsonPrimitive("text").getAsString();
         long timeStamp = msgObject.getAsJsonPrimitive("timestamp").getAsLong();
@@ -78,17 +80,29 @@ public class Post extends PostsMiddleware {
     }
 
 
-    public String getChatBubbleColor() {
-        if (characters.has("User")
-                && characters.getAsJsonObject("User").has("color")) {
-            return characters.getAsJsonObject("User").getAsJsonPrimitive("color").getAsString();
-        } else
+    public String getCharacterColor(int characterId) {
+//        if (characters.has("User")
+//                && characters.getAsJsonObject("User").has("color")) {
+//            return characters.getAsJsonObject("User").getAsJsonPrimitive("color").getAsString();
+//        } else
+//            return "#4E5EDA";
+
+        String characterName = getCharacterName(characterId);
+        if (characterName == null)
             return "#4E5EDA";
+
+        JsonObject character = characters.get(characterName).getAsJsonObject();
+        if (!character.has("color"))
+            return "#4E5EDA";
+        return character.get("color").getAsString();
     }
 
 
-    public void changeCharacterSettings(String characterName, String settingName, String value) {
-        characters.getAsJsonObject(characterName).addProperty(settingName, value);
+    public void changeCharacterSettings(String characterName, String settingName, Object value) {
+        if (value instanceof String)
+            characters.getAsJsonObject(characterName).addProperty(settingName, (String) value);
+        else
+            characters.getAsJsonObject(characterName).addProperty(settingName, (Number) value);
     }
 
 
@@ -124,28 +138,53 @@ public class Post extends PostsMiddleware {
     }
 
 
-    public void setOtherCharacter(String name) {
-        JsonObject user = characters.getAsJsonObject("User");
-        characters = new JsonObject();
-        characters.add("User", user);
-        characters.add(name, new JsonObject());
-        changeCharacterSettings(name, "isMain", "false");
-    }
+//    public void setOtherCharacter(String name) {
+//        JsonObject user = characters.getAsJsonObject("User");
+//        characters = new JsonObject();
+//        characters.add("User", user);
+//        characters.add(name, new JsonObject());
+//        changeCharacterSettings(name, "isMain", "false");
+//    }
+//
+//
+//    public String getOtherCharacterName() {
+//        Set<String> keys = characters.keySet();
+//        for (String key : keys) {
+//            if (key.equals("User"))
+//                continue;
+//            return key;
+//        }
+//
+//        return null;
+//    }
 
-
-    public String getOtherCharacterName() {
+    public String getCharacterName(int characterId) {
         Set<String> keys = characters.keySet();
         for (String key : keys) {
-            if (key.equals("User"))
-                continue;
-            return key;
+            JsonObject character = characters.get(key).getAsJsonObject();
+            int id = character.get("id").getAsInt();
+            if (id == characterId)
+                return character.get("name").getAsString();
         }
 
         return null;
     }
 
 
-    public List<String> getCharacterList() {
+    public int getCharacterId(String characterName) {
+        Set<String> keys = characters.keySet();
+        for (String key : keys) {
+            JsonObject character = characters.get(key).getAsJsonObject();
+            String name = character.get("name").getAsString();
+            if (name == characterName)
+                return character.get("id").getAsInt();
+        }
+
+        return -1;
+    }
+
+
+    public List<String> getCharacterNameList() {
         List<String> list = new ArrayList<>();
 
         for (String key : characters.keySet()) {

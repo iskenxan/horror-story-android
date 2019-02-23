@@ -25,7 +25,7 @@ public class EditPostDialogHandler {
     private View mContainerView;
     private String mName;
     private String mColor;
-    private String mTitle;
+    private int mCharacterId;
 
 
     public EditPostDialogHandler(AppCompatActivity activity, ChatSettingsListener listener) {
@@ -34,7 +34,7 @@ public class EditPostDialogHandler {
     }
 
 
-    public DialogPlus getDialog( String nameValue, String colorValue, String title) {
+    public DialogPlus getDialog(String nameValue, String colorValue, int characterId) {
         DialogPlus dialogPlus = DialogPlus.newDialog(mActivity)
                 .setContentHolder(new ViewHolder(R.layout.dialog_edit_post_settings))
                 .setGravity(Gravity.CENTER)
@@ -44,7 +44,7 @@ public class EditPostDialogHandler {
                 .setOnClickListener(getOnClickListener())
                 .create();
         mContainerView = dialogPlus.getHolderView();
-        setupInitialValues(nameValue, colorValue, title);
+        setupInitialValues(nameValue, colorValue, characterId);
 
         return dialogPlus;
     }
@@ -54,9 +54,8 @@ public class EditPostDialogHandler {
         return (dialog, view) -> {
             if (view.getId() == R.id.chatSettingsSaveButton) {
                 mName = getNameInput();
-                mTitle = getTitleInput();
 
-                mListener.onChatSettingsChanged(mName, mColor, mTitle);
+                mListener.onChatSettingsChanged(mName, mColor, mCharacterId);
                 dialog.dismiss();
             }
             if (view.getId() == R.id.chatSettingsPickColorButton) {
@@ -67,15 +66,16 @@ public class EditPostDialogHandler {
     }
 
 
-    private void setupInitialValues( String nameValue, String colorValue, String title) {
+    private void setupInitialValues(String nameValue, String colorValue, int characterId) {
         EditText chattingWithEditText = mContainerView.findViewById(R.id.chatSettingsChatWithEditText);
+        if (nameValue == null)
+            nameValue = "";
         chattingWithEditText.setText(nameValue);
 
-        EditText titleEditText = mContainerView.findViewById(R.id.chatSettingsTitleEditText);
-        titleEditText.setText(title);
 
         int colorInt = Color.parseColor(colorValue);
         setButtonColor(mContainerView, colorInt);
+        this.mCharacterId = characterId;
     }
 
 
@@ -84,15 +84,6 @@ public class EditPostDialogHandler {
         String chattingWith = chattingWithEditText.getText() + "";
 
         return chattingWith;
-    }
-
-
-    private String getTitleInput() {
-        EditText titleEditText = mContainerView.findViewById(R.id.chatSettingsTitleEditText);
-        String title = titleEditText.getText() + "";
-
-
-        return title;
     }
 
 

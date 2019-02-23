@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,13 +31,14 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Post;
+import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.model.post.Author;
 import samatov.space.spookies.model.post.ChatSettingsListener;
 import samatov.space.spookies.model.post.Message;
-import samatov.space.spookies.model.enums.POST_TYPE;
 import samatov.space.spookies.model.utils.Validator;
 import samatov.space.spookies.view_model.activities.EditPostActivity;
-import samatov.space.spookies.view_model.fragments.post.MyOutcomingMessageViewHolder;
+import samatov.space.spookies.view_model.fragments.post.messageViewHolder.FirstCharMessageViewHolder;
+import samatov.space.spookies.view_model.fragments.post.messageViewHolder.SecondCharMessageViewHolder;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class EditPostFragment extends Fragment implements ChatSettingsListener, MessageInput.InputListener {
@@ -54,9 +56,11 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     }
 
 
-    @BindView(R.id.editPostChattingWithTextView) TextView mChattingWithTextView;
-    @BindView(R.id.editPostFragmentTitleTextView) TextView mTitleTextView;
-    @BindView(R.id.editPostColorPlaceholder) ImageView mColorImageView;
+    @BindView(R.id.editPostFragmentFistCharacterTextView) TextView mFirstCharacterTextView;
+    @BindView(R.id.editPostFragmentSecondCharacterTextView) TextView mSecondCharacterTextView;
+    @BindView(R.id.editPostFragmentTitleEditText) EditText mTitleTextView;
+    @BindView(R.id.editPostFragmentFirstCharacterColor) ImageView mFirstCharacterColorImageView;
+    @BindView(R.id.editPostFragmentSecondCharacterColor) ImageView mSecondCharacterColorImageView;
     @BindView(R.id.editPostUserSpinner) Spinner mUserSpinner;
     @BindView(R.id.editPostMessageList) MessagesList mMessageList;
     @BindView(R.id.editPostMessageInput) MessageInput mMessageInput;
@@ -65,7 +69,8 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     @BindView(R.id.editPostPublishButton) Button mPublishButton;
     @BindView(R.id.editPostDeletePostTextView) TextView mDeletePostTextView;
     @BindView(R.id.editPostUnpublishTextView) TextView mUnpublishTextView;
-    @BindView(R.id.editPostSettingsImageView) ImageView mSettingsImageView;
+    @BindView(R.id.editPostFragmentFirstCharacterEditIcon) ImageView mFirstCharacterEditIcon;
+    @BindView(R.id.editPostFragmentSecondCharacterEditIcon) ImageView mSecondCharacterEditIcon;
     @BindView(R.id.editPostInputContainer)ConstraintLayout mInputContainer;
 
 
@@ -96,7 +101,7 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
     private void setupModel() {
         setupForCurrentPost();
-        MyPreferenceManager.saveString(getContext(), MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR, mPost.getChatBubbleColor());
+        setupCharColors();
     }
 
 
@@ -105,33 +110,45 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
         mPostType = MyPreferenceManager.getObject(getContext(),
                 MyPreferenceManager.CURRENT_POST_TYPE, POST_TYPE.class);
 
-        if (mPost == null) {
+        if (mPost == null)
             mPost = new Post();
-            return;
-        }
-        setupOtherCharacterName();
-        if (!Validator.isNullOrEmpty(mPost.getTitle()))
-            mTitleTextView.setText(mPost.getTitle());
     }
 
 
-    private void setupOtherCharacterName() {
-        String name = mPost.getOtherCharacterName();
-        if (Validator.isNullOrEmpty(name))
-            return;
-        mChattingWithTextView.setText(name);
-        mChattingWithAuthor.setName(name);
+    private void setupCharColors() {
+        MyPreferenceManager.saveString(getContext(),
+                MyPreferenceManager.FIRST_CHARACTER_COLOR, mPost.getCharacterColor(1)); // characterId 0 belongs to narrator
+        MyPreferenceManager.saveString(getContext(),
+                MyPreferenceManager.SECOND_CHARACTER_COLOR, mPost.getCharacterColor(2));
     }
 
 
     private void setupViews() {
         setupForPublished();
+        if (!Validator.isNullOrEmpty(mPost.getTitle()))
+            mTitleTextView.setText(mPost.getTitle());
         mSettingsDialogHandler = new EditPostDialogHandler(mActivity,this);
         mMessageInput.setInputListener(this);
         mDeleteMessageImageView.setVisibility(View.INVISIBLE);
-        updateColorImageView();
+        setCharacterNames();
+        setCharacterColors();
+
         setupSpinner();
         setupMessageList();
+    }
+
+
+    private void setCharacterNames() {
+        String name = mPost.getCharacterName(1); // characterId 0 belongs to narrator
+        setCharacterName(1, name);
+        name = mPost.getCharacterName(2);
+        setCharacterName(2, name);
+    }
+
+
+    private void setCharacterColors() {
+        setCharacterColor(1, mPost.getCharacterColor(1));
+        setCharacterColor(2, mPost.getCharacterColor(2));
     }
 
 
@@ -141,7 +158,8 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
             mDeletePostTextView.setVisibility(View.GONE);
             mPublishButton.setVisibility(View.GONE);
             mSaveDraftButton.setVisibility(View.GONE);
-            mSettingsImageView.setVisibility(View.GONE);
+            mFirstCharacterEditIcon.setVisibility(View.GONE);
+            mSecondCharacterEditIcon.setVisibility(View.GONE);
             mInputContainer.setVisibility(View.GONE);
         }
     }
@@ -149,14 +167,15 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
     private void setupSpinner() {
         mSpinnerAdapter = new ArrayAdapter<>(getContext(),
-                R.layout.support_simple_spinner_dropdown_item, mPost.getCharacterList());
+                R.layout.support_simple_spinner_dropdown_item, mPost.getCharacterNameList());
         mUserSpinner.setAdapter(mSpinnerAdapter);
     }
 
 
     private void setupMessageList() {
         MessagesListAdapter.HoldersConfig holdersConfig = new MessagesListAdapter.HoldersConfig();
-        holdersConfig.setOutcoming(MyOutcomingMessageViewHolder.class, com.stfalcon.chatkit.R.layout.item_outcoming_text_message);
+        holdersConfig.setOutcoming(FirstCharMessageViewHolder.class, com.stfalcon.chatkit.R.layout.item_outcoming_text_message);
+        holdersConfig.setIncoming(SecondCharMessageViewHolder.class, com.stfalcon.chatkit.R.layout.item_incoming_text_message);
         mMessageListAdapter = new MessagesListAdapter<>("0", holdersConfig, null);
         mMessageList.setAdapter(mMessageListAdapter);
         setupOnMessageHoldListener();
@@ -262,52 +281,44 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     }
 
 
-    @OnClick(R.id.editPostSettingsImageView)
-    public void onSettingsClick() {
-        String chattingWith = getChattingWithValue();
-        String title = getTitleValue();
+    @OnClick(R.id.editPostFragmentFirstCharacterEditIcon)
+    public void onFirstSettingsClick() {
+        startSettingsDialog(1);
+    }
+
+
+    @OnClick(R.id.editPostFragmentSecondCharacterEditIcon)
+    public void onSecondSettingsClick() {
+        startSettingsDialog(2);
+    }
+
+
+    private void startSettingsDialog(int characterId) {
+        String chattingWith = mPost.getCharacterName(characterId);
         DialogPlus settingsDialog = mSettingsDialogHandler
-                .getDialog(chattingWith, mPost.getChatBubbleColor(),  title);
+                .getDialog(chattingWith, mPost.getCharacterColor(characterId), characterId);
         settingsDialog.show();
     }
 
 
-    private String getChattingWithValue() {
-        String chattingWith = mChattingWithTextView.getText() + "";
-        if (chattingWith.equals("Edit in settings"))
-            chattingWith = "";
-
-        return chattingWith;
-    }
-
-
-    private String getTitleValue() {
-        String title = mTitleTextView.getText() + "";
-        if (title.equals("Edit in settings"))
-            title = "";
-
-        return title;
-    }
-
-
     @Override
-    public void onChatSettingsChanged(String name, String color, String title) {
+    public void onChatSettingsChanged(String name, String color, int characterId) {
         if (!Validator.isNullOrEmpty(color)) {
-            mPost.changeCharacterSettings("User", "color", color);
-            updateColorImageView();
-            MyPreferenceManager.saveString(getContext(), MyPreferenceManager.CURRENT_CHAT_BUBBLE_COLOR , color);
+            mPost.changeCharacterSettings(name, "color", color);
+            setCharacterColor(characterId, color);
+            if (characterId == 1)
+                MyPreferenceManager.saveString(mActivity, MyPreferenceManager.FIRST_CHARACTER_COLOR, color);
+            else
+                MyPreferenceManager.saveString(mActivity, MyPreferenceManager.SECOND_CHARACTER_COLOR, color);
         }
 
         if (!Validator.isNullOrEmpty(name)) {
-            mChattingWithTextView.setText(name);
-            mChattingWithAuthor.setName(name);
+//            mChattingWithTextView.setText(name);
+//            mChattingWithAuthor.setName(name);
+//            resetSpinner(name);
+//            mPost.setOtherCharacter(name);
+            setCharacterName(characterId, name);
             resetSpinner(name);
-            mPost.setOtherCharacter(name);
-        }
-
-        if (!Validator.isNullOrEmpty(title)) {
-            mTitleTextView.setText(title);
-            mPost.setTitle(title);
         }
     }
 
@@ -319,9 +330,19 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     }
 
 
-    private void updateColorImageView() {
-        GradientDrawable drawable = (GradientDrawable) mColorImageView.getDrawable();
-        drawable.setColor(Color.parseColor(mPost.getChatBubbleColor()));
+    private void setCharacterColor(int characterId, String newColor) {
+        ImageView imageView = characterId == 1 ? mFirstCharacterColorImageView : mSecondCharacterColorImageView;
+        GradientDrawable drawable = (GradientDrawable) imageView.getDrawable();
+        drawable.setColor(Color.parseColor(newColor));
+    }
+
+
+    private void setCharacterName(int characterId, String newName) {
+        if (newName == null)
+            return;
+
+        TextView textView = characterId == 1 ? mFirstCharacterTextView : mSecondCharacterTextView;
+        textView.setText(newName);
     }
 
 
