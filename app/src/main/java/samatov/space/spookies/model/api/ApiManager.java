@@ -23,14 +23,14 @@ import samatov.space.spookies.model.api.beans.notification.NotificationsFeed;
 
 public class ApiManager {
 
-    private static String BASE_URL = "https://spookies-server.herokuapp.com";
-//    private static String BASE_URL = "https://699215c2.ngrok.io/";
+//    private static String BASE_URL = "https://spookies-server.herokuapp.com";
+    private static String BASE_URL = "https://7554b90f.ngrok.io";
 
 
     public static Retrofit getRetrofit() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(10, TimeUnit.SECONDS)
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .build();
 
         return new Retrofit.Builder()

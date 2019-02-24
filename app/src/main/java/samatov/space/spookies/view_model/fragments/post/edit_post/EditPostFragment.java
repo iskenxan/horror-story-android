@@ -32,13 +32,15 @@ import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
 import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.enums.POST_TYPE;
-import samatov.space.spookies.model.post.Author;
 import samatov.space.spookies.model.post.ChatSettingsListener;
 import samatov.space.spookies.model.post.Message;
+import samatov.space.spookies.model.post.NarratorMessage;
 import samatov.space.spookies.model.utils.Validator;
 import samatov.space.spookies.view_model.activities.EditPostActivity;
-import samatov.space.spookies.view_model.fragments.post.messageViewHolder.FirstCharMessageViewHolder;
-import samatov.space.spookies.view_model.fragments.post.messageViewHolder.SecondCharMessageViewHolder;
+import samatov.space.spookies.view_model.fragments.post.message_viewholder.FirstCharMessageViewHolder;
+import samatov.space.spookies.view_model.fragments.post.message_viewholder.NarratorContentChecker;
+import samatov.space.spookies.view_model.fragments.post.message_viewholder.NarratorMessageHolder;
+import samatov.space.spookies.view_model.fragments.post.message_viewholder.SecondCharMessageViewHolder;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class EditPostFragment extends Fragment implements ChatSettingsListener, MessageInput.InputListener {
@@ -79,8 +81,6 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     private EditPostDialogHandler mSettingsDialogHandler;
     private ArrayAdapter<String> mSpinnerAdapter;
     private MessagesListAdapter<Message> mMessageListAdapter;
-    private Author mChattingWithAuthor = new Author("1", null);
-    private Author mUserAuthor = new Author("0", "User");
     private Post mPost;
     private POST_TYPE mPostType;
 
@@ -117,9 +117,9 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
     private void setupCharColors() {
         MyPreferenceManager.saveString(getContext(),
-                MyPreferenceManager.FIRST_CHARACTER_COLOR, mPost.getCharacterColor(1)); // characterId 0 belongs to narrator
+                MyPreferenceManager.FIRST_CHARACTER_COLOR, mPost.getCharacterColor(0));
         MyPreferenceManager.saveString(getContext(),
-                MyPreferenceManager.SECOND_CHARACTER_COLOR, mPost.getCharacterColor(2));
+                MyPreferenceManager.SECOND_CHARACTER_COLOR, mPost.getCharacterColor(1));
     }
 
 
@@ -139,16 +139,16 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
 
     private void setCharacterNames() {
-        String name = mPost.getCharacterName(1); // characterId 0 belongs to narrator
+        String name = mPost.getCharacterName(0);
+        setCharacterName(0, name);
+        name = mPost.getCharacterName(1);
         setCharacterName(1, name);
-        name = mPost.getCharacterName(2);
-        setCharacterName(2, name);
     }
 
 
     private void setCharacterColors() {
+        setCharacterColor(0, mPost.getCharacterColor(0));
         setCharacterColor(1, mPost.getCharacterColor(1));
-        setCharacterColor(2, mPost.getCharacterColor(2));
     }
 
 
@@ -173,9 +173,17 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
 
     private void setupMessageList() {
+        NarratorContentChecker checker = new NarratorContentChecker();
         MessagesListAdapter.HoldersConfig holdersConfig = new MessagesListAdapter.HoldersConfig();
-        holdersConfig.setOutcoming(FirstCharMessageViewHolder.class, com.stfalcon.chatkit.R.layout.item_outcoming_text_message);
-        holdersConfig.setIncoming(SecondCharMessageViewHolder.class, com.stfalcon.chatkit.R.layout.item_incoming_text_message);
+        holdersConfig.setOutcoming(FirstCharMessageViewHolder.class, R.layout.message_list_outcoming_item);
+        holdersConfig.setIncoming(SecondCharMessageViewHolder.class, R.layout.message_list_incoming_item);
+        holdersConfig.registerContentType(
+                NarratorMessage.CONTENT_TYPE,
+                NarratorMessageHolder.class,
+                R.layout.message_list_narrator_view,
+                R.layout.message_list_narrator_view,
+                checker
+        );
         mMessageListAdapter = new MessagesListAdapter<>("0", holdersConfig, null);
         mMessageList.setAdapter(mMessageListAdapter);
         setupOnMessageHoldListener();
@@ -283,13 +291,13 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
     @OnClick(R.id.editPostFragmentFirstCharacterEditIcon)
     public void onFirstSettingsClick() {
-        startSettingsDialog(1);
+        startSettingsDialog(0);
     }
 
 
     @OnClick(R.id.editPostFragmentSecondCharacterEditIcon)
     public void onSecondSettingsClick() {
-        startSettingsDialog(2);
+        startSettingsDialog(1);
     }
 
 
@@ -303,37 +311,29 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
     @Override
     public void onChatSettingsChanged(String name, String color, int characterId) {
+        mPost.addCharacterIfNull(name, characterId);
+        onCharacterColorChanged(color, name, characterId);
+        onCharacterNameChanged(name, characterId);
+    }
+
+
+    private void onCharacterColorChanged(String color, String name, int characterId) {
         if (!Validator.isNullOrEmpty(color)) {
             mPost.changeCharacterSettings(name, "color", color);
             setCharacterColor(characterId, color);
-            if (characterId == 1)
+            if (characterId == 0)
                 MyPreferenceManager.saveString(mActivity, MyPreferenceManager.FIRST_CHARACTER_COLOR, color);
-            else
+            else if (characterId == 1)
                 MyPreferenceManager.saveString(mActivity, MyPreferenceManager.SECOND_CHARACTER_COLOR, color);
         }
-
-        if (!Validator.isNullOrEmpty(name)) {
-//            mChattingWithTextView.setText(name);
-//            mChattingWithAuthor.setName(name);
-//            resetSpinner(name);
-//            mPost.setOtherCharacter(name);
-            setCharacterName(characterId, name);
-            resetSpinner(name);
-        }
     }
 
 
-    private void resetSpinner(String name) {
-        mSpinnerAdapter.clear();
-        mSpinnerAdapter.add("User");
-        mSpinnerAdapter.add(name);
-    }
-
-
-    private void setCharacterColor(int characterId, String newColor) {
-        ImageView imageView = characterId == 1 ? mFirstCharacterColorImageView : mSecondCharacterColorImageView;
-        GradientDrawable drawable = (GradientDrawable) imageView.getDrawable();
-        drawable.setColor(Color.parseColor(newColor));
+    private void onCharacterNameChanged(String name, int characterId) {
+        if (Validator.isNullOrEmpty(name))
+            return;
+        setCharacterName(characterId, name);
+        resetSpinner();
     }
 
 
@@ -341,8 +341,24 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
         if (newName == null)
             return;
 
-        TextView textView = characterId == 1 ? mFirstCharacterTextView : mSecondCharacterTextView;
+        mPost.setCharacterName(newName, characterId);
+        TextView textView = characterId == 0 ? mFirstCharacterTextView : mSecondCharacterTextView;
         textView.setText(newName);
+    }
+
+
+    private void resetSpinner() {
+        mSpinnerAdapter.clear();
+        List<String> userNames = mPost.getCharacterNameList();
+        for (String name: userNames)
+            mSpinnerAdapter.add(name);
+    }
+
+
+    private void setCharacterColor(int characterId, String newColor) {
+        ImageView imageView = characterId == 0 ? mFirstCharacterColorImageView : mSecondCharacterColorImageView;
+        GradientDrawable drawable = (GradientDrawable) imageView.getDrawable();
+        drawable.setColor(Color.parseColor(newColor));
     }
 
 
@@ -356,13 +372,14 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
         String id = UUID.randomUUID().toString();
         message.setId(id);
 
-        if (mUserSpinner.getSelectedItem().equals("User")) {
-            message.setAuthor(mUserAuthor);
-            mPost.addMessageFromUser(text, id);
-        } else {
-            message.setAuthor(mChattingWithAuthor);
-            mPost.addMessageFromOtherCharacter(text, id);
-        }
+        String characterName = mUserSpinner.getSelectedItem().toString();
+
+
+        int characterId = mPost.getCharacterId(characterName);
+        message.setAuthor(characterName, characterId);
+
+        if (characterName.equals("Narrator"))
+            message = new NarratorMessage(message);
 
         mMessageListAdapter.addToStart(message, true);
 

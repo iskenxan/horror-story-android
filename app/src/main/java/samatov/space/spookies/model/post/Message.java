@@ -5,10 +5,20 @@ import com.stfalcon.chatkit.commons.models.IMessage;
 import java.util.Date;
 
 public class Message implements IMessage {
+
     private String id;
     private String text;
     private Author author;
     private Date createdAt;
+
+    public static enum TYPE {
+        incoming, outcoming, narrator
+    }
+
+
+    public void setAuthor(String name, int id) {
+        this.author = new Author(id + "", name);
+    }
 
 
     public void setId(String id) {

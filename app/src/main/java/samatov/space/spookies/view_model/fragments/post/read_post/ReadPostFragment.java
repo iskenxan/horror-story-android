@@ -31,8 +31,8 @@ import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.post.Message;
 import samatov.space.spookies.view_model.activities.ReadPostActivity;
-import samatov.space.spookies.view_model.fragments.post.messageViewHolder.FirstCharMessageViewHolder;
-import samatov.space.spookies.view_model.fragments.post.messageViewHolder.SecondCharMessageViewHolder;
+import samatov.space.spookies.view_model.fragments.post.message_viewholder.FirstCharMessageViewHolder;
+import samatov.space.spookies.view_model.fragments.post.message_viewholder.SecondCharMessageViewHolder;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 

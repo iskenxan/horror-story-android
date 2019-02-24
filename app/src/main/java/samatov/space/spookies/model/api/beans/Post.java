@@ -30,7 +30,7 @@ public class Post extends PostsMiddleware {
 //        characters.add("User", new JsonObject());
 //        changeCharacterSettings("User", "isMain", "true");
         characters.add("Narrator", new JsonObject());
-        changeCharacterSettings("Narrator", "id", 0);
+        changeCharacterSettings("Narrator", "id", 2);
     }
 
 
@@ -80,42 +80,6 @@ public class Post extends PostsMiddleware {
     }
 
 
-    public String getCharacterColor(int characterId) {
-//        if (characters.has("User")
-//                && characters.getAsJsonObject("User").has("color")) {
-//            return characters.getAsJsonObject("User").getAsJsonPrimitive("color").getAsString();
-//        } else
-//            return "#4E5EDA";
-
-        String characterName = getCharacterName(characterId);
-        if (characterName == null)
-            return "#4E5EDA";
-
-        JsonObject character = characters.get(characterName).getAsJsonObject();
-        if (!character.has("color"))
-            return "#4E5EDA";
-        return character.get("color").getAsString();
-    }
-
-
-    public void changeCharacterSettings(String characterName, String settingName, Object value) {
-        if (value instanceof String)
-            characters.getAsJsonObject(characterName).addProperty(settingName, (String) value);
-        else
-            characters.getAsJsonObject(characterName).addProperty(settingName, (Number) value);
-    }
-
-
-    public void addMessageFromUser(String text, String messageId) {
-        addMessage(text, "User", messageId);
-    }
-
-
-    public void addMessageFromOtherCharacter(String text, String messageId) {
-        addMessage(text, "Other", messageId);
-    }
-
-
     private void addMessage(String text, String name, String id) {
         JsonObject message = new JsonObject();
         message.addProperty("timestamp", new Date().getTime());
@@ -158,13 +122,36 @@ public class Post extends PostsMiddleware {
 //        return null;
 //    }
 
+
+    public void setCharacterName(String newName, int characterId) {
+        String oldName = getCharacterName(characterId);
+        if (oldName == null) {
+            addCharacterIfNull(newName, characterId);
+            return;
+        }
+        JsonObject character = characters.getAsJsonObject(oldName);
+        characters.remove(oldName);
+        characters.add(newName, character);
+    }
+
+
+    public void addCharacterIfNull(String name, int characterId) {
+        String characterName = getCharacterName(characterId);
+        if (characterName != null)
+            return;
+
+        characters.add(name, new JsonObject());
+        changeCharacterSettings(name,"id", characterId);
+    }
+
+
     public String getCharacterName(int characterId) {
         Set<String> keys = characters.keySet();
         for (String key : keys) {
             JsonObject character = characters.get(key).getAsJsonObject();
             int id = character.get("id").getAsInt();
             if (id == characterId)
-                return character.get("name").getAsString();
+                return key;
         }
 
         return null;
@@ -175,12 +162,37 @@ public class Post extends PostsMiddleware {
         Set<String> keys = characters.keySet();
         for (String key : keys) {
             JsonObject character = characters.get(key).getAsJsonObject();
-            String name = character.get("name").getAsString();
-            if (name == characterName)
+            if (key == characterName)
                 return character.get("id").getAsInt();
         }
 
         return -1;
+    }
+
+
+    public String getCharacterColor(int characterId) {
+//        if (characters.has("User")
+//                && characters.getAsJsonObject("User").has("color")) {
+//            return characters.getAsJsonObject("User").getAsJsonPrimitive("color").getAsString();
+//        } else
+//            return "#4E5EDA";
+
+        String characterName = getCharacterName(characterId);
+        if (characterName == null)
+            return "#4E5EDA";
+
+        JsonObject character = characters.get(characterName).getAsJsonObject();
+        if (!character.has("color"))
+            return "#4E5EDA";
+        return character.get("color").getAsString();
+    }
+
+
+    public void changeCharacterSettings(String characterName, String settingName, Object value) {
+        if (value instanceof String)
+            characters.getAsJsonObject(characterName).addProperty(settingName, (String) value);
+        else
+            characters.getAsJsonObject(characterName).addProperty(settingName, (Number) value);
     }
 
 

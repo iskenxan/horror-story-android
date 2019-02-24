@@ -106,6 +106,8 @@
                 android:layout_marginLeft="7dp"
                 android:textStyle="bold"
                 android:textSize="14sp"
+                android:maxLines="1"
+                android:singleLine="true"
                 app:layout_constraintVertical_chainStyle="spread_inside"
                 android:textColor="@color/colorPrimaryDark"
                 app:layout_constraintStart_toEndOf="@id/editPostFragmentTitleLabel"
@@ -166,7 +168,7 @@
                     android:src="@drawable/circle_color_palette"
                     android:layout_marginLeft="12dp"/>
                 <TextView
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="7dp"
                     android:id="@+id/editPostFragmentSecondCharacterTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -193,10 +195,11 @@
         android:layout_height="0dp"
         app:dateHeaderTextColor="@android:color/transparent"
         app:dateHeaderPadding="0dp"
-        app:outcomingTimeTextSize="0sp"
-        app:incomingTimeTextSize="0sp"
-        app:incomingTimeTextColor="@android:color/transparent"
-        app:outcomingTimeTextColor="@android:color/transparent"
+        app:incomingTimeTextSize="12sp"
+        app:incomingTimeTextColor="@android:color/darker_gray"
+        app:outcomingTimeTextSize="12sp"
+        app:outcomingTimeTextColor="@android:color/darker_gray"
+        app:incomingTextColor="@android:color/white"
         app:outcomingDefaultBubbleSelectedColor="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/editPostTopContainer"
         app:layout_constraintBottom_toTopOf="@+id/editPostInputContainer"/>
