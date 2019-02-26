@@ -7,14 +7,34 @@ import android.support.v4.view.ViewCompat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.stfalcon.chatkit.messages.MessagesListAdapter
 import samatov.space.spookies.R
 import samatov.space.spookies.model.MyPreferenceManager
 import samatov.space.spookies.model.post.Message
+import samatov.space.spookies.model.post.NarratorMessage
 
 abstract class MessageholderHelper {
 
 
     companion object {
+
+        fun getMessageListAdapter(): MessagesListAdapter<Message> {
+            val checker = NarratorContentChecker()
+            val holdersConfig = MessagesListAdapter.HoldersConfig()
+            holdersConfig.setOutcoming(FirstCharMessageViewHolder::class.java, R.layout.message_list_outcoming_item)
+            holdersConfig.setIncoming(SecondCharMessageViewHolder::class.java, R.layout.message_list_incoming_item)
+            holdersConfig.registerContentType(
+                    NarratorMessage.CONTENT_TYPE,
+                    NarratorMessageHolder::class.java,
+                    R.layout.message_list_narrator_view,
+                    R.layout.message_list_narrator_view,
+                    checker
+            )
+
+          return MessagesListAdapter("0", holdersConfig, null)
+        }
+
+
         fun setupMessageholder(preferenceKey: String, listener: SharedPreferences.OnSharedPreferenceChangeListener, view: View, type: Message.TYPE) {
             val color = MyPreferenceManager.getString(view.context, preferenceKey)
             setBubbleColor(Color.parseColor(color), view, type)

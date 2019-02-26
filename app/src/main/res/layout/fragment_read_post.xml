@@ -39,10 +39,10 @@
         android:layout_height="wrap_content"
         app:dateHeaderTextColor="@android:color/transparent"
         app:dateHeaderPadding="0dp"
-        app:outcomingTimeTextSize="0sp"
-        app:incomingTimeTextSize="0sp"
-        android:visibility="gone"
-        app:incomingTimeTextColor="@android:color/transparent"
-        app:outcomingTimeTextColor="@android:color/transparent" />
+        app:incomingTimeTextSize="12sp"
+        app:incomingTimeTextColor="@android:color/darker_gray"
+        app:outcomingTimeTextSize="12sp"
+        app:outcomingTimeTextColor="@android:color/darker_gray"
+        android:visibility="gone" />
 
 </android.support.constraint.ConstraintLayout>

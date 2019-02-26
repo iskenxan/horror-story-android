@@ -71,6 +71,7 @@ public class EditPostDialogHandler {
         if (nameValue == null)
             nameValue = "";
         chattingWithEditText.setText(nameValue);
+        mColor = colorValue;
 
 
         int colorInt = Color.parseColor(colorValue);

@@ -43,9 +43,10 @@
                 />
             <Button
                 android:id="@+id/editPostSaveDraftButton"
-                android:layout_width="78dp"
-                android:layout_height="25dp"
+                android:layout_width="82dp"
+                android:layout_height="27dp"
                 style="@style/secondaryButton"
+                android:padding="2dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/editPostDeletePostTextView"
@@ -95,30 +96,47 @@
                 android:layout_height="wrap_content"
                 android:text="Title:"
                 android:textColor="@color/colorPrimary"
-                app:layout_constraintTop_toTopOf="@+id/editPostFragmentTitleEditText"
-                app:layout_constraintBottom_toBottomOf="@+id/editPostFragmentTitleEditText"
+                app:layout_constraintTop_toTopOf="@+id/editPostFragmentTitleSwitcher"
+                app:layout_constraintBottom_toBottomOf="@+id/editPostFragmentTitleSwitcher"
                 />
-            <EditText
-                android:id="@+id/editPostFragmentTitleEditText"
+            <ViewSwitcher
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/editPostFragmentTitleSwitcher"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Your story title..."
                 android:layout_marginLeft="7dp"
+                app:layout_constraintVertical_chainStyle="spread_inside"
+                app:layout_constraintStart_toEndOf="@id/editPostFragmentTitleLabel"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/editPostFragmentFirstCharacterContainer">
+            <EditText
+                android:id="@+id/editPostFragmentTitleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Your story title..."
                 android:textStyle="bold"
                 android:textSize="14sp"
                 android:maxLines="1"
                 android:singleLine="true"
-                app:layout_constraintVertical_chainStyle="spread_inside"
-                android:textColor="@color/colorPrimaryDark"
-                app:layout_constraintStart_toEndOf="@id/editPostFragmentTitleLabel"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/editPostFragmentFirstCharacterContainer"/>
+                android:textColor="@color/colorPrimaryDark" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:id="@+id/editPostFragmentTitleTextView"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    />
+            </ViewSwitcher>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editPostFragmentFirstCharacterContainer"
-                app:layout_constraintTop_toBottomOf="@+id/editPostFragmentTitleEditText"
+                app:layout_constraintTop_toBottomOf="@+id/editPostFragmentTitleSwitcher"
                 app:layout_constraintBottom_toTopOf="@+id/editPostFragmentSecondCharacterContainer">
                 <TextView
                     android:layout_width="wrap_content"

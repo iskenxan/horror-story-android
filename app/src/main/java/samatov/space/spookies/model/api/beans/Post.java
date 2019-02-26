@@ -11,6 +11,7 @@ import java.util.Set;
 import samatov.space.spookies.model.api.middleware.PostsMiddleware;
 import samatov.space.spookies.model.post.Author;
 import samatov.space.spookies.model.post.Message;
+import samatov.space.spookies.model.post.NarratorMessage;
 
 public class Post extends PostsMiddleware {
 
@@ -27,14 +28,12 @@ public class Post extends PostsMiddleware {
 
 
     public Post() {
-//        characters.add("User", new JsonObject());
-//        changeCharacterSettings("User", "isMain", "true");
         characters.add("Narrator", new JsonObject());
         changeCharacterSettings("Narrator", "id", 2);
     }
 
 
-    public List<Message> getSortedDialog() throws Exception {
+    public List<Message> getSortedDialog() {
         List<Message> messages = getMessageList();
         sortPostsByTimestamp(messages);
 
@@ -49,7 +48,7 @@ public class Post extends PostsMiddleware {
     }
 
 
-    private List<Message> getMessageList() throws Exception {
+    private List<Message> getMessageList() {
         List<Message> messages = new ArrayList<>();
         Set<String> keys = dialog.keySet();
         for (String key : keys) {
@@ -62,12 +61,12 @@ public class Post extends PostsMiddleware {
     }
 
 
-    private Message constructMessage(String id, JsonObject msgObject) throws Exception {
+    private Message constructMessage(String id, JsonObject msgObject) {
         Message message = new Message();
         message.setId(id);
         String messageBy = msgObject.getAsJsonPrimitive("name").getAsString();
         String author = messageBy;
-        String authorId  = author.equals("Narrator") ? "0" : getCharacterId(author) + ""; //narrator is always the first character by default
+        String authorId  = author.equals("Narrator") ? "2" : getCharacterId(author) + "";
 
         String text = msgObject.getAsJsonPrimitive("text").getAsString();
         long timeStamp = msgObject.getAsJsonPrimitive("timestamp").getAsLong();
@@ -76,7 +75,15 @@ public class Post extends PostsMiddleware {
         message.setCreatedAt(new Date(timeStamp));
         message.setText(text);
 
+        if (authorId.equals("2"))
+            message = new NarratorMessage(message);
+
         return message;
+    }
+
+
+    public void addMessage(Message message) {
+        addMessage(message.getText(), message.getUser().getName(), message.getId());
     }
 
 
@@ -102,27 +109,6 @@ public class Post extends PostsMiddleware {
     }
 
 
-//    public void setOtherCharacter(String name) {
-//        JsonObject user = characters.getAsJsonObject("User");
-//        characters = new JsonObject();
-//        characters.add("User", user);
-//        characters.add(name, new JsonObject());
-//        changeCharacterSettings(name, "isMain", "false");
-//    }
-//
-//
-//    public String getOtherCharacterName() {
-//        Set<String> keys = characters.keySet();
-//        for (String key : keys) {
-//            if (key.equals("User"))
-//                continue;
-//            return key;
-//        }
-//
-//        return null;
-//    }
-
-
     public void setCharacterName(String newName, int characterId) {
         String oldName = getCharacterName(characterId);
         if (oldName == null) {
@@ -132,6 +118,17 @@ public class Post extends PostsMiddleware {
         JsonObject character = characters.getAsJsonObject(oldName);
         characters.remove(oldName);
         characters.add(newName, character);
+    }
+
+
+    public void updateMessagesAuthorName(String oldName, String newName) {
+        Set<String> keys = dialog.keySet();
+        for (String key : keys) {
+            JsonObject message = dialog.get(key).getAsJsonObject();
+            String characterName = message.get("name").getAsString();
+            if (characterName.equals(oldName))
+                message.addProperty("name", newName);
+        }
     }
 
 
@@ -162,7 +159,7 @@ public class Post extends PostsMiddleware {
         Set<String> keys = characters.keySet();
         for (String key : keys) {
             JsonObject character = characters.get(key).getAsJsonObject();
-            if (key == characterName)
+            if (key.equals(characterName))
                 return character.get("id").getAsInt();
         }
 
@@ -171,11 +168,6 @@ public class Post extends PostsMiddleware {
 
 
     public String getCharacterColor(int characterId) {
-//        if (characters.has("User")
-//                && characters.getAsJsonObject("User").has("color")) {
-//            return characters.getAsJsonObject("User").getAsJsonPrimitive("color").getAsString();
-//        } else
-//            return "#4E5EDA";
 
         String characterName = getCharacterName(characterId);
         if (characterName == null)

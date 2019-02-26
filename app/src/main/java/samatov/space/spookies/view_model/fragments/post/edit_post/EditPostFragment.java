@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.orhanobut.dialogplus.DialogPlus;
 import com.stfalcon.chatkit.messages.MessageInput;
@@ -37,10 +38,7 @@ import samatov.space.spookies.model.post.Message;
 import samatov.space.spookies.model.post.NarratorMessage;
 import samatov.space.spookies.model.utils.Validator;
 import samatov.space.spookies.view_model.activities.EditPostActivity;
-import samatov.space.spookies.view_model.fragments.post.message_viewholder.FirstCharMessageViewHolder;
-import samatov.space.spookies.view_model.fragments.post.message_viewholder.NarratorContentChecker;
-import samatov.space.spookies.view_model.fragments.post.message_viewholder.NarratorMessageHolder;
-import samatov.space.spookies.view_model.fragments.post.message_viewholder.SecondCharMessageViewHolder;
+import samatov.space.spookies.view_model.fragments.post.message_viewholder.MessageholderHelper;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 public class EditPostFragment extends Fragment implements ChatSettingsListener, MessageInput.InputListener {
@@ -60,7 +58,7 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
     @BindView(R.id.editPostFragmentFistCharacterTextView) TextView mFirstCharacterTextView;
     @BindView(R.id.editPostFragmentSecondCharacterTextView) TextView mSecondCharacterTextView;
-    @BindView(R.id.editPostFragmentTitleEditText) EditText mTitleTextView;
+    @BindView(R.id.editPostFragmentTitleEditText) EditText mTitleEditText;
     @BindView(R.id.editPostFragmentFirstCharacterColor) ImageView mFirstCharacterColorImageView;
     @BindView(R.id.editPostFragmentSecondCharacterColor) ImageView mSecondCharacterColorImageView;
     @BindView(R.id.editPostUserSpinner) Spinner mUserSpinner;
@@ -73,7 +71,9 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     @BindView(R.id.editPostUnpublishTextView) TextView mUnpublishTextView;
     @BindView(R.id.editPostFragmentFirstCharacterEditIcon) ImageView mFirstCharacterEditIcon;
     @BindView(R.id.editPostFragmentSecondCharacterEditIcon) ImageView mSecondCharacterEditIcon;
-    @BindView(R.id.editPostInputContainer)ConstraintLayout mInputContainer;
+    @BindView(R.id.editPostInputContainer) ConstraintLayout mInputContainer;
+    @BindView(R.id.editPostFragmentTitleSwitcher) ViewSwitcher mTitleSwitcher;
+    @BindView(R.id.editPostFragmentTitleTextView) TextView mTitleTextView;
 
 
 
@@ -83,6 +83,7 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     private MessagesListAdapter<Message> mMessageListAdapter;
     private Post mPost;
     private POST_TYPE mPostType;
+    private String mCurrentName;
 
 
 
@@ -112,6 +113,7 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
         if (mPost == null)
             mPost = new Post();
+        mPost.addCharacterIfNull("Narrator", 2);
     }
 
 
@@ -126,7 +128,7 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     private void setupViews() {
         setupForPublished();
         if (!Validator.isNullOrEmpty(mPost.getTitle()))
-            mTitleTextView.setText(mPost.getTitle());
+            mTitleEditText.setText(mPost.getTitle());
         mSettingsDialogHandler = new EditPostDialogHandler(mActivity,this);
         mMessageInput.setInputListener(this);
         mDeleteMessageImageView.setVisibility(View.INVISIBLE);
@@ -161,6 +163,8 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
             mFirstCharacterEditIcon.setVisibility(View.GONE);
             mSecondCharacterEditIcon.setVisibility(View.GONE);
             mInputContainer.setVisibility(View.GONE);
+            mTitleSwitcher.showNext();
+            mTitleTextView.setText(mPost.getTitle());
         }
     }
 
@@ -173,19 +177,10 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
 
     private void setupMessageList() {
-        NarratorContentChecker checker = new NarratorContentChecker();
-        MessagesListAdapter.HoldersConfig holdersConfig = new MessagesListAdapter.HoldersConfig();
-        holdersConfig.setOutcoming(FirstCharMessageViewHolder.class, R.layout.message_list_outcoming_item);
-        holdersConfig.setIncoming(SecondCharMessageViewHolder.class, R.layout.message_list_incoming_item);
-        holdersConfig.registerContentType(
-                NarratorMessage.CONTENT_TYPE,
-                NarratorMessageHolder.class,
-                R.layout.message_list_narrator_view,
-                R.layout.message_list_narrator_view,
-                checker
-        );
-        mMessageListAdapter = new MessagesListAdapter<>("0", holdersConfig, null);
+        mMessageListAdapter = MessageholderHelper.Companion.getMessageListAdapter();
         mMessageList.setAdapter(mMessageListAdapter);
+        mMessageList.getLayoutManager().setAutoMeasureEnabled(false);
+        mMessageList.setHasFixedSize(true);
         setupOnMessageHoldListener();
         addCurrentPostMessages();
     }
@@ -236,6 +231,7 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
     @OnClick(R.id.editPostSaveDraftButton)
     public void onSaveDraftClicked() {
+        mPost.setTitle(mTitleEditText.getText() + "");
         if (!titleEmpty())
             mActivity.saveDraft(mPost);
     }
@@ -243,6 +239,7 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
     @OnClick(R.id.editPostPublishButton)
     public void onPublishButtonClicked() {
+        mPost.setTitle(mTitleEditText.getText() + "");
         if (!titleEmpty() && !notEnoughMessages())
             mActivity.publishPost(mPost);
     }
@@ -272,13 +269,6 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     }
 
 
-    private void showWarningDialog(String text, String title) {
-        SweetAlertDialog dialog = DialogFactory
-                .getAlertDialog(mActivity, title, text);
-        dialog.show();
-    }
-
-
     @OnClick(R.id.editPostDeleteMessagesImageView)
     public void onDeleteClicked() {
         List<Message> messages = mMessageListAdapter.getSelectedMessages();
@@ -302,23 +292,25 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
 
     private void startSettingsDialog(int characterId) {
-        String chattingWith = mPost.getCharacterName(characterId);
-        DialogPlus settingsDialog = mSettingsDialogHandler
-                .getDialog(chattingWith, mPost.getCharacterColor(characterId), characterId);
+        mCurrentName = mPost.getCharacterName(characterId);
+        String color = mPost.getCharacterColor(characterId);
+        DialogPlus settingsDialog = mSettingsDialogHandler.getDialog(mCurrentName, color, characterId);
         settingsDialog.show();
     }
 
 
     @Override
     public void onChatSettingsChanged(String name, String color, int characterId) {
-        mPost.addCharacterIfNull(name, characterId);
-        onCharacterColorChanged(color, name, characterId);
+        if (!validSettingsChange(name))
+            return;
         onCharacterNameChanged(name, characterId);
+        onCharacterColorChanged(color, name, characterId);
     }
 
 
     private void onCharacterColorChanged(String color, String name, int characterId) {
         if (!Validator.isNullOrEmpty(color)) {
+            mPost.addCharacterIfNull(name, characterId);
             mPost.changeCharacterSettings(name, "color", color);
             setCharacterColor(characterId, color);
             if (characterId == 0)
@@ -330,10 +322,23 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
 
     private void onCharacterNameChanged(String name, int characterId) {
-        if (Validator.isNullOrEmpty(name))
-            return;
+        mPost.addCharacterIfNull(name, characterId);
         setCharacterName(characterId, name);
         resetSpinner();
+    }
+
+
+    private boolean validSettingsChange(String name) {
+        if (Validator.isNullOrEmpty(name))
+            return false;
+        if ((!Validator.isNullOrEmpty(mCurrentName) && mCurrentName.equals(name)))
+            return true;
+        if (mPost.getCharacterNameList().contains(name)) {
+            showWarningDialog("Character with that name already exists", "Name is taken");
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -342,6 +347,12 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
             return;
 
         mPost.setCharacterName(newName, characterId);
+        if (!Validator.isNullOrEmpty(mCurrentName) && !newName.equals(mCurrentName)){
+            mPost.updateMessagesAuthorName(mCurrentName, newName);
+            mMessageListAdapter.clear(true);
+            addCurrentPostMessages();
+        }
+
         TextView textView = characterId == 0 ? mFirstCharacterTextView : mSecondCharacterTextView;
         textView.setText(newName);
     }
@@ -382,7 +393,15 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
             message = new NarratorMessage(message);
 
         mMessageListAdapter.addToStart(message, true);
+        mPost.addMessage(message);
 
         return true;
+    }
+
+
+    private void showWarningDialog(String text, String title) {
+        SweetAlertDialog dialog = DialogFactory
+                .getAlertDialog(mActivity, title, text);
+        dialog.show();
     }
 }

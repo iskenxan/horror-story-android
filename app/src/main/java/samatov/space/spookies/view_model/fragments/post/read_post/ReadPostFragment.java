@@ -31,8 +31,7 @@ import samatov.space.spookies.model.api.beans.PostRef;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.post.Message;
 import samatov.space.spookies.view_model.activities.ReadPostActivity;
-import samatov.space.spookies.view_model.fragments.post.message_viewholder.FirstCharMessageViewHolder;
-import samatov.space.spookies.view_model.fragments.post.message_viewholder.SecondCharMessageViewHolder;
+import samatov.space.spookies.view_model.fragments.post.message_viewholder.MessageholderHelper;
 import samatov.space.spookies.view_model.utils.DialogFactory;
 
 
@@ -81,17 +80,12 @@ public class ReadPostFragment extends Fragment {
     }
 
 
-    private void setupMessageList() throws Exception {
+    private void setupMessageList() {
         MyPreferenceManager.saveString(getContext(),
-                MyPreferenceManager.FIRST_CHARACTER_COLOR, mPost.getCharacterColor(1)); // characterId 0 belongs to the narrator
+                MyPreferenceManager.FIRST_CHARACTER_COLOR, mPost.getCharacterColor(0)); // characterId 0 belongs to the narrator
         MyPreferenceManager.saveString(getContext(),
-                MyPreferenceManager.SECOND_CHARACTER_COLOR, mPost.getCharacterColor(2));
-        MessagesListAdapter.HoldersConfig holdersConfig = new MessagesListAdapter.HoldersConfig();
-        holdersConfig.setOutcoming(FirstCharMessageViewHolder.class,
-                com.stfalcon.chatkit.R.layout.item_outcoming_text_message);
-        holdersConfig.setIncoming(SecondCharMessageViewHolder.class,
-                com.stfalcon.chatkit.R.layout.item_incoming_text_message);
-        mMessageListAdapter = new MessagesListAdapter<>("0", holdersConfig, null);
+                MyPreferenceManager.SECOND_CHARACTER_COLOR, mPost.getCharacterColor(1));
+        mMessageListAdapter = MessageholderHelper.Companion.getMessageListAdapter();
         mMessageList.setAdapter(mMessageListAdapter);
         mMessageListAdapter.setOnMessageViewClickListener((a, b) -> checkAndAddNextMessage());
         mMessages = mPost.getSortedDialog();
