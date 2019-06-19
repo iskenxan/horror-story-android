@@ -64,8 +64,9 @@
                 android:layout_marginTop="20dp"/>
             <ImageView
                 android:id="@+id/feedListItemCommentImageView"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:padding="3dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:src="@drawable/comment_icon"/>
@@ -83,8 +84,9 @@
 
             <ImageView
                 android:id="@+id/feedListItemFavoriteImageView"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:padding="3dp"
                 android:layout_marginRight="20dp"
                 android:src="@drawable/favorite_icon_colored"
                 app:layout_constraintBottom_toBottomOf="@id/feedListItemCommentImageView"

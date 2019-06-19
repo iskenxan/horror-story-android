@@ -61,6 +61,7 @@ public class FeedActivity extends BaseToolbarActivity {
         fetchFeed(() -> {
             MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.FEED_TIMELINE, mFeed.getTimeline());
             MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.FEED_POPULAR, mFeed.getPopular());
+            MyPreferenceManager.saveObjectAsJson(mActivity, MyPreferenceManager.FEED_NEW, mFeed.getNew());
             replaceFragment(FeedFragment.newInstance(), R.id.feedActivityMainPlaceholder);
         });
     }
@@ -82,12 +83,14 @@ public class FeedActivity extends BaseToolbarActivity {
     }
 
 
-    public void fetchTimelineFeed( FeedType type, ApiRequestListener listener) {
+    public void fetchFeedUpdated(FeedType type, ApiRequestListener listener) {
         fetchFeed(() -> {
             if (type == FeedType.TIMELINE)
                 listener.onRequestComplete(mFeed.getTimeline(), null);
-            else
+            else if (type == FeedType.POPULAR)
                 listener.onRequestComplete(mFeed.getPopular(), null);
+            else
+                listener.onRequestComplete(mFeed.getNew(), null);
         });
     }
 
@@ -110,8 +113,13 @@ public class FeedActivity extends BaseToolbarActivity {
             }
 
             mFeed = (Feed) result;
+            mFeed.addNewPostsAndSort();
             onFetchSuccess.run();
         });
+    }
+
+
+    private void formatNewPosts() {
     }
 
 

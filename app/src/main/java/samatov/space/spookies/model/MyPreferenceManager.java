@@ -28,6 +28,7 @@ public class MyPreferenceManager {
     public static String SECOND_CHARACTER_COLOR = "second_character_color";
     public static String FEED_TIMELINE = "feed_timeline_list";
     public static String FEED_POPULAR = "feed_popular_list";
+    public static String FEED_NEW = "feed_new_list";
     public static String FAVORITE_ACTION = "like_post_action";
 
 

@@ -74,7 +74,7 @@ class FeedListFragment : BaseFragment() {
                 resources.getColor(R.color.colorAccent))
         feedListSwipeRefresh.setOnRefreshListener {
             feedListItemEmptyContainer.visibility = View.GONE
-            mActivity?.fetchTimelineFeed(mType) { result, _ ->
+            mActivity?.fetchFeedUpdated(mType) { result, _ ->
                 mPosts = result as List<FeedItem>
                 mAdapter?.refreshList(mPosts as List<FeedItem>)
                 feedListSwipeRefresh.isRefreshing = false

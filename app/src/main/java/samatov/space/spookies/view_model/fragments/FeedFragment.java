@@ -44,6 +44,7 @@ public class FeedFragment extends Fragment {
     FeedViewPagerAdapter mAdapter;
     List<FeedItem> mTimeline = new ArrayList<>();
     List<FeedItem> mPopular = new ArrayList<>();
+    List<FeedItem> mNew = new ArrayList<>();
     FeedActivity mActivity;
 
 
@@ -66,13 +67,14 @@ public class FeedFragment extends Fragment {
                 .getListOfObjects(getContext(), MyPreferenceManager.FEED_TIMELINE, FeedItem.class);
         mPopular = MyPreferenceManager
                 .getListOfObjects(getContext(), MyPreferenceManager.FEED_POPULAR, FeedItem.class);
+        mNew = MyPreferenceManager.getListOfObjects(getContext(), MyPreferenceManager.FEED_NEW, FeedItem.class);
     }
 
 
     public void setupViewPager() {
         SmartTabLayout tabs = mActivity.getViewPagerTabs();
         FragmentManager fm = getChildFragmentManager();
-        mAdapter = new FeedViewPagerAdapter(fm, mTimeline, mPopular);
+        mAdapter = new FeedViewPagerAdapter(fm, mTimeline, mPopular, mNew);
         mViewPager.setAdapter(mAdapter);
         tabs.setViewPager(mViewPager);
     }

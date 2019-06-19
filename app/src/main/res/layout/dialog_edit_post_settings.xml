@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:textColor="@color/colorPrimary"
-        android:text="Buble color:"
+        android:text="Bubble color:"
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@id/chatSettingsSeparator"
         app:layout_constraintTop_toBottomOf="@id/chatSettingsChatWithLabel"

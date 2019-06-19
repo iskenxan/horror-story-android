@@ -34,6 +34,9 @@ public class TimeSince {
             return diff / HOUR_MILLIS + " hours ago";
         } else if (diff < 48 * HOUR_MILLIS) {
             return "yesterday";
+        } else if (diff > ((long)30 * DAY_MILLIS)) {
+            int months = (int)(diff / ((long)30 * DAY_MILLIS));
+            return months + " months ago";
         } else {
             return diff / DAY_MILLIS + " days ago";
         }
