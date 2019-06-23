@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.notification_list_item.*
 import samatov.space.spookies.R
 import samatov.space.spookies.model.api.beans.notification.NotificationActivity
 import samatov.space.spookies.model.utils.FormatterK
+import samatov.space.spookies.model.utils.TimeSince
 
 
 class NotificationListViewholder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
@@ -54,5 +55,6 @@ class NotificationListViewholder(override val containerView: View) : RecyclerVie
         notificationItemCircleImageView.setOnClickListener { listener(activity) }
         notificationItemTextView.setOnClickListener { listener(activity) }
         notificationItemIconImageView.setOnClickListener { listener(activity) }
+        notificationItemDate.text = TimeSince.getTimeAgo(activity.timestamp)
     }
 }

@@ -23,7 +23,7 @@ public class BmbMenuFactory {
 
     private static void addMyFeed(BoomMenuButton bmb, AppCompatActivity activity) {
         HamButton.Builder builder = getBasicBuilder()
-                .normalText("My Feed")
+                .normalText("Stories")
                 .normalImageRes(R.drawable.menu_home_icon)
                 .highlightedImageRes(R.drawable.menu_home_icon_white)
                 .listener(index ->

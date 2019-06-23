@@ -2,6 +2,7 @@ package samatov.space.spookies.model.api.calls;
 
 import java.util.HashMap;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -27,6 +28,9 @@ public interface ProfileApi {
 
     @POST("user/profile/unfollow")
     Observable<User> unfollow(@Body HashMap<String, Object> params);
+
+    @POST("user/profile/notification-token/set")
+    Completable setNotificationToken(@Body HashMap<String, Object> params);
 
 
     @Multipart

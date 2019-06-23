@@ -46,6 +46,11 @@ public class ActionbarItemsManager {
     }
 
 
+    public void updateNotifications() {
+        setupNotificationAction();
+    }
+    
+
     private void setupNotificationAction() {
         mActivity.getNotificationFeed(false, false, (result, exception) -> {
             NotificationsFeed feed = (NotificationsFeed) result;

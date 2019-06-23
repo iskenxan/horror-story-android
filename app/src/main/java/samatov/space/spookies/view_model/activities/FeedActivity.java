@@ -53,6 +53,11 @@ public class FeedActivity extends BaseToolbarActivity {
         mPlaceholder = R.id.feedActivityMainPlaceholder;
         setupMainActionbar(mToolbar);
         getFeed();
+        setCurrentActivity();
+    }
+
+    public void updateNotifications() {
+        mManager.updateNotifications();
     }
 
 
@@ -116,10 +121,6 @@ public class FeedActivity extends BaseToolbarActivity {
             mFeed.addNewPostsAndSort();
             onFetchSuccess.run();
         });
-    }
-
-
-    private void formatNewPosts() {
     }
 
 

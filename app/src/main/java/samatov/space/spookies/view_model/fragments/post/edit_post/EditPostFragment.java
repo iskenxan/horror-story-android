@@ -5,6 +5,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.orhanobut.dialogplus.DialogPlus;
@@ -74,6 +77,9 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     @BindView(R.id.editPostInputContainer) ConstraintLayout mInputContainer;
     @BindView(R.id.editPostFragmentTitleSwitcher) ViewSwitcher mTitleSwitcher;
     @BindView(R.id.editPostFragmentTitleTextView) TextView mTitleTextView;
+    @BindView(R.id.editPostFragmentPrefaceEditText) EditText mPrefaceEditText;
+    @BindView(R.id.editPostFragmentPrefaceTextView) TextView mPrefaceTextView;
+    @BindView(R.id.editPostFragmentPrefaceSwitcher) ViewSwitcher mPrefaceSwitcher;
 
 
 
@@ -95,8 +101,31 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
 
        setupModel();
        setupViews();
+       setPrefaceListener();
 
        return view;
+    }
+
+
+    private void setPrefaceListener() {
+        mPrefaceEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() > 100) {
+                    Toast.makeText(mActivity, "Preface too long", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
 
@@ -129,6 +158,9 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
         setupForPublished();
         if (!Validator.isNullOrEmpty(mPost.getTitle()))
             mTitleEditText.setText(mPost.getTitle());
+        if (!Validator.isNullOrEmpty(mPost.getPreface()))
+            mPrefaceEditText.setText(mPost.getPreface());
+
         mSettingsDialogHandler = new EditPostDialogHandler(mActivity,this);
         mMessageInput.setInputListener(this);
         mDeleteMessageImageView.setVisibility(View.INVISIBLE);
@@ -164,7 +196,9 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
             mSecondCharacterEditIcon.setVisibility(View.GONE);
             mInputContainer.setVisibility(View.GONE);
             mTitleSwitcher.showNext();
+            mPrefaceSwitcher.showNext();
             mTitleTextView.setText(mPost.getTitle());
+            mPrefaceTextView.setText(mPost.getPreface());
         }
     }
 
@@ -232,6 +266,7 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     @OnClick(R.id.editPostSaveDraftButton)
     public void onSaveDraftClicked() {
         mPost.setTitle(mTitleEditText.getText() + "");
+        mPost.setPreface(mPrefaceEditText.getText() + "");
         if (!titleEmpty())
             mActivity.saveDraft(mPost);
     }
@@ -240,7 +275,8 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
     @OnClick(R.id.editPostPublishButton)
     public void onPublishButtonClicked() {
         mPost.setTitle(mTitleEditText.getText() + "");
-        if (!titleEmpty() && !notEnoughMessages())
+        mPost.setPreface(mPrefaceEditText.getText() + "");
+        if (!titleEmpty() && !notEnoughMessages() && validPreface())
             mActivity.publishPost(mPost);
     }
 
@@ -254,6 +290,21 @@ public class EditPostFragment extends Fragment implements ChatSettingsListener, 
         }
 
         return false;
+    }
+
+
+    public boolean validPreface() {
+        if (Validator.isNullOrEmpty(mPost.getPreface())) return true;
+
+        if (mPost.getPreface().length() > 100) {
+            String text = "Preface cannot be more than 100 letters long";
+            String title = "Preface too long";
+            showWarningDialog(text, title);
+
+            return false;
+        }
+
+        return true;
     }
 
 

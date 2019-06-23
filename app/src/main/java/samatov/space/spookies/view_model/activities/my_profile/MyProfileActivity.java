@@ -50,6 +50,12 @@ public class MyProfileActivity extends BaseToolbarActivity {
         mPlaceholder = R.id.myProfilePlaceholder;
         myProfileFragment = MyProfileFragment.newInstance();
         replaceFragment(myProfileFragment, R.id.myProfilePlaceholder);
+        setCurrentActivity();
+    }
+
+
+    public void updateNotifications() {
+        mManager.updateNotifications();
     }
 
 

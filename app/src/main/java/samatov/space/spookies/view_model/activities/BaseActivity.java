@@ -28,6 +28,7 @@ import samatov.space.spookies.model.api.beans.Post;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.beans.notification.NotificationsFeed;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
+import samatov.space.spookies.view_model.MyApplication;
 import samatov.space.spookies.view_model.fragments.post.comment.CommentFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.BmbMenuFactory;
@@ -37,6 +38,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected  SweetAlertDialog mDialog;
     public int mPlaceholder;
+
+
+    public void setCurrentActivity() {
+        MyApplication app = (MyApplication) this.getApplication();
+        app.setCurrentActivity(this);
+    }
 
 
     public void fetchMyPublished(String postId, ApiRequestListener listener) {

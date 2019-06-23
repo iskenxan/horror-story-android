@@ -7,13 +7,15 @@
     tools:context=".view_model.fragments.post.edit_post.EditPostFragment"
     android:background="@color/colorBg">
     <android.support.constraint.ConstraintLayout
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:layout_height="200dp"
+        android:layout_height="230dp"
         android:background="@android:color/white"
         android:id="@+id/editPostTopContainer">
         <android.support.constraint.ConstraintLayout
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:id="@+id/editPostTopButtonsContainer">
@@ -87,7 +89,7 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/editPostSettingsContainer"
             android:layout_width="match_parent"
-            android:layout_height="125dp"
+            android:layout_height="165dp"
             android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@id/editPostTopSeparator">
             <TextView
@@ -97,29 +99,30 @@
                 android:text="Title:"
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintTop_toTopOf="@+id/editPostFragmentTitleSwitcher"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="@+id/editPostFragmentTitleSwitcher"
                 />
             <ViewSwitcher
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/editPostFragmentTitleSwitcher"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_marginLeft="7dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintVertical_chainStyle="spread_inside"
                 app:layout_constraintStart_toEndOf="@id/editPostFragmentTitleLabel"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/editPostFragmentFirstCharacterContainer">
-            <EditText
-                android:id="@+id/editPostFragmentTitleEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Your story title..."
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@color/colorPrimaryDark" />
+                app:layout_constraintBottom_toTopOf="@+id/editPostFragmentPrefaceSwitcher">
+                <EditText
+                    android:id="@+id/editPostFragmentTitleEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Your story title..."
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/colorPrimaryDark" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -132,11 +135,55 @@
                     android:textColor="@color/colorPrimaryDark"
                     />
             </ViewSwitcher>
+            <TextView
+                android:id="@+id/editPostFragmentPrefaceLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preface:"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintTop_toTopOf="@+id/editPostFragmentPrefaceSwitcher"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/editPostFragmentPrefaceSwitcher"
+                />
+            <ViewSwitcher
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/editPostFragmentPrefaceSwitcher"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                app:layout_constraintStart_toEndOf="@id/editPostFragmentPrefaceLabel"
+                app:layout_constraintTop_toBottomOf="@id/editPostFragmentTitleSwitcher"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/editPostFragmentFirstCharacterContainer">
+                <EditText
+                    android:id="@+id/editPostFragmentPrefaceEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="100 letter long summary... (optional)"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/colorPrimaryDark" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:id="@+id/editPostFragmentPrefaceTextView"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    />
+            </ViewSwitcher>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:id="@+id/editPostFragmentFirstCharacterContainer"
-                app:layout_constraintTop_toBottomOf="@+id/editPostFragmentTitleSwitcher"
+                app:layout_constraintTop_toBottomOf="@+id/editPostFragmentPrefaceSwitcher"
                 app:layout_constraintBottom_toTopOf="@+id/editPostFragmentSecondCharacterContainer">
                 <TextView
                     android:layout_width="wrap_content"
@@ -230,6 +277,7 @@
         android:paddingRight="5dp"
         app:layout_constraintBottom_toBottomOf="parent">
         <Spinner
+            app:layout_constraintLeft_toLeftOf="parent"
             android:id="@+id/editPostUserSpinner"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />

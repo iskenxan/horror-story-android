@@ -17,6 +17,7 @@ public class Post extends PostsMiddleware {
 
     private String title;
     private String author;
+    private String preface;
     private String id;
     private int dialogCount = 0;
     private JsonObject dialog = new JsonObject();
@@ -278,5 +279,13 @@ public class Post extends PostsMiddleware {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPreface() {
+        return preface;
+    }
+
+    public void setPreface(String preface) {
+        this.preface = preface;
     }
 }

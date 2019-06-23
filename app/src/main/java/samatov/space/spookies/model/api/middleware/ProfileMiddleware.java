@@ -5,6 +5,7 @@ import android.content.Context;
 import java.io.File;
 import java.util.HashMap;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -34,6 +35,17 @@ public class ProfileMiddleware {
         params.put("token", token);
 
         return profileApi.getUserInfo(params);
+    }
+
+
+    public static Completable setNotificationToken(Context context, String notificationToken) {
+        ProfileApi profileApi = ApiManager.getRetrofit().create(ProfileApi.class);
+        String token = MyPreferenceManager.getToken(context);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", token);
+        params.put("notif_token", notificationToken);
+
+        return profileApi.setNotificationToken(params);
     }
 
 

@@ -30,6 +30,7 @@ public class MyPreferenceManager {
     public static String FEED_POPULAR = "feed_popular_list";
     public static String FEED_NEW = "feed_new_list";
     public static String FAVORITE_ACTION = "like_post_action";
+    public static String NOTIFICATION_TOKEN = "notification_token";
 
 
     private static String VIEWED_USERS = "user_searched_clicked_item";

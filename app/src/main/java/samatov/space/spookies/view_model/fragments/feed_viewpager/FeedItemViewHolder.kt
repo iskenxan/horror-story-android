@@ -9,6 +9,7 @@ import samatov.space.spookies.R
 import samatov.space.spookies.model.api.beans.FeedItem
 import samatov.space.spookies.model.utils.FormatterK
 import samatov.space.spookies.model.utils.TimeSince
+import samatov.space.spookies.model.utils.Validator
 
 
 class FeedItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
@@ -23,6 +24,13 @@ class FeedItemViewHolder(override val containerView: View) : RecyclerView.ViewHo
         feedListItemImageView.setImageResource(R.drawable.ic_profile_placeholder)
         feedListItemUsernameTextview.text = post.author
         feedListItemTitleTextView.text = post.title
+        if (!Validator.isNullOrEmpty(post.preface)) {
+            feedListItemPrefaceTextView.visibility = View.VISIBLE
+            feedListItemPrefaceTextView.text = post.preface
+        } else {
+            feedListItemPrefaceTextView.visibility = View.GONE
+            feedListItemPrefaceTextView.text = ""
+        }
         feedListItemFavoriteTextView.text = post.favoriteCount.toString()
         feedListItemCommentTextView.text = post.commentCount.toString()
 
@@ -38,6 +46,11 @@ class FeedItemViewHolder(override val containerView: View) : RecyclerView.ViewHo
 
         feedListItemUsernameTextview.setOnClickListener {
             listener.invoke(FeedClickedOn.USERNAME, post.author)
+        }
+
+
+        feedListItemCommentTextView.setOnClickListener {
+            listener.invoke(FeedClickedOn.COMMENTS, post)
         }
 
         feedListItemCommentImageView.setOnClickListener {

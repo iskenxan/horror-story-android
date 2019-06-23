@@ -42,6 +42,12 @@ public class ViewProfileActivity extends BaseToolbarActivity {
         setupMainActionbar(mToolbar);
         getCurrentUser();
         replaceFragment(ViewProfileFragment.newInstance(), R.id.viewProfileMainPlaceholder);
+        setCurrentActivity();
+    }
+
+
+    public void updateNotifications() {
+        mManager.updateNotifications();
     }
 
 

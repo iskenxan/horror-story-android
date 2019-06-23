@@ -54,7 +54,7 @@ public class FeedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
         ButterKnife.bind(this, view);
         mActivity = (FeedActivity) getActivity();
-        mActivity.setMainToolbarTitle("Feed");
+        mActivity.setMainToolbarTitle("Stories");
         getFeed();
         setupViewPager();
 

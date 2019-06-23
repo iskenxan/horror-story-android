@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import samatov.space.spookies.R;
 import samatov.space.spookies.model.MyPreferenceManager;
@@ -11,6 +12,7 @@ import samatov.space.spookies.model.api.beans.Auth;
 import samatov.space.spookies.model.api.beans.User;
 import samatov.space.spookies.model.api.interfaces.ApiRequestListener;
 import samatov.space.spookies.model.api.interfaces.AuthListener;
+import samatov.space.spookies.model.api.middleware.ProfileMiddleware;
 import samatov.space.spookies.view_model.fragments.LoginFragment;
 import samatov.space.spookies.view_model.utils.ActivityFactory;
 import samatov.space.spookies.view_model.utils.DialogFactory;
@@ -27,6 +29,19 @@ public class AuthActivity extends BaseActivity {
         mDialog = DialogFactory.getLoadingDialog(this, "Loading...");
         mPlaceholder = R.id.authMainPlaceholder;
         checkIfLoggedInAndRedirect();
+        setCurrentActivity();
+    }
+
+
+    private void checkAndSaveNotificationToken() {
+        String notificationToken = MyPreferenceManager.getString(this, MyPreferenceManager.NOTIFICATION_TOKEN);
+        if (notificationToken == null) return;
+        Completable completable = ProfileMiddleware.setNotificationToken(this, notificationToken);
+        listenToCompletable(completable, (result, error) -> {
+            if (error == null) {
+                MyPreferenceManager.delete(this, MyPreferenceManager.NOTIFICATION_TOKEN);
+            }
+        });
     }
 
 
@@ -71,6 +86,7 @@ public class AuthActivity extends BaseActivity {
 
     private void onFetchUserSuccess(Object result) {
         User user = (User) result;
+        checkAndSaveNotificationToken();
         MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_USER, user);
         ActivityFactory.startActivity(this, FeedActivity.class, true, true);
     }
@@ -104,6 +120,7 @@ public class AuthActivity extends BaseActivity {
     private void onAuthSuccess(Auth auth) {
         MyPreferenceManager.saveString(getApplicationContext(), MyPreferenceManager.SECURITY_TOKEN, auth.getToken());
         MyPreferenceManager.saveObjectAsJson(getApplicationContext(), MyPreferenceManager.CURRENT_USER, auth.getUser());
+        checkAndSaveNotificationToken();
         ActivityFactory.startActivity(this, FeedActivity.class, true, true);
     }
 

@@ -4,7 +4,7 @@
     android:layout_height="410dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="16dp"
-    android:paddingLeft="16dp"
+    android:paddingLeft="24dp"
     android:paddingRight="16dp"
     android:background="@android:color/white"
     android:minHeight="410dp">

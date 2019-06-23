@@ -14,6 +14,7 @@ class PostRef(id: String, author: String): BasePostReference() {
         this.lastUpdated = post.lastUpdated
         this.favorite = FormatterK.getFormattedFavorite(post.favorite)
         this.title = post.title
+        this.preface = post.preface
     }
 
 

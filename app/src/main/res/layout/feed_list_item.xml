@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="20dp"
@@ -47,13 +48,25 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:gravity="center"/>
+            <TextView
+                android:id="@+id/feedListItemPrefaceTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/feedListItemTitleTextView"
+                android:layout_marginTop="15dp"
+                android:text="In the dark In the dark In the dark In the dark"
+                android:textColor="#8493A8"
+                android:textSize="13sp"
+                android:textStyle="normal"
+                android:gravity="center"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorBg"
                 android:layout_marginTop="10dp"
                 android:id="@+id/feedListItemSeparator"
-                app:layout_constraintTop_toBottomOf="@id/feedListItemTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@id/feedListItemPrefaceTextView"/>
             <Button
                 android:id="@+id/feedListitemReadButton"
                 app:layout_constraintTop_toBottomOf="@id/feedListItemSeparator"

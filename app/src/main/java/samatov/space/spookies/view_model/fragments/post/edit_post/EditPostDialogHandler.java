@@ -38,6 +38,7 @@ public class EditPostDialogHandler {
         DialogPlus dialogPlus = DialogPlus.newDialog(mActivity)
                 .setContentHolder(new ViewHolder(R.layout.dialog_edit_post_settings))
                 .setGravity(Gravity.CENTER)
+                .setContentBackgroundResource(R.drawable.dialog_bg)
                 .setPadding(36, 26, 36 ,26)
                 .setContentWidth(ViewGroup.LayoutParams.WRAP_CONTENT)
                 .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)

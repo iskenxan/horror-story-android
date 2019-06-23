@@ -31,6 +31,7 @@ public class ReadPostActivity extends BaseToolbarActivity {
         mActivity = this;
         mPlaceholder = R.id.readPostMainPlaceholder;
         getPost();
+        setCurrentActivity();
     }
 
 

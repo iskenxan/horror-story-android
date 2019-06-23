@@ -27,6 +27,7 @@ public class EditPostActivity extends BaseActivity {
 
         mActivity = this;
         checkCurrentPostAndStartFragment();
+        setCurrentActivity();
     }
 
 
