@@ -236,6 +236,8 @@ public class ReadPostFragment extends Fragment {
             return;
 
         PostRef postRef = viewedUser.getPublishedRefs().get(mPost.getId());
+        if (postRef == null) return;
+
         postRef.getFavorite().add(currentUser.getUsername());
         MyPreferenceManager.popViewedUsersStack(mActivity);
         MyPreferenceManager.addToViewedUsersStack(mActivity, viewedUser);
@@ -255,7 +257,10 @@ public class ReadPostFragment extends Fragment {
         if (viewedUser == null || mPost.getAuthor() == null || !mPost.getAuthor().equals(viewedUser.getUsername()))
             return;
 
-        viewedUser.getPublishedRefs().get(mPost.getId()).getFavorite().remove(currentUser.getUsername());
+        PostRef ref = viewedUser.getPublishedRefs().get(mPost.getId());
+        if (ref == null) return;
+
+        ref.getFavorite().remove(currentUser.getUsername());
         MyPreferenceManager.popViewedUsersStack(mActivity);
         MyPreferenceManager.addToViewedUsersStack(mActivity, viewedUser);
     }
