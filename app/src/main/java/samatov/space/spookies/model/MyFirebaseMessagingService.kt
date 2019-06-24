@@ -1,7 +1,6 @@
 package samatov.space.spookies.model
 
 import android.os.Handler
-import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import samatov.space.spookies.view_model.MyApplication
@@ -30,15 +29,5 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             }
         }
         handler.post(runnable)
-    }
-
-    override fun onDeletedMessages() {
-        super.onDeletedMessages()
-        Log.i("Test", "Test")
-    }
-
-
-    override fun onNewToken(token: String?) {
-        MyPreferenceManager.saveString(baseContext, MyPreferenceManager.NOTIFICATION_TOKEN, token)
     }
 }

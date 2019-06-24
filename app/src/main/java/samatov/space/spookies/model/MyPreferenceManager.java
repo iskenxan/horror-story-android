@@ -54,6 +54,7 @@ public class MyPreferenceManager {
         delete(context, USER_SEARCH_RESULT);
         delete(context, FEED_TIMELINE);
         delete(context, FEED_POPULAR);
+        delete(context, NOTIFICATION_TOKEN);
     }
 
 

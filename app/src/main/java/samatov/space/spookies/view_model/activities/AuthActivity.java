@@ -3,6 +3,8 @@ package samatov.space.spookies.view_model.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -21,6 +23,7 @@ import samatov.space.spookies.view_model.utils.DialogFactory;
 public class AuthActivity extends BaseActivity {
 
     SweetAlertDialog mDialog;
+    AuthActivity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,20 +31,30 @@ public class AuthActivity extends BaseActivity {
         setContentView(R.layout.activity_auth);
         mDialog = DialogFactory.getLoadingDialog(this, "Loading...");
         mPlaceholder = R.id.authMainPlaceholder;
+        mActivity = this;
         checkIfLoggedInAndRedirect();
         setCurrentActivity();
     }
 
 
-    private void checkAndSaveNotificationToken() {
-        String notificationToken = MyPreferenceManager.getString(this, MyPreferenceManager.NOTIFICATION_TOKEN);
-        if (notificationToken == null) return;
-        Completable completable = ProfileMiddleware.setNotificationToken(this, notificationToken);
-        listenToCompletable(completable, (result, error) -> {
-            if (error == null) {
-                MyPreferenceManager.delete(this, MyPreferenceManager.NOTIFICATION_TOKEN);
-            }
-        });
+    private  void retrieveNotificationToken () {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) return;
+
+                    String token = task.getResult().getToken();
+                    if (token == null) return;
+
+                    String savedToken = MyPreferenceManager.getString(mActivity, MyPreferenceManager.NOTIFICATION_TOKEN);
+                    if (savedToken == null || !savedToken.equals(token)) {
+                        Completable completable = ProfileMiddleware.setNotificationToken(mActivity, token);
+                        listenToCompletable(completable, (result, error) -> {
+                            if (error == null) {
+                               MyPreferenceManager.saveString(mActivity, MyPreferenceManager.NOTIFICATION_TOKEN, token);
+                            }
+                        });
+                    }
+                });
     }
 
 
@@ -86,8 +99,8 @@ public class AuthActivity extends BaseActivity {
 
     private void onFetchUserSuccess(Object result) {
         User user = (User) result;
-        checkAndSaveNotificationToken();
         MyPreferenceManager.saveObjectAsJson(this, MyPreferenceManager.CURRENT_USER, user);
+        retrieveNotificationToken();
         ActivityFactory.startActivity(this, FeedActivity.class, true, true);
     }
 
@@ -120,7 +133,7 @@ public class AuthActivity extends BaseActivity {
     private void onAuthSuccess(Auth auth) {
         MyPreferenceManager.saveString(getApplicationContext(), MyPreferenceManager.SECURITY_TOKEN, auth.getToken());
         MyPreferenceManager.saveObjectAsJson(getApplicationContext(), MyPreferenceManager.CURRENT_USER, auth.getUser());
-        checkAndSaveNotificationToken();
+        retrieveNotificationToken();
         ActivityFactory.startActivity(this, FeedActivity.class, true, true);
     }
 
